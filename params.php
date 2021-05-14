@@ -8,11 +8,11 @@
  */
 require_once __DIR__ . '/vendor/autoload.php';
 
-$enviroment == 'develop' && $enviroment = 'development';
-define('ENV', $enviroment);
-define('DB_HOST', '');
+$environment == 'develop' && $environment = 'development';
+define('ENV', $environment);
+define('DB_HOST', 'localhost');
 define('DB_PORT', 3306);
 define('DB_USER', 'root');
 define('DB_PASSWORD', '123456');
-define('DB_DATABASE', 'test');
+define('DB_DATABASE', 'bsc');
 define('SESSION_CACHE', '');
