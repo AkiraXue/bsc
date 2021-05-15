@@ -47,6 +47,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @category	Output
  * @author		EllisLab Dev Team
  * @link		https://codeigniter.com/user_guide/libraries/output.html
+ *
+ * @method      myOutput(array $exceptionBase)
  */
 class CI_Output {
 

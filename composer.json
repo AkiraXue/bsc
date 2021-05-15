@@ -10,10 +10,19 @@
 		"slack": "https://codeigniterchat.slack.com",
 		"source": "https://github.com/bcit-ci/CodeIgniter"
 	},
-	"require": {
-		"php": ">=7",
-		"robmorgan/phinx": "^0.12.6"
+	"autoload": {
+		"psr-4": {
+			"Lib\\":"application/libraries/",
+			"Model\\":"application/models/",
+			"Service\\":"application/services/",
+			"Exception\\":"application/exceptions/"
+		}
 	},
+	"require": {
+		"php": ">=7.1",
+		"robmorgan/phinx": "^0.12.6",
+		"ext-json": "*"
+    },
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
 	},
