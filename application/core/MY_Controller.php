@@ -3,7 +3,7 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-use Service\BaseControllerTrait;
+use Service\BaseTrait;
 
 /**
  * Class MY_Controller
@@ -17,7 +17,7 @@ use Service\BaseControllerTrait;
 class MY_Controller extends CI_Controller
 {
 
-    use BaseControllerTrait;
+    use BaseTrait;
 
     /**
      * MY_Controller constructor.

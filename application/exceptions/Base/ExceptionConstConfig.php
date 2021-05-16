@@ -136,6 +136,10 @@ class ExceptionConstConfig
     const DB_VERIFY_ARGUMENT_TYPE_ERROR_CODE = 005;
     const DB_VERIFY_ARGUMENT_TYPE_ERROR_MSG = 'db verify argument %s type %s error in model %s with function %s';
 
+    /** 参数校验类型错误 */
+    const DB_OBJECT_HAS_EXIST_ERROR_CODE = 006;
+    const DB_OBJECT_HAS_EXIST_ERROR_MSG = 'db object record has exist argument %s type %s error in model %s with function %s';
+
 
 
     /** 假期券起始时间配置错误 */
@@ -179,22 +183,17 @@ class ExceptionConstConfig
     const DB_USER_EMAIL_EXIST_ERROR_CODE = 302;
     const DB_USER_EMAIL_EXIST_ERROR_MSG = '邮箱已存在';
 
-    /** 员工性质不在可转正范围内 */
-    const DB_USER_EMPLOYEE_TYYE_NOT_IN_TRANSFER_REGULAR_RULE_ERROR_CODE = 303;
-    const DB_USER_EMPLOYEE_TYYE_NOT_IN_TRANSFER_REGULAR_RULE_ERROR_MSG = 'user employeeType not in transfer regular rule';
-
-    /**  用户当前状态不可离职 */
-    const DB_USER_COMPANY_EMPLOYEE_TYPE_NOT_IN_DEPARTURE_STATUS_ERROR_CODE = 304;
-    const DB_USER_COMPANY_EMPLOYEE_TYPE_NOT_IN_DEPARTURE_STATUS_ERROR_MSG = 'user company employee type not is departure status';
-
-    /** 初始入职的员工性质类型只可为试用/实习/转正/兼职 */
-    const DB_USER_ORIGIN_ENTRY_EMPLOYEE_TYPE_NOT_IN_TRANSFER_REGULAR_RULE_ERROR_CODE = 305;
-    const DB_USER_ORIGIN_ENTRY_EMPLOYEE_TYPE_NOT_IN_TRANSFER_REGULAR_RULE_ERROR_MSG = 'origin entry user employeeType not in transfer regular rule';
-
     /** 没有上传识别图片 */
     const DB_UPLOAD_IDENTIFY_IMG_NOT_EXIST_ERROR_CODE = 401;
     const DB_UPLOAD_IDENTIFY_IMG_NOT_EXIST_ERROR_MSG = '没有上传识别图片';
 
+    /** 活动唯一码不匹配排期 */
+    const DB_ACTIVITY_CODE_NOT_MATCH_SCHEDULE_ERROR_CODE = 501;
+    const DB_ACTIVITY_CODE_NOT_MATCH_SCHEDULE_ERROR_MSG = '活动唯一码不匹配排期';
+
+    /** 活动唯一码不匹配排期 */
+    const DB_ACCOUNT_ID_NOT_MATCH_SCHEDULE_ERROR_CODE = 502;
+    const DB_ACCOUNT_ID_NOT_MATCH_SCHEDULE_ERROR_MSG = '用户唯一码accountId不匹配排期';
 
     /*********** 数据库的参数验证失败 - 3 end ******************/
 

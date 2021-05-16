@@ -8,7 +8,7 @@
  * @created on 2020-08-12 11:09
  */
 
-namespace App\Exception\Common;
+namespace Exception\Common;
 
 use Exception\Base\DBParamException;
 use Exception\Base\ExceptionConstConfig;

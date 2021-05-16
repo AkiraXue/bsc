@@ -51,6 +51,19 @@ class MY_Model extends CI_Model
         return $this->tablePrefix . $this->table;
     }
 
+    public static function getIns()
+    {
+        static $instances = array();
+
+        $calledClass = get_called_class();
+
+        if (!array_key_exists($calledClass, $instances)) {
+            $instances[$calledClass] = new $calledClass();
+        }
+
+        return $instances[$calledClass];
+    }
+
 #region ci框架链式
 
     /**

@@ -9,7 +9,7 @@ class AddTableActivity extends AbstractMigration
     const TABLE_NAME_ACTIVITY= 'activity';
     const TABLE_NAME_ACTIVITY_SCHEDULE = 'activity_schedule';
 
-    const TABLE_NAME_ACTIVITY_PARTICIPATE_SCHEDULE= 'activity_participate_schedule';
+    const TABLE_NAME_ACTIVITY_PARTICIPATE_SCHEDULE= 'Activity_participate_schedule';
     const TABLE_NAME_ACTIVITY_PARTICIPATE_RECORD = 'activity_participate_record';
 
     public function up()
@@ -49,6 +49,7 @@ class AddTableActivity extends AbstractMigration
 
         $table->addColumn('name', 'char', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '名称'])
             ->addColumn('code', 'char', ['null' => false, 'default' => '', 'length' => 32, 'comment' => '活动唯一code'])
+            ->addColumn('days', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '活动周期'])
             ->addColumn('start_date', 'date', ['null' => false, 'comment' => '起始日期'])
             ->addColumn('end_date', 'date', ['null' => false, 'comment' => '截止日期'])
             ->addColumn('state', 'integer', [
@@ -172,6 +173,7 @@ class AddTableActivity extends AbstractMigration
         $table->addColumn('activity_code', 'char', ['null' => false, 'default' => '', 'length' => 32, 'comment' => '活动唯一code'])
             ->addColumn('account_id', 'char', ['null' => false, 'default' => '', 'length' => 32, 'comment' => '用户唯一code'])
             ->addColumn('day', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '活动第几天'])
+            ->addColumn('activity_schedule_id', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '活动关联排期id'])
             ->addColumn('is_related_knowledge', 'integer', [
                 'null' => false,
                 'default' => 1,
@@ -179,6 +181,15 @@ class AddTableActivity extends AbstractMigration
                 'signed' => false,
                 'comment' => '是否关联知识科普 1-是 2-否'
             ])
+            ->addColumn('knowledge_id', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '知识库id'])
+            ->addColumn('is_asset_award', 'integer', [
+                'null' => false,
+                'default' => 1,
+                'limit' => MysqlAdapter::INT_TINY,
+                'signed' => false,
+                'comment' => '是否资产奖励 1-是 2-否'
+            ])
+            ->addColumn('asset_num', 'decimal', ['precision' => '10', 'scale' => '2', 'comment' => '资产奖励额度', 'default' => '1'])
             ->addColumn('is_knowledge', 'integer', [
                 'null' => false,
                 'default' => 1,
@@ -186,8 +197,7 @@ class AddTableActivity extends AbstractMigration
                 'signed' => false,
                 'comment' => '是否已知识科普 1-是 2-否'
             ])
-            ->addColumn('recent_punch_date',  'date', ['null' => false, 'comment' => '上次打卡日期'])
-            ->addColumn('next_punch_date', 'date', ['null' => false, 'comment' => '下次打卡日期'])
+            ->addColumn('knowledge_time', 'timestamp', ['null' => false , 'default' => 'CURRENT_TIMESTAMP', 'update' => '', 'comment' => '知识科普时间'])
             ->addColumn('is_punch', 'integer', [
                 'null' => false,
                 'default' => 1,
@@ -196,6 +206,9 @@ class AddTableActivity extends AbstractMigration
                 'comment' => '是否打卡  1-是 2-否'
             ])
             ->addColumn('punch_time', 'timestamp', ['null' => false , 'default' => 'CURRENT_TIMESTAMP', 'update' => '', 'comment' => '打卡时间'])
+            ->addColumn('punch_date', 'date', ['null' => false, 'comment' => '当前打卡日期'])
+            ->addColumn('recent_punch_date',  'date', ['null' => false, 'comment' => '上次打卡日期'])
+            ->addColumn('next_punch_date', 'date', ['null' => false, 'comment' => '下次打卡日期'])
             ->addColumn('state', 'integer', [
                 'null' => false,
                 'default' => 1,

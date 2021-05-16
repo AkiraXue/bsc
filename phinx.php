@@ -7,7 +7,7 @@
  * @created on 5/14/21 1:52 PM
  */
 
-@require_once  __DIR__ . '/params.php';
+@require_once  __DIR__ . '/etc/env.php';
 
 return [
     'paths' => [

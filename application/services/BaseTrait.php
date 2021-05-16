@@ -1,6 +1,6 @@
 <?php
 /**
- * BaseControllerTrait.php
+ * BaseTrait.php
  *
  * @copyright Copyright (c) 2019 AkiraXue
  * @author akira.xue <18862104333@163.com>
@@ -16,7 +16,7 @@ use Exception\Common\ApiInvalidArgumentLenOverLimitException;
  * Trait BaseControllerTrait
  * @package Service
  */
-trait BaseControllerTrait
+trait BaseTrait
 {
     /**
      * 检测数组变量参数 - check => invalid && len limit
@@ -167,7 +167,7 @@ trait BaseControllerTrait
      */
     protected function checkApiInvalidArgumentException($argument='', $data=array())
     {
-        if (empty($data[$argument])) {
+        if (!isset($data[$argument])) {
             throw new ApiInvalidArgumentException($argument);
         }
 

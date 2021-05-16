@@ -13,7 +13,7 @@ class BaseService
      * @throws \Exception
      */
     public function __construct()
-    {;
+    {
     }
 
     public function getError()
