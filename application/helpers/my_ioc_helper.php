@@ -72,12 +72,18 @@ class IoCMgr
  * @property Activity_participate_record_model      $Activity_participate_record_model
  * @property Activity_participate_schedule_model    $Activity_participate_schedule_model
  *
+ * @property Topic_model            $Topic_model
  * @property Knowledge_model        $Knowledge_model
  *
  * @property Group_model            $Group_model
  * @property Group_item_model       $Group_item_model
  *
  * @property User_model             $User_model
+ *
+ * @property Asset_model            $Asset_model
+ *
+ * @property Order_model            $Order_model
+ * @property Order_item_model       $Order_item_model
  *
  * libraries/
  *
@@ -96,13 +102,18 @@ class HisIoCMgr extends IoCMgr
         $this->registerModel('Activity_participate_schedule_model', 'Activity_participate_schedule_model');
         $this->registerModel('Activity_participate_record_model', 'Activity_participate_record_model');
 
-
+        $this->registerModel('Topic_model', 'Topic_model');
         $this->registerModel('Knowledge_model', 'Knowledge_model');
 
         $this->registerModel('Group_model', 'Group_model');
         $this->registerModel('Group_item_model', 'Group_item_model');
 
         $this->registerModel('User_model', 'User_model');
+
+        $this->registerModel('Asset_model', 'Asset_model');
+
+        $this->registerModel('Order_model', 'Order_model');
+        $this->registerModel('Order_item_model', 'Order_item_model');
 
         /* library */
     }

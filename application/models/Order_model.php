@@ -1,19 +1,19 @@
 <?php
 /**
- * User_model.php
+ * Order_model.php
  *
  * @copyright Copyright (c) 2019 AkiraXue
  * @author akira.xue <18862104333@163.com>
- * @created on 5/16/21 2:55 PM
+ * @created on 5/17/21 1:04 AM
  */
 
 use Service\BaseModelTrait;
 
-class User_model extends MY_Model
+class Order_model extends MY_Model
 {
     use BaseModelTrait;
 
-    public $table = 'user';
+    public $table = 'order';
 
     public function __construct()
     {
@@ -103,14 +103,11 @@ class User_model extends MY_Model
     private function filterQuery(CI_DB_query_builder $query, array $params)
     {
         /** initialize where,group,having,order **/
-        !empty($params['name']) && $query->where('name', $params['name']);
-        !empty($params['account_id']) && $query->where('account_id', $params['account_id']);
-        !empty($params['account_ids']) && $query->where_in('account_id', $params['account_ids']);
-        !empty($params['openid']) && $query->where('openid', $params['openid']);
+        !empty($params['unique_code']) && $query->where('unique_code', $params['unique_code']);
+        !empty($params['trade_no']) && $query->where('trade_no', $params['trade_no']);
 
-        !empty($params['birthday']) && $query->where('birthday', $params['birthday']);
-        !empty($params['phone']) && $query->where('phone', $params['phone']);
-        !empty($params['mobile']) && $query->where('mobile', $params['mobile']);
+        !empty($params['status']) && $query->where('status', $params['status']);
+
         !empty($params['state']) && $query->where('state', $params['state']);
 
         return $query;

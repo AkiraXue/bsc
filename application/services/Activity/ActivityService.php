@@ -142,7 +142,7 @@ class ActivityService extends BaseService
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];
             }
-            throw new DBInvalidObjectException('ActivityObj', 'code');
+            throw new DBInvalidObjectException('ActivityObj', 'activity code');
         }
         return $activity;
     }

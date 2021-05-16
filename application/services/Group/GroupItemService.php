@@ -11,13 +11,13 @@ namespace Service\Group;
 
 use Exception;
 
-use Exception\Common\ApiVerifyArgumentTypeErrorException;
 use Lib\Constants;
 
 use Service\BaseTrait;
 use Service\BaseService;
 
 use Exception\Common\DBInvalidObjectException;
+use Exception\Common\ApiVerifyArgumentTypeErrorException;
 
 /**
  * Class GroupItemService
@@ -146,7 +146,7 @@ class GroupItemService extends BaseService
         $updateList = [];
         foreach ($filter['item_list'] as $groupItem) {
             if (array_key_exists($groupItem['unique_code'], $oldGroupItemList)) {
-                $groupItem['id'] = $oldGroupItemList[$groupItem['day']]['id'];
+                $groupItem['id'] = $oldGroupItemList[$groupItem['unique_code']]['id'];
                 $updateList[] = $groupItem;
             } else {
                 $groupItem['group_code'] = $params['group_code'];

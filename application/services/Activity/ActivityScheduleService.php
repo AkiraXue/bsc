@@ -11,8 +11,11 @@ namespace Service\Activity;
 use Exception;
 
 use Lib\Constants;
+
 use Service\BaseTrait;
 use Service\BaseService;
+
+use Service\Knowledge\KnowledgeService;
 
 use Exception\Common\DBInvalidObjectException;
 use Exception\Common\ApiVerifyArgumentTypeErrorException;
@@ -158,7 +161,7 @@ class ActivityScheduleService extends BaseService
             );
         }
         if ($params['is_related_knowledge'] == Constants::YES_VALUE && $params['knowledge_id']) {
-            KnowledgeService::getInstance()->checkKnowledgeById($params['knowledge_id']);
+            KnowledgeService::getInstance()->checkById($params['knowledge_id']);
         }
 
         /** 3. check activity schedule => delete or close old schedule setting  */

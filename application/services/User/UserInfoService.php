@@ -45,7 +45,6 @@ class UserInfoService extends BaseService
 
 #region base func
     /**
-     * @param string $activityCode
      * @param string $accountId
      * @param int $isThrowError
      *

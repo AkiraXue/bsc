@@ -138,13 +138,14 @@ class AddAssetTable extends AbstractMigration
     {
         $table = $this->table(self::TABLE_NAME_ORDER_ITEM, [
             'signed' => false,
-            'comment' => '订单',
+            'comment' => '订单子项',
             'engine' => 'InnoDB',
             'collation' => 'utf8mb4_unicode_ci '
         ]);
 
         $table->addColumn('sku', 'char', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '商品sku'])
             ->addColumn('trade_no', 'char', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '订单编号'])
+            ->addColumn('unique_code', 'char', ['null' => false, 'default' => '', 'length' => 32, 'comment' => '关联唯一码'])
             ->addColumn('type', 'integer', [
                 'null' => false,
                 'default' => 1,
@@ -168,7 +169,8 @@ class AddAssetTable extends AbstractMigration
             ->addColumn('updated_at', 'timestamp', ['null' => false , 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP',  'comment' => '更新时间'])
             ->addIndex(['id'], ['unique' => true, 'name' => 'id'])
             ->addIndex(['sku'], ['name' => 'idx_sku'])
-            ->addIndex(['trade_no'], ['name' => 'idx_trade_noe'])
+            ->addIndex(['trade_no'], ['name' => 'idx_trade_no'])
+            ->addIndex(['unique_code'], ['name' => 'idx_unique_code'])
             ->create();
     }
 

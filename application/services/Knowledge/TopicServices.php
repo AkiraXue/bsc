@@ -1,17 +1,16 @@
 <?php
 /**
- * GroupService.php
+ * TopicServices.php
  *
  * @copyright Copyright (c) 2019 AkiraXue
  * @author akira.xue <18862104333@163.com>
- * @created on 5/16/21 11:18 PM
+ * @created on 5/17/21 12:48 AM
  */
 
-namespace Service\Group;
+namespace Service\Knowledge;
 
 use Exception;
 
-use Lib\Helper;
 use Lib\Constants;
 
 use Service\BaseTrait;
@@ -20,10 +19,10 @@ use Service\BaseService;
 use Exception\Common\DBInvalidObjectException;
 
 /**
- * Class GroupService
- * @package Service
+ * Class TopicServices
+ * @package Service\Knowledge
  */
-class GroupService extends BaseService
+class TopicServices extends BaseService
 {
     use BaseTrait;
 
@@ -44,13 +43,16 @@ class GroupService extends BaseService
     }
 #endregion
 
-#region group module
+#region func
     public function find(array $params)
     {
         $condition = [];
 
-        empty($params['code']) || $condition['code'] = $params['code'];
-        empty($params['name']) || $condition['name'] = $params['name'];
+        empty($params['title']) || $condition['title'] = $params['title'];
+        empty($params['type']) || $condition['type'] = $params['type'];
+
+        empty($params['answer_type']) || $condition['answer_type'] = $params['answer_type'];
+        empty($params['knowledge_id']) || $condition['knowledge_id'] = $params['knowledge_id'];
 
         empty($params['state']) || $condition['state'] = $params['state'];
 
@@ -59,7 +61,7 @@ class GroupService extends BaseService
         $page = !empty($page) ? intval($page) : 1;
         $limit = !empty($limit) ? intval($limit) : 10;
 
-        $data =  IoC()->Group_model->find($condition, $count, $page, $limit);
+        $data =  IoC()->Topic_model->find($condition, $count, $page, $limit);
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
         return [
@@ -71,69 +73,67 @@ class GroupService extends BaseService
 
     /**
      * @param array $params
+     *
      * @return int
      * @throws Exception
      */
     public function save(array $params)
     {
         /** 1. check base params */
-        $necessaryParamArr = ['name'];
+        $necessaryParamArr = ['title', 'type', 'answer_type', 'knowledge_id', 'content'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
         $checkLenLimitList = [
-            'name' => 50,
+            'title' => 50,
+            'answer_type' => 50
         ];
         $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
 
         /** 2. check data */
-        $code = $params['code'] ? $params['code'] : null;
         $state = Constants::YES_VALUE;
         if ($params['state'] && in_array($params['state'], [Constants::YES_VALUE, Constants::NO_VALUE])) {
             $state = $params['state'];
         }
 
-        /** 3. save group info */
-        if ($code) {
-            $group = $this->checkGroupByCode($code);
-            $where = ['code' => $group['code']];
-            $update = [
-                'name'          => $filter['name'],
-                'state'         => $state
-            ];
-            return IoC()->Group_model->_update($where, $update);
+        /** 3. save topic info */
+        $condition = [
+            'title'         => $filter['title'],
+            'type'          => $filter['type'],
+            'answer_type'   => $filter['answer_type'],
+            'knowledge_id'  => $filter['knowledge_id'],
+            'content'       => $filter['content'],
+            'state'         => $state
+        ];
+        if ($params['id']) {
+            $this->checkById($params['id']);
+            $where = ['id' => $params['id']];
+            $update = $condition;
+            return IoC()->Topic_model->_update($where, $update);
         } else {
-            $code = Helper::gen_uuid();
-            $insert = [
-                'code'          => $code,
-                'name'          => $filter['name'],
-                'state'         => $state
-            ];
-            return IoC()->Group_model->_insert($insert);
+            $insert = $condition;
+            return IoC()->Topic_model->_insert($insert);
         }
-
     }
+
 #endregion
 
 #region base func
     /**
-     * @param string  $code
+     * @param integer  $id
      * @param integer $isThrowError
      *
      * @return array
      * @throws Exception
      */
-    public function checkGroupByCode(string $code, $isThrowError=Constants::YES_VALUE)
+    public function checkById(int $id, $isThrowError=Constants::YES_VALUE)
     {
-        $condition = [
-            'code'  => $code,
-        ];
-        $group = IoC()->Group_model->get($condition);
-        if (empty($group)) {
+        $knowledge = IoC()->Topic_model->getByID($id);
+        if (empty($knowledge)) {
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];
             }
-            throw new DBInvalidObjectException('GroupObj', 'group code');
+            throw new DBInvalidObjectException('TopicObj', 'id');
         }
-        return $group;
+        return $knowledge;
     }
 #endregion
 }

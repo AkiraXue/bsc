@@ -59,9 +59,7 @@ class Knowledge_model extends MY_Model
         !empty($params['orderBy']) && $orderBy = $params['orderBy'];
         is_array($orderBy) ? $query->order_by(key($orderBy), current($orderBy)) : $query->order_by($orderBy);
 
-        !empty($params['title']) && $query->where('title', $params['title']);
-        !empty($params['type']) && $query->where_in('type', $params['type']);
-        !empty($params['state']) && $query->where('state', $params['state']);
+        $query = $this->filterQuery($query, $params);
 
         $count = $query->count_all_results('',false);
 

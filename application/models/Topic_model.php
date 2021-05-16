@@ -1,19 +1,19 @@
 <?php
 /**
- * User_model.php
+ * Topic_model.php
  *
  * @copyright Copyright (c) 2019 AkiraXue
  * @author akira.xue <18862104333@163.com>
- * @created on 5/16/21 2:55 PM
+ * @created on 5/16/21 11:55 PM
  */
 
 use Service\BaseModelTrait;
 
-class User_model extends MY_Model
+class Topic_model extends MY_Model
 {
     use BaseModelTrait;
 
-    public $table = 'user';
+    public $table = 'topic';
 
     public function __construct()
     {
@@ -103,14 +103,12 @@ class User_model extends MY_Model
     private function filterQuery(CI_DB_query_builder $query, array $params)
     {
         /** initialize where,group,having,order **/
-        !empty($params['name']) && $query->where('name', $params['name']);
-        !empty($params['account_id']) && $query->where('account_id', $params['account_id']);
-        !empty($params['account_ids']) && $query->where_in('account_id', $params['account_ids']);
-        !empty($params['openid']) && $query->where('openid', $params['openid']);
+        !empty($params['title']) && $query->where('title', $params['title']);
+        !empty($params['type']) && $query->where('type', $params['type']);
 
-        !empty($params['birthday']) && $query->where('birthday', $params['birthday']);
-        !empty($params['phone']) && $query->where('phone', $params['phone']);
-        !empty($params['mobile']) && $query->where('mobile', $params['mobile']);
+        !empty($params['answer_type']) && $query->where('answer_type', $params['answer_type']);
+        !empty($params['knowledge_id']) && $query->where('knowledge_id', $params['knowledge_id']);
+
         !empty($params['state']) && $query->where('state', $params['state']);
 
         return $query;

@@ -1,19 +1,20 @@
 <?php
 /**
- * User_model.php
+ * Asset_model.php
  *
  * @copyright Copyright (c) 2019 AkiraXue
  * @author akira.xue <18862104333@163.com>
- * @created on 5/16/21 2:55 PM
+ * @created on 5/17/21 12:55 AM
  */
+
 
 use Service\BaseModelTrait;
 
-class User_model extends MY_Model
+class Asset_model extends MY_Model
 {
     use BaseModelTrait;
 
-    public $table = 'user';
+    public $table = 'asset';
 
     public function __construct()
     {
@@ -34,6 +35,35 @@ class User_model extends MY_Model
             return $arr[0];
         }
         return [];
+    }
+
+    /**
+     * 查询
+     *
+     * @param array $params
+     *  @params  boolean    isAll           是否取全部
+     *
+     * @return array
+     */
+    public function findOne(array $params)
+    {
+        $selectStr = '*';
+        !empty($params['selectStr']) && $selectStr=$params['selectStr'];
+
+        $query = $this->db->select($selectStr)->from($this->myTable() );
+
+        $orderBy = ['id' => 'asc'];
+        !empty($params['orderBy']) && $orderBy = $params['orderBy'];
+        is_array($orderBy) ? $query->order_by(key($orderBy), current($orderBy)) : $query->order_by($orderBy);
+
+        $query = $this->filterQuery($query, $params);
+
+        $query->limit(1);
+        $result = $query->get()->result_array();
+        if (!count($result)) {
+            return [];
+        }
+        return $result[0];
     }
 
     /**
@@ -103,14 +133,12 @@ class User_model extends MY_Model
     private function filterQuery(CI_DB_query_builder $query, array $params)
     {
         /** initialize where,group,having,order **/
+        !empty($params['unique_code']) && $query->where('unique_code', $params['unique_code']);
         !empty($params['name']) && $query->where('name', $params['name']);
-        !empty($params['account_id']) && $query->where('account_id', $params['account_id']);
-        !empty($params['account_ids']) && $query->where_in('account_id', $params['account_ids']);
-        !empty($params['openid']) && $query->where('openid', $params['openid']);
 
-        !empty($params['birthday']) && $query->where('birthday', $params['birthday']);
-        !empty($params['phone']) && $query->where('phone', $params['phone']);
-        !empty($params['mobile']) && $query->where('mobile', $params['mobile']);
+        !empty($params['source']) && $query->where('source', $params['source']);
+        !empty($params['type']) && $query->where('type', $params['type']);
+
         !empty($params['state']) && $query->where('state', $params['state']);
 
         return $query;
