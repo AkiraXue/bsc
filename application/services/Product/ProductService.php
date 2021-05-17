@@ -1,13 +1,13 @@
 <?php
 /**
- * OrderItemService.php
+ * ProductService.php
  *
  * @copyright Copyright (c) 2019 AkiraXue
  * @author akira.xue <18862104333@163.com>
- * @created on 5/17/21 1:02 AM
+ * @created on 5/17/21 1:45 AM
  */
 
-namespace Service\Order;
+namespace Service\Product;
 
 use Exception;
 
@@ -19,10 +19,10 @@ use Service\BaseService;
 use Exception\Common\DBInvalidObjectException;
 
 /**
- * Class OrderItemService
- * @package Service\Order
+ * Class ProductService
+ * @package Service\Product
  */
-class OrderItemService extends BaseService
+class ProductService extends BaseService
 {
     use BaseTrait;
 
@@ -36,8 +36,8 @@ class OrderItemService extends BaseService
 
     public static function getInstance()
     {
-        if (!self::$instance instanceof self){
-            self::$instance = new self() ;
+        if (!self::$instance instanceof self) {
+            self::$instance = new self();
         }
         return self::$instance;
     }
@@ -49,13 +49,9 @@ class OrderItemService extends BaseService
         $condition = [];
 
         empty($params['sku']) || $condition['sku'] = $params['sku'];
-        empty($params['unique_code']) || $condition['unique_code'] = $params['unique_code'];
-        empty($params['trade_no']) || $condition['trade_no'] = $params['trade_no'];
-
         empty($params['type']) || $condition['type'] = $params['type'];
-
         empty($params['name']) || $condition['name'] = $params['name'];
-
+        empty($params['status']) || $condition['status'] = $params['status'];
         empty($params['state']) || $condition['state'] = $params['state'];
 
         $page = $params['page'];
@@ -63,12 +59,12 @@ class OrderItemService extends BaseService
         $page = !empty($page) ? intval($page) : 1;
         $limit = !empty($limit) ? intval($limit) : 10;
 
-        $data =  IoC()->Order_item_model->find($condition, $count, $page, $limit);
+        $data = IoC()->Product_model->find($condition, $count, $page, $limit);
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
         return [
-            'list'       => $data,
-            'total'      => $count,
+            'list' => $data,
+            'total' => $count,
             'total_page' => $totalPage
         ];
     }
@@ -88,7 +84,7 @@ class OrderItemService extends BaseService
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
         $checkLenLimitList = [
             'unique_code' => 50,
-            'trade_no'    => 50
+            'trade_no' => 50
         ];
         $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
 
@@ -100,25 +96,25 @@ class OrderItemService extends BaseService
 
         /** 3. save topic info */
         $condition = [
-            'sku'           => $filter['sku'],
-            'unique_code'   => $filter['unique_code'],
-            'trade_no'      => $filter['trade_no'],
-            'type'          => $filter['type'],
-            'price'         => $filter['price'],
-            'name'          => $filter['name'],
-            'pic'           => $filter['pic'],
-            'detail'        => $filter['detail'],
-            'remark'        => $filter['remark'],
-            'state'         => $state,
+            'sku' => $filter['sku'],
+            'unique_code' => $filter['unique_code'],
+            'trade_no' => $filter['trade_no'],
+            'type' => $filter['type'],
+            'price' => $filter['price'],
+            'name' => $filter['name'],
+            'pic' => $filter['pic'],
+            'detail' => $filter['detail'],
+            'remark' => $filter['remark'],
+            'state' => $state,
         ];
         if ($params['id']) {
             $this->checkById($params['id']);
             $where = ['id' => $params['id']];
             $update = $condition;
-            return IoC()->Order_item_model->_update($where, $update);
+            return IoC()->Product_model->_update($where, $update);
         } else {
             $insert = $condition;
-            return IoC()->Order_item_model->_insert($insert);
+            return IoC()->Product_model->_insert($insert);
         }
     }
 
@@ -131,24 +127,22 @@ class OrderItemService extends BaseService
     public function batchSave(array $params)
     {
         /** 1. check base params & group_code */
-        $filter = $this->checkOrderItemEntryApiArgument($params);
-
-        OrderService::getInstance()->checkOrderByTradeNo($filter['trade_no']);
+        $filter = $this->checkProductEntryApiArgument($params);
 
         /** 2. get update & insert & delete data list */
         $skus = array_column($filter['item_list'], 'sku');
         $delCondition = [
             'no_skus' => $skus,
-            'isAll'   => Constants::YES_VALUE
+            'isAll' => Constants::YES_VALUE
         ];
-        $deleteItemList =  IoC()->Order_item_model->find($delCondition, $count);
+        $deleteItemList = IoC()->Product_model->find($delCondition, $count);
         $deleteIds = array_column($deleteItemList, 'id');
 
         $oldCondition = [
-            'skus'  => $skus,
-            'isAll'         => Constants::YES_VALUE
+            'skus' => $skus,
+            'isAll' => Constants::YES_VALUE
         ];
-        $oldItemList = IoC()->Order_item_model->find($oldCondition, $count);
+        $oldItemList = IoC()->Product_model->find($oldCondition, $count);
         $oldItemList = array_column($oldItemList, null, 'sku');
 
         $addList = [];
@@ -165,14 +159,14 @@ class OrderItemService extends BaseService
 
         /** 3. update & insert & delete data */
         if (is_array($deleteIds) && count($deleteIds) > 0) {
-            IoC()->Order_item_model->batchDelete($deleteIds);
+            IoC()->Product_model->batchDelete($deleteIds);
         }
         if (is_array($updateList) && count($updateList) > 0) {
-            IoC()->Order_item_model->batchUpdate($updateList);
+            IoC()->Product_model->batchUpdate($updateList);
         }
 
         if (is_array($addList) && count($addList) > 0) {
-            IoC()->Order_item_model->batchAdd($addList);
+            IoC()->Product_model->batchAdd($addList);
         }
 
         return true;
@@ -182,49 +176,47 @@ class OrderItemService extends BaseService
 
 #region base func
     /**
-     * @param integer  $id
+     * @param integer $id
      * @param integer $isThrowError
      *
      * @return array
      * @throws Exception
      */
-    public function checkById(int $id, $isThrowError=Constants::YES_VALUE)
+    public function checkById(int $id, $isThrowError = Constants::YES_VALUE)
     {
-        $knowledge = IoC()->Knowledge_model->getByID($id);
-        if (empty($knowledge)) {
+        $product = IoC()->Product_model->getByID($id);
+        if (empty($product)) {
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];
             }
-            throw new DBInvalidObjectException('OrderItemObj', 'id');
+            throw new DBInvalidObjectException('ProductObj', 'id');
         }
-        return $knowledge;
+        return $product;
     }
 
     /**
-     * @param string  $tradeNo
-     * @param string  $sku
+     * @param string $sku
      * @param integer $isThrowError
      *
      * @return array
      * @throws Exception
      */
-    public function checkOrderByTradeNoAndSku(
-        string $tradeNo,
+    public function checkBySku(
         string $sku,
-        $isThrowError=Constants::YES_VALUE
-    ) {
+        $isThrowError = Constants::YES_VALUE
+    )
+    {
         $condition = [
-            'trade_no'  => $tradeNo,
-            'sku'       => $sku,
+            'sku' => $sku,
         ];
-        $orderItem = IoC()->Order_item_model->get($condition);
-        if (empty($orderItem)) {
+        $product = IoC()->Product_model->get($condition);
+        if (empty($product)) {
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];
             }
-            throw new DBInvalidObjectException('OrderItemObj', 'trade_no & sku');
+            throw new DBInvalidObjectException('ProductObj', 'sku');
         }
-        return $orderItem;
+        return $product;
     }
 
     /**
@@ -233,16 +225,16 @@ class OrderItemService extends BaseService
      *
      * @throws Exception
      */
-    public function checkOrderItemEntryApiArgument($params)
+    public function checkProductEntryApiArgument($params)
     {
-        $necessaryParamArr = ['trade_no', 'item_list'];
+        $necessaryParamArr = ['item_list'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
 
-        $necessaryParamArr = ['sku', 'unique_code', 'type', 'price', 'name', 'pic', 'detail', 'remark'];
+        $necessaryParamArr = ['sku', 'type', 'price', 'name', 'pic', 'detail', 'remark'];
         $checkLenLimitList = [
-            'sku'         => 50,
-            'unique_code' => 50,
-            'name'        => 50,
+            'sku'  => 50,
+            'pic'  => 254,
+            'name' => 50,
         ];
         $this->checkArrayParamArgItem($params['item_list'], $necessaryParamArr, $checkLenLimitList);
 

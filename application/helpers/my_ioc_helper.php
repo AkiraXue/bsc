@@ -81,6 +81,7 @@ class IoCMgr
  * @property User_model             $User_model
  *
  * @property Asset_model            $Asset_model
+ * @property Product_model          $Product_model
  *
  * @property Order_model            $Order_model
  * @property Order_item_model       $Order_item_model
@@ -97,23 +98,24 @@ class HisIoCMgr extends IoCMgr
         parent::__construct();
 
         /* register module */
-        $this->registerModel('Activity_model', 'Activity_model');
-        $this->registerModel('Activity_schedule_model', 'Activity_schedule_model');
-        $this->registerModel('Activity_participate_schedule_model', 'Activity_participate_schedule_model');
-        $this->registerModel('Activity_participate_record_model', 'Activity_participate_record_model');
+        $this->registerModel('Activity_model', 'Activity/Activity_model');
+        $this->registerModel('Activity_schedule_model', 'Activity/Activity_schedule_model');
+        $this->registerModel('Activity_participate_schedule_model', 'Activity/Activity_participate_schedule_model');
+        $this->registerModel('Activity_participate_record_model', 'Activity/Activity_participate_record_model');
 
-        $this->registerModel('Topic_model', 'Topic_model');
-        $this->registerModel('Knowledge_model', 'Knowledge_model');
+        $this->registerModel('Topic_model', 'Knowledge/Topic_model');
+        $this->registerModel('Knowledge_model', 'Knowledge/Knowledge_model');
 
-        $this->registerModel('Group_model', 'Group_model');
-        $this->registerModel('Group_item_model', 'Group_item_model');
+        $this->registerModel('Group_model', 'Group/Group_model');
+        $this->registerModel('Group_item_model', 'Group/Group_item_model');
 
-        $this->registerModel('User_model', 'User_model');
+        $this->registerModel('Product_model', 'Product/Product_model');
+
+        $this->registerModel('Order_model', 'Order/Order_model');
+        $this->registerModel('Order_item_model', 'Order/Order_item_model');
 
         $this->registerModel('Asset_model', 'Asset_model');
-
-        $this->registerModel('Order_model', 'Order_model');
-        $this->registerModel('Order_item_model', 'Order_item_model');
+        $this->registerModel('User_model', 'User_model');
 
         /* library */
     }

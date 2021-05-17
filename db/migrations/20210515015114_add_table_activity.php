@@ -9,7 +9,7 @@ class AddTableActivity extends AbstractMigration
     const TABLE_NAME_ACTIVITY= 'activity';
     const TABLE_NAME_ACTIVITY_SCHEDULE = 'activity_schedule';
 
-    const TABLE_NAME_ACTIVITY_PARTICIPATE_SCHEDULE= 'Activity_participate_schedule';
+    const TABLE_NAME_ACTIVITY_PARTICIPATE_SCHEDULE= 'activity_participate_schedule';
     const TABLE_NAME_ACTIVITY_PARTICIPATE_RECORD = 'activity_participate_record';
 
     public function up()

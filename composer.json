@@ -21,7 +21,8 @@
 	"require": {
 		"php": ">=7.1",
 		"robmorgan/phinx": "^0.12.6",
-		"ext-json": "*"
+		"ext-json": "*",
+		"overtrue/wechat": "~4.0"
     },
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

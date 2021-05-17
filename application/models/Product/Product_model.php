@@ -1,19 +1,21 @@
 <?php
 /**
- * Asset_model.php
+ * Product_model.php
  *
  * @copyright Copyright (c) 2019 AkiraXue
  * @author akira.xue <18862104333@163.com>
- * @created on 5/17/21 12:55 AM
+ * @created on 5/17/21 1:49 AM
  */
+
+use Lib\Constants;
 
 use Service\BaseModelTrait;
 
-class Asset_model extends MY_Model
+class Product_model extends MY_Model
 {
     use BaseModelTrait;
 
-    public $table = 'asset';
+    public $table = 'product';
 
     public function __construct()
     {
@@ -34,6 +36,56 @@ class Asset_model extends MY_Model
             return $arr[0];
         }
         return [];
+    }
+
+    /**
+     * 批量添加
+     *
+     * @param $list
+     *
+     * @return int
+     */
+    public function batchAdd($list)
+    {
+        $data = [];
+        foreach ($list as $item) {
+            $data[] = [
+                'sku'           => $item['sku'],
+                'type'          => $item['type'],
+                'name'          => $item['name'],
+                'pic'           => $item['pic'],
+                'price'         => $item['price'],
+                'detail'        => $item['detail'],
+                'remark'        => $item['remark'],
+                'status'        => $item['status'],
+                'state'         => $item['state'] ?: Constants::YES_VALUE
+            ];
+        }
+        return $this->db->insert_batch($this->myTable(), $data);
+    }
+
+    /**
+     * 批量更新
+     *
+     * @param $list
+     *
+     * @return int
+     */
+    public function batchUpdate($list)
+    {
+        return $this->db->update_batch($this->myTable(), $list, 'id');
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param $idList
+     *
+     * @return int
+     */
+    public function batchDelete($idList)
+    {
+        return $this->db->where_in('id', $idList)->delete($this->myTable());
     }
 
     /**
@@ -132,14 +184,14 @@ class Asset_model extends MY_Model
     private function filterQuery(CI_DB_query_builder $query, array $params)
     {
         /** initialize where,group,having,order **/
-        !empty($params['unique_code']) && $query->where('unique_code', $params['unique_code']);
-        !empty($params['name']) && $query->where('name', $params['name']);
-
-        !empty($params['source']) && $query->where('source', $params['source']);
+        !empty($params['sku']) && $query->where('sku', $params['sku']);
         !empty($params['type']) && $query->where('type', $params['type']);
-
+        !empty($params['name']) && $query->where('name', $params['name']);
+        !empty($params['status']) && $query->where('status', $params['status']);
         !empty($params['state']) && $query->where('state', $params['state']);
 
         return $query;
     }
 }
+
+

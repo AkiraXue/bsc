@@ -97,26 +97,26 @@ class ActivityScheduleService extends BaseService
             'activity_code' => $params['activity_code'],
             'isAll'         => Constants::YES_VALUE
         ];
-        $deleteActivityScheduleList =  IoC()->Activity_schedule_model->find($delCondition, $count);
-        $deleteIds = array_column($deleteActivityScheduleList, 'id');
+        $deleteItemList =  IoC()->Activity_schedule_model->find($delCondition, $count);
+        $deleteIds = array_column($deleteItemList, 'id');
 
         $oldCondition = [
             'days'          => $days,
             'activity_code' => $params['activity_code'],
             'isAll'         => Constants::YES_VALUE
         ];
-        $oldActivityScheduleList = IoC()->Activity_schedule_model->find($oldCondition, $count);
-        $oldActivityScheduleList = array_column($oldActivityScheduleList, null, 'day');
+        $oldItemList = IoC()->Activity_schedule_model->find($oldCondition, $count);
+        $oldItemList = array_column($oldItemList, null, 'day');
 
         $addList = [];
         $updateList = [];
-        foreach ($filter['schedule_list'] as $schedule) {
-            if (array_key_exists($schedule['day'], $oldActivityScheduleList)) {
-                $schedule['id'] = $oldActivityScheduleList[$schedule['day']]['id'];
-                $updateList[] = $schedule;
+        foreach ($filter['schedule_list'] as $item) {
+            if (array_key_exists($item['day'], $oldItemList)) {
+                $item['id'] = $oldItemList[$item['day']]['id'];
+                $updateList[] = $item;
             } else {
-                $schedule['activity_code'] = $params['activity_code'];
-                $addList[] = $schedule;
+                $item['activity_code'] = $params['activity_code'];
+                $addList[] = $item;
             }
         }
 

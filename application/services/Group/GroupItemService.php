@@ -132,25 +132,25 @@ class GroupItemService extends BaseService
             'no_unique_codes' => $uniqueCodes,
             'isAll'           => Constants::YES_VALUE
         ];
-        $deleteGroupItemList =  IoC()->Group_item_model->find($delCondition, $count);
-        $deleteIds = array_column($deleteGroupItemList, 'id');
+        $deleteItemList =  IoC()->Group_item_model->find($delCondition, $count);
+        $deleteIds = array_column($deleteItemList, 'id');
 
         $oldCondition = [
             'unique_codes'  => $uniqueCodes,
             'isAll'         => Constants::YES_VALUE
         ];
-        $oldGroupItemList = IoC()->Group_item_model->find($oldCondition, $count);
-        $oldGroupItemList = array_column($oldGroupItemList, null, 'unique_code');
+        $oldItemList = IoC()->Group_item_model->find($oldCondition, $count);
+        $oldItemList = array_column($oldItemList, null, 'unique_code');
 
         $addList = [];
         $updateList = [];
-        foreach ($filter['item_list'] as $groupItem) {
-            if (array_key_exists($groupItem['unique_code'], $oldGroupItemList)) {
-                $groupItem['id'] = $oldGroupItemList[$groupItem['unique_code']]['id'];
-                $updateList[] = $groupItem;
+        foreach ($filter['item_list'] as $item) {
+            if (array_key_exists($item['unique_code'], $oldItemList)) {
+                $item['id'] = $oldItemList[$item['unique_code']]['id'];
+                $updateList[] = $item;
             } else {
-                $groupItem['group_code'] = $params['group_code'];
-                $addList[] = $groupItem;
+                $item['group_code'] = $params['group_code'];
+                $addList[] = $item;
             }
         }
 
