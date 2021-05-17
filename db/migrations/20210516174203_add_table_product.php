@@ -42,8 +42,8 @@ class AddTableProduct extends AbstractMigration
             ->addColumn('name', 'string', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '商品名称'])
             ->addColumn('pic', 'string', ['null' => false, 'default' => '', 'length' => 254, 'comment' => '商品图片'])
             ->addColumn('price', 'decimal', ['precision' => '10', 'scale' => '2', 'comment' => '商品价格', 'default' => '1'])
-            ->addColumn('detail', 'text', ['null' => false, 'default' => '', 'comment' => '商品详情'])
-            ->addColumn('remark', 'text', ['null' => false, 'default' => '', 'comment' => '商品备注'])
+            ->addColumn('detail', 'text', ['null' => false, 'comment' => '商品详情'])
+            ->addColumn('remark', 'text', ['null' => false, 'comment' => '商品备注'])
             ->addColumn('state', 'integer', [
                 'null' => false,
                 'default' => 1,

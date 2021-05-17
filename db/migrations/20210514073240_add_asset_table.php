@@ -109,7 +109,7 @@ class AddAssetTable extends AbstractMigration
                 'signed' => false,
                 'comment' => '状态 1-创建未付款 2-创建已付款，未发货 3-已付款，未收货 4.已付款，已收货 5. 订单失败'
             ])
-            ->addColumn('remark', 'text', ['null' => false, 'default' => '', 'comment' => '订单备注'])
+            ->addColumn('remark', 'text', ['null' => false,  'comment' => '订单备注'])
             ->addColumn('state', 'integer', [
                 'null' => false,
                 'default' => 1,
@@ -156,8 +156,8 @@ class AddAssetTable extends AbstractMigration
             ->addColumn('price', 'decimal', ['precision' => '10', 'scale' => '2', 'comment' => '订单总价', 'default' => '1'])
             ->addColumn('name', 'string', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '商品名称'])
             ->addColumn('pic', 'string', ['null' => false, 'default' => '', 'length' => 254, 'comment' => '商品图片'])
-            ->addColumn('detail', 'text', ['null' => false, 'default' => '', 'comment' => '商品详情'])
-            ->addColumn('remark', 'text', ['null' => false, 'default' => '', 'comment' => '商品备注'])
+            ->addColumn('detail', 'text', ['null' => false, 'comment' => '商品详情'])
+            ->addColumn('remark', 'text', ['null' => false, 'comment' => '商品备注'])
             ->addColumn('state', 'integer', [
                 'null' => false,
                 'default' => 1,

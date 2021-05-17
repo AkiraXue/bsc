@@ -50,7 +50,7 @@ class AddTablePrizeContest extends AbstractMigration
             ->addColumn('entry_num', 'integer', ['null' => false, 'default' => 3, 'signed' => false, 'comment' => '每日参与名额'])
             ->addColumn('topic_num', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '题库数目'])
             ->addColumn('pic', 'string', ['null' => false, 'default' => '', 'length' => 254, 'comment' => '图片地址'])
-            ->addColumn('remark', 'text', ['null' => false, 'default' => '','comment' => '内容备注'])
+            ->addColumn('remark', 'text', ['null' => false, 'comment' => '内容备注'])
             ->addColumn('is_asset_award_section', 'integer', [
                 'null' => false,
                 'default' => 1,
@@ -150,7 +150,7 @@ class AddTablePrizeContest extends AbstractMigration
                 'signed' => false,
                 'comment' => '状态 1-正常 2-关闭'
             ])
-            ->addColumn('problem_set', 'text', ['null' => false, 'default' => '','comment' => '题集- topic id集合 - json'])
+            ->addColumn('problem_set', 'text', ['null' => false, 'comment' => '题集- topic id集合 - json'])
             ->addColumn('created_at', 'timestamp', ['null' => false , 'default' => 'CURRENT_TIMESTAMP', 'update' => '', 'comment' => '创建时间'])
             ->addColumn('updated_at', 'timestamp', ['null' => false , 'default' => 'CURRENT_TIMESTAMP', 'update' => 'CURRENT_TIMESTAMP',  'comment' => '更新时间'])
             ->addIndex(['id'], ['unique' => true, 'name' => 'id'])

@@ -39,7 +39,7 @@ class AddTableKnowledge extends AbstractMigration
         $table->addColumn('title', 'char', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '标题'])
             ->addColumn('type', 'string', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '类型 - 视频 - video，图片 - pic， 图文 - graphic，文案 - text'])
             ->addColumn('pic', 'string', ['null' => false, 'default' => '', 'length' => 254, 'comment' => '图片地址'])
-            ->addColumn('content', 'text', ['null' => false, 'default' => '','comment' => '内容'])
+            ->addColumn('content', 'text', ['null' => false, 'comment' => '内容'])
             ->addColumn('state', 'integer', [
                 'null' => false,
                 'default' => 1,
@@ -75,7 +75,7 @@ class AddTableKnowledge extends AbstractMigration
             ->addColumn('type', 'string', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '类型: 视频 - video，图片 - pic， 图文 - graphic，文案 - text'])
             ->addColumn('answer_type', 'string', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '答题方式: 阅读-read 上传-upload 选择-choice'])
             ->addColumn('knowledge_id', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '知识点id'])
-            ->addColumn('content', 'text', ['null' => false, 'default' => '','comment' => '题目内容 - json'])
+            ->addColumn('content', 'text', ['null' => false, 'comment' => '题目内容 - json'])
             ->addColumn('state', 'integer', [
                 'null' => false,
                 'default' => 1,
