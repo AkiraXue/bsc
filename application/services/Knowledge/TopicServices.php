@@ -44,10 +44,16 @@ class TopicServices extends BaseService
 #endregion
 
 #region func
+    public function randomTopic($num)
+    {
+        return IoC()->Topic_model->random_topic($num);
+    }
+
     public function find(array $params)
     {
         $condition = [];
 
+        empty($params['ids']) || $condition['ids'] = $params['ids'];
         empty($params['title']) || $condition['title'] = $params['title'];
         empty($params['type']) || $condition['type'] = $params['type'];
 
@@ -62,6 +68,10 @@ class TopicServices extends BaseService
         $limit = !empty($limit) ? intval($limit) : 10;
 
         $data =  IoC()->Topic_model->find($condition, $count, $page, $limit);
+        foreach ($data as &$item) {
+            $item['content'] = json_decode($item['content'], true);
+        }
+
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
         return [
@@ -88,19 +98,25 @@ class TopicServices extends BaseService
         ];
         $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
 
-        /** 2. check data */
+        /** 2. check topic content */
+        if (!isset($params['content']['list']) && $params['content']['answer_num'] ) {
+            throw new Exception('content format not correct', 3001);
+        }
+
+        /** 3. check data */
         $state = Constants::YES_VALUE;
         if ($params['state'] && in_array($params['state'], [Constants::YES_VALUE, Constants::NO_VALUE])) {
             $state = $params['state'];
         }
+        KnowledgeService::getInstance()->checkById($filter['knowledge_id']);
 
-        /** 3. save topic info */
+        /** 4. save topic info */
         $condition = [
             'title'         => $filter['title'],
             'type'          => $filter['type'],
             'answer_type'   => $filter['answer_type'],
             'knowledge_id'  => $filter['knowledge_id'],
-            'content'       => $filter['content'],
+            'content'       => json_encode($filter['content'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
             'state'         => $state
         ];
         if ($params['id']) {
@@ -126,14 +142,15 @@ class TopicServices extends BaseService
      */
     public function checkById(int $id, $isThrowError=Constants::YES_VALUE)
     {
-        $knowledge = IoC()->Topic_model->getByID($id);
-        if (empty($knowledge)) {
+        $topic = IoC()->Topic_model->getByID($id);
+        if (empty($topic)) {
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];
             }
             throw new DBInvalidObjectException('TopicObj', 'id');
         }
-        return $knowledge;
+        $topic['content'] = json_decode($topic['content'], true);
+        return $topic;
     }
 #endregion
 }

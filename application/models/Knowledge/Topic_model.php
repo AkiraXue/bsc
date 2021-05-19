@@ -37,6 +37,20 @@ class Topic_model extends MY_Model
     }
 
     /**
+     * @param $num
+     * @return array
+     */
+    public function random_topic($num)
+    {
+       $sql = "SELECT * FROM " . $this->table . " ORDER BY RAND() LIMIT ".$num;
+       $result = $this->db->query($sql)->result_array();
+        if (!count($result)) {
+            return [];
+        }
+        return $result;
+    }
+
+    /**
      * 查询
      *
      * @param array $params
@@ -103,7 +117,9 @@ class Topic_model extends MY_Model
     private function filterQuery(CI_DB_query_builder $query, array $params)
     {
         /** initialize where,group,having,order **/
-        !empty($params['title']) && $query->where('title', $params['title']);
+        !empty($params['ids']) && $query->where_in('id', $params['ids']);
+        !empty($params['title']) && $query->like('title', $params['title']);
+
         !empty($params['type']) && $query->where('type', $params['type']);
 
         !empty($params['answer_type']) && $query->where('answer_type', $params['answer_type']);

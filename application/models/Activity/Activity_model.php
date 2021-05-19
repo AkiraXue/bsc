@@ -36,6 +36,36 @@ class Activity_model extends MY_Model
         return [];
     }
 
+
+    /**
+     * 查询
+     *
+     * @param array $params
+     *  @params  boolean    isAll           是否取全部
+     *
+     * @return array
+     */
+    public function findOne(array $params)
+    {
+        $selectStr = '*';
+        !empty($params['selectStr']) && $selectStr=$params['selectStr'];
+
+        $query = $this->db->select($selectStr)->from($this->myTable() );
+
+        $orderBy = ['id' => 'asc'];
+        !empty($params['orderBy']) && $orderBy = $params['orderBy'];
+        is_array($orderBy) ? $query->order_by(key($orderBy), current($orderBy)) : $query->order_by($orderBy);
+
+        $query = $this->filterQuery($query, $params);
+
+        $query->limit(1);
+        $result = $query->get()->result_array();
+        if (!count($result)) {
+            return [];
+        }
+        return $result[0];
+    }
+
     /**
      * 查询
      *

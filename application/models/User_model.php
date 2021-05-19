@@ -103,8 +103,18 @@ class User_model extends MY_Model
     private function filterQuery(CI_DB_query_builder $query, array $params)
     {
         /** initialize where,group,having,order **/
+        !empty($params['nameLike']) && $query->like('name', $params['nameLike']);
+        !empty($params['nicknameLike']) && $query->like('nickname', $params['nicknameLike']);
+
         !empty($params['name']) && $query->where('name', $params['name']);
-        !empty($params['account_id']) && $query->where('account_id', $params['account_id']);
+
+        !empty($params['nickname']) && $query->where('nickname', $params['nickname']);
+
+        !empty($params['account_id']) && !is_array($params['account_id']) &&
+            $query->where('account_id', $params['account_id']);
+        !empty($params['account_id']) && is_array($params['account_id']) &&
+            $query->where_in('account_id', $params['account_id']);
+
         !empty($params['account_ids']) && $query->where_in('account_id', $params['account_ids']);
         !empty($params['openid']) && $query->where('openid', $params['openid']);
 

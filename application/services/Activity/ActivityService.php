@@ -45,6 +45,23 @@ class ActivityService extends BaseService
 #endregion
 
 #region func
+    /**
+     * 获取当前活动
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    public function getCurrentActivity()
+    {
+        $activity =  IoC()->Activity_model->findOne(['state' => Constants::YES_VALUE]);
+        if (empty($activity) || !isset($activity['id'])) {
+            throw new Exception('current default activity not exist', 3001);
+        }
+        return $activity;
+    }
+
+
     public function find(array $params)
     {
         $condition = [];
@@ -120,6 +137,24 @@ class ActivityService extends BaseService
             ];
             return IoC()->Activity_model->_insert($insert);
         }
+    }
+
+    /**
+     * @param array $params
+     * @return int
+     * @throws Exception
+     */
+    public function toggle(array $params)
+    {
+        /** 1. check base params */
+        $necessaryParamArr = ['code'];
+        $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
+
+        /** 2. check activity */
+        $activity = $this->checkActivityByCode($filter['code']);
+
+        $state = $activity['state'] == Constants::YES_VALUE ? Constants::NO_VALUE : Constants::YES_VALUE;
+        return IoC()->Activity_model->_update(['code' => $filter['code']], ['state' => $state]);
     }
 
 #endregion

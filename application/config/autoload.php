@@ -58,7 +58,8 @@ $autoload['packages'] = array();
 |
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
-$autoload['libraries'] = array();
+$autoload['libraries'] = [
+];
 
 /*
 | -------------------------------------------------------------------
@@ -79,7 +80,9 @@ $autoload['libraries'] = array();
 |	$autoload['drivers'] = array('cache' => 'cch');
 |
 */
-$autoload['drivers'] = array();
+$autoload['drivers'] = [
+    'session'
+];
 
 /*
 | -------------------------------------------------------------------
@@ -89,7 +92,11 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = ['my_ioc_helper'];
+$autoload['helper'] = [
+    'my_ioc_helper',
+    'url',
+    'file'
+];
 
 /*
 | -------------------------------------------------------------------

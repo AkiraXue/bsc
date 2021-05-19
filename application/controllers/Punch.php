@@ -7,3 +7,51 @@
  * @created on 5/16/21 3:16 PM
  */
 
+use Lib\Constants;
+
+use Service\Punch\PunchService;
+
+/**
+ * Class Punch
+ */
+class Punch extends MY_Controller
+{
+#region init
+    public function __construct()
+    {
+        parent::__construct();
+    }
+#endregion
+
+#punch punch info
+    /**
+     * @throws Exception
+     */
+    public function getConfig()
+    {
+        $data = $this->input->post(null, true);
+        $date = date('Y-m-d');
+        $result = PunchService::getInstance()->getConfig($this->accountId);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function record()
+    {
+        $result = PunchService::getInstance()->punch($this->accountId);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function knowledge()
+    {
+        $result = PunchService::getInstance()->knowledge($this->accountId);
+        $this->_success($result);
+    }
+
+#endregion
+}

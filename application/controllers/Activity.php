@@ -60,6 +60,16 @@ class Activity extends MY_Controller
         $result = ActivityService::getInstance()->find($data);
         $this->_success($result);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function toggle()
+    {
+        $data = $this->input->post(null, true);
+        $result = ActivityService::getInstance()->toggle($data);
+        $this->_success($result);
+    }
 #endregion
 
 #region activity schedule

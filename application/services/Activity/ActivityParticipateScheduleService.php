@@ -48,6 +48,8 @@ class ActivityParticipateScheduleService extends BaseService
 #region func
     /**
      * @param array $params
+     *
+     * @return mixed
      * @throws Exception
      */
     public function save(array $params)
@@ -63,11 +65,10 @@ class ActivityParticipateScheduleService extends BaseService
 
         /** 2. check activity_code && account_id */
         ActivityService::getInstance()->checkActivityByCode($filter['activity_code']);
-
         UserInfoService::getInstance()->checkByAccountId($filter['account_id']);
 
         /** 3. check old data */
-        $oldAccountIdDataRecord = $this->checkByAccountId($filter['account_id']);
+        $oldAccountIdDataRecord = $this->checkByAccountId($filter['account_id'], Constants::NO_VALUE);
         if (!empty($oldAccountIdDataRecord) && isset($oldAccountIdDataRecord['id'])) {
             throw new DBObjectHasExistException('account_id', 'activityParticipateScheduleObj');
         }
@@ -78,8 +79,7 @@ class ActivityParticipateScheduleService extends BaseService
             'account_id'    => $filter['account_id'],
             'state'         => Constants::YES_VALUE
         ];
-        IoC()->Activity_participate_schedule_model->_insert($insert);
-
+        return IoC()->Activity_participate_schedule_model->_insert($insert);
     }
 
     /**
@@ -150,6 +150,7 @@ class ActivityParticipateScheduleService extends BaseService
     ) {
         $condition = [
             'account_id'     => $accountId,
+            'state'          => Constants::YES_VALUE,
         ];
         $activityParticipateSchedule = IoC()->Activity_participate_schedule_model->get($condition);
         if (empty($activityParticipateSchedule)) {
@@ -159,6 +160,29 @@ class ActivityParticipateScheduleService extends BaseService
             throw new DBInvalidObjectException('ActivityParticipateScheduleObj', 'account_id');
         }
         return $activityParticipateSchedule;
+    }
+
+
+    /**
+     * @param string $accountId
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function initByAccountId(string $accountId) {
+        $condition = [
+            'account_id'     => $accountId,
+            'state'          => Constants::YES_VALUE
+        ];
+        $activityParticipateSchedule = IoC()->Activity_participate_schedule_model->get($condition);
+        if (!empty($activityParticipateSchedule)) {
+            return [];
+           // throw new Exception('current schedule has exist', 3001);
+        }
+
+        $activity = ActivityService::getInstance()->getCurrentActivity();
+
+        return $this->save(['activity_code' => $activity['code'], 'account_id' => $accountId]);
     }
 #endregion
 

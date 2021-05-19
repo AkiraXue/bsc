@@ -7,6 +7,8 @@
  * @created on 5/15/21 11:59 AM
  */
 
+use Service\PrizeContest\PrizeContestRecordItemService;
+
 /**
  * Class Test
  */
@@ -19,6 +21,7 @@ class Test extends MY_Controller
 
     public function index()
     {
-        $this->_success('test');
+        $list = PrizeContestRecordItemService::getInstance()->refreshProblemSet(7);
+        $this->_success($list);
     }
 }

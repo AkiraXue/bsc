@@ -12,9 +12,9 @@ use Lib\Constants;
 use Service\Product\ProductService;
 
 /**
- * Class Topic
+ * Class Product
  */
-class Topic extends MY_Controller
+class Product extends MY_Controller
 {
 #region init
     public function __construct()

@@ -103,6 +103,7 @@ class Knowledge_model extends MY_Model
     private function filterQuery(CI_DB_query_builder $query, array $params)
     {
         /** initialize where,group,having,order **/
+        !empty($params['ids']) && $query->where_in('id', $params['ids']);
         !empty($params['title']) && $query->where('title', $params['title']);
         !empty($params['type']) && $query->where_in('type', $params['type']);
         !empty($params['state']) && $query->where('state', $params['state']);

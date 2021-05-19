@@ -16,7 +16,7 @@ class Activity_participate_schedule_model extends MY_Model
 {
     use BaseModelTrait;
 
-    public $table = 'Activity_participate_schedule';
+    public $table = 'activity_participate_schedule';
 
     public function __construct()
     {

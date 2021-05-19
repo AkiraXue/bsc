@@ -46,13 +46,7 @@ class AddAssetTable extends AbstractMigration
         $table->addColumn('unique_code', 'char', ['null' => false, 'default' => '', 'length' => 32, 'comment' => '关联唯一码'])
             ->addColumn('name', 'char', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '资产名称'])
             ->addColumn('source', 'char', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '资产来源 - string'])
-            ->addColumn('type', 'integer', [
-                'null' => false,
-                'default' => 1,
-                'limit' => MysqlAdapter::INT_TINY,
-                'signed' => false,
-                'comment' => '资产类型 1-个人积分 2-组别积分 3-实体资金'
-            ])
+            ->addColumn('type', 'char', ['null' => false, 'default' => 'jifen', 'length' => 50, 'comment' => '资产类型 jifen-个人积分 group_jifen-组别积分'])
             ->addColumn('total', 'decimal', ['precision' => '10', 'scale' => '2', 'comment' => '总数', 'default' => '1'])
             ->addColumn('used', 'decimal', ['precision' => '10', 'scale' => '2', 'comment' => '已用', 'default' => '1'])
             ->addColumn('remaining', 'decimal', ['precision' => '10', 'scale' => '2', 'comment' => '剩余', 'default' => '1'])

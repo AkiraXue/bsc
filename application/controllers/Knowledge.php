@@ -44,17 +44,50 @@ class Knowledge extends MY_Controller
         $data = $this->input->post(null, true);
         $necessaryParamArr = ['id'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $data, true);
-        $result = KnowledgeService::getInstance()->checkById($filter['id'], Constants::NO_VALUE);
+        $result = KnowledgeService::getInstance()->getById($filter['id']);
         $this->_success($result);
     }
 
     /**
      * 搜索
+     *  @throws Exception
      */
     public function find()
     {
         $data = $this->input->post(null, true);
         $result = KnowledgeService::getInstance()->find($data);
+        $this->_success($result);
+    }
+#endregion
+
+#region function api
+    /**
+     * @throws Exception
+     */
+    public function banner()
+    {
+        $data = $this->input->post(null, true);
+        $result = KnowledgeService::getInstance()->banner($data);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function guide()
+    {
+        $data = $this->input->post(null, true);
+        $result = KnowledgeService::getInstance()->guide($data);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function findByTagId()
+    {
+        $data = $this->input->post(null, true);
+        $result = KnowledgeService::getInstance()->findByTagId($data);
         $this->_success($result);
     }
 #endregion
