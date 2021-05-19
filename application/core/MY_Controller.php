@@ -159,7 +159,6 @@ class MY_Controller extends CI_Controller
      */
     protected function checkCors()
     {
-        return true;
         $frontHosts = [];
         $frontUrl = $_SERVER['APPLICATION_FRONT'];
         $frontUrl = json_decode(base64_decode($frontUrl));
