@@ -162,8 +162,6 @@ class MY_Controller extends CI_Controller
         $this->output->set_header("Access-Control-Allow-Origin:{$_SERVER['HTTP_ORIGIN']}");
         $this->output->set_header("Access-Control-Allow-Credentials:true");
         $this->output->set_header("Access-Control-Allow-Methods:POST,GET,PUT,DELETE,HEAD ");
-        $this->output->set_header("Access-Control-Allow-Headers:{$_SERVER['Access-Control-Allow-Headers']}");
-        $this->output->set_header("Access-Control-Max-Age:86400");
 
 //        $frontHosts = [];
 //        $frontUrl = $_SERVER['APPLICATION_FRONT'];
