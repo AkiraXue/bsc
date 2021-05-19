@@ -159,31 +159,37 @@ class MY_Controller extends CI_Controller
      */
     protected function checkCors()
     {
-        $frontHosts = [];
-        $frontUrl = $_SERVER['APPLICATION_FRONT'];
-        $frontUrl = json_decode(base64_decode($frontUrl));
-        $origin = str_replace(['http://', 'https://', '/'], '', $_SERVER['HTTP_ORIGIN']);
-        if (!empty($frontUrl)) {
-            foreach ($frontUrl as $item) {
-                $host = parse_url($item);
-                $host['host'] && $frontHosts[] = $host['host'];
-            }
-        }
-        if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
-            if (in_array($origin, $frontHosts)) {
-                $this->output->set_header("Access-Control-Allow-Origin:{$_SERVER['HTTP_ORIGIN']}");
-                $this->output->set_header("Access-Control-Allow-Credentials:true");
-                $this->output->set_header("Access-Control-Allow-Methods:POST,GET,PUT,DELETE,HEAD ");
-                $this->output->set_header("Access-Control-Allow-Headers:{$_SERVER['Access-Control-Allow-Headers']}");
-                $this->output->set_header("Access-Control-Max-Age:86400");
-            }
-            die();
-        } else {
-            if (in_array($origin, $frontHosts)) {
-                $this->output->set_header("Access-Control-Allow-Origin:{$_SERVER['HTTP_ORIGIN']}");
-                $this->output->set_header("Access-Control-Allow-Credentials:true");
-                $this->output->set_header("Access-Control-Allow-Methods:POST,GET,PUT,DELETE,HEAD ");
-            }
-        }
+        $this->output->set_header("Access-Control-Allow-Origin:{$_SERVER['HTTP_ORIGIN']}");
+        $this->output->set_header("Access-Control-Allow-Credentials:true");
+        $this->output->set_header("Access-Control-Allow-Methods:POST,GET,PUT,DELETE,HEAD ");
+        $this->output->set_header("Access-Control-Allow-Headers:{$_SERVER['Access-Control-Allow-Headers']}");
+        $this->output->set_header("Access-Control-Max-Age:86400");
+
+//        $frontHosts = [];
+//        $frontUrl = $_SERVER['APPLICATION_FRONT'];
+//        $frontUrl = json_decode(base64_decode($frontUrl));
+//        $origin = str_replace(['http://', 'https://', '/'], '', $_SERVER['HTTP_ORIGIN']);
+//        if (!empty($frontUrl)) {
+//            foreach ($frontUrl as $item) {
+//                $host = parse_url($item);
+//                $host['host'] && $frontHosts[] = $host['host'];
+//            }
+//        }
+//        if ($_SERVER["REQUEST_METHOD"] == "OPTIONS") {
+//            if (in_array($origin, $frontHosts)) {
+//                $this->output->set_header("Access-Control-Allow-Origin:{$_SERVER['HTTP_ORIGIN']}");
+//                $this->output->set_header("Access-Control-Allow-Credentials:true");
+//                $this->output->set_header("Access-Control-Allow-Methods:POST,GET,PUT,DELETE,HEAD ");
+//                $this->output->set_header("Access-Control-Allow-Headers:{$_SERVER['Access-Control-Allow-Headers']}");
+//                $this->output->set_header("Access-Control-Max-Age:86400");
+//            }
+//            die();
+//        } else {
+//            if (in_array($origin, $frontHosts)) {
+//                $this->output->set_header("Access-Control-Allow-Origin:{$_SERVER['HTTP_ORIGIN']}");
+//                $this->output->set_header("Access-Control-Allow-Credentials:true");
+//                $this->output->set_header("Access-Control-Allow-Methods:POST,GET,PUT,DELETE,HEAD ");
+//            }
+//        }
     }
 }
