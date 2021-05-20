@@ -159,7 +159,7 @@ class MY_Controller extends CI_Controller
      */
     protected function checkCors()
     {
-        $this->output->set_header("Access-Control-Allow-Origin:{$_SERVER['HTTP_ORIGIN']}");
+        $this->output->set_header("Access-Control-Allow-Origin:*");
         $this->output->set_header("Access-Control-Allow-Credentials:true");
         $this->output->set_header("Access-Control-Allow-Methods:POST,GET,PUT,DELETE,HEAD ");
 
