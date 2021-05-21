@@ -122,6 +122,24 @@ class ActivityService extends BaseService
         }
     }
 
+    /**
+     * @param array $params
+     * @return int
+     * @throws Exception
+     */
+    public function toggle(array $params)
+    {
+        /** 1. check base params */
+        $necessaryParamArr = ['code'];
+        $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
+
+        /** 2. check activity */
+        $activity = $this->checkActivityByCode($filter['code']);
+
+        $state = $activity['state'] == Constants::YES_VALUE ? Constants::NO_VALUE : Constants::YES_VALUE;
+        return IoC()->Activity_model->_update(['code' => $filter['code']], ['state' => $state]);
+    }
+
 #endregion
 
 #region base func
