@@ -79,7 +79,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 	require_once(BASEPATH.'core/Common.php');
 
-
 /*
  * ------------------------------------------------------
  * Security procedures
@@ -417,8 +416,7 @@ if ( ! is_php('5.4'))
 		elseif (method_exists($class, '_remap'))
 		{
 			$params = array($method, array_slice($URI->rsegments, 2));
-			$method = '_remap';
-		}
+			$method = '_remap';		}
 		elseif ( ! method_exists($class, $method))
 		{
 			$e404 = TRUE;
