@@ -51,7 +51,7 @@ class LoginService extends BaseService
      * @return mixed
      * @throws Exception
      */
-    public function wxAppLogin(array $params)
+    public function wxAppLogin($params)
     {
         /** 1. check params */
         $necessaryParamArr = ['code', 'user_info'];
