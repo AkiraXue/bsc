@@ -1,19 +1,22 @@
 <?php
 /**
- * Topic_model.php
+ * Prize_contest_record_model.php
  *
  * @copyright Copyright (c) 2019 AkiraXue
  * @author akira.xue <18862104333@163.com>
- * @created on 5/16/21 11:55 PM
+ * @created on 5/22/21 8:54 PM
  */
 
 use Service\BaseModelTrait;
 
-class Topic_model extends MY_Model
+/**
+ * Class Prize_contest_record_model
+ */
+class Prize_contest_record_model extends MY_Model
 {
     use BaseModelTrait;
 
-    public $table = 'topic';
+    public $table = 'prize_contest_record';
 
     public function __construct()
     {
@@ -103,12 +106,11 @@ class Topic_model extends MY_Model
     private function filterQuery(CI_DB_query_builder $query, array $params)
     {
         /** initialize where,group,having,order **/
-        !empty($params['title']) && $query->like('title', $params['title']);
-
-        !empty($params['type']) && $query->where('type', $params['type']);
-
-        !empty($params['answer_type']) && $query->where('answer_type', $params['answer_type']);
-        !empty($params['knowledge_id']) && $query->where('knowledge_id', $params['knowledge_id']);
+        !empty($params['prize_contest_id']) && $query->where('prize_contest_id', $params['prize_contest_id']);
+        !empty($params['account_id']) && $query->where('account_id', $params['account_id']);
+        !empty($params['date']) && $query->where('date', $params['date']);
+        !empty($params['is_through']) && $query->where('is_through', $params['is_through']);
+        !empty($params['asset_num']) && $query->where('asset_num', $params['asset_num']);
 
         !empty($params['state']) && $query->where('state', $params['state']);
 

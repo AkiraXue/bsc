@@ -58,6 +58,14 @@ class AddTablePrizeContest extends AbstractMigration
                 'signed' => false,
                 'comment' => '是否分段结算资产奖励 1-是 2-否'
             ])
+            ->addColumn('is_asset_award', 'integer', [
+                'null' => false,
+                'default' => 1,
+                'limit' => MysqlAdapter::INT_TINY,
+                'signed' => false,
+                'comment' => '是否资产奖励 1-是 2-否'
+            ])
+            ->addColumn('asset_num', 'decimal', ['precision' => '10', 'scale' => '2', 'comment' => '资产奖励额度', 'default' => '1'])
             ->addColumn('start_date', 'date', ['null' => false, 'comment' => '起始日期'])
             ->addColumn('end_date', 'date', ['null' => false, 'comment' => '截止日期'])
             ->addColumn('state', 'integer', [

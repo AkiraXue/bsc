@@ -7,3 +7,19 @@
  * @created on 5/16/21 3:16 PM
  */
 
+use Lib\Constants;
+
+/**
+ * Class Punch
+ */
+class Punch extends MY_Controller
+{
+#region init
+    public function __construct()
+    {
+        parent::__construct();
+    }
+#endregion
+
+
+}

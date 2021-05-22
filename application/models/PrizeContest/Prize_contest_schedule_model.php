@@ -1,24 +1,78 @@
 <?php
 /**
- * Topic_model.php
+ * Prize_contest_schedule_model.php
  *
  * @copyright Copyright (c) 2019 AkiraXue
  * @author akira.xue <18862104333@163.com>
- * @created on 5/16/21 11:55 PM
+ * @created on 5/22/21 9:08 PM
  */
+
+
+use Lib\Constants;
 
 use Service\BaseModelTrait;
 
-class Topic_model extends MY_Model
+/**
+ * Class Prize_contest_schedule_model
+ */
+class Prize_contest_schedule_model extends MY_Model
 {
     use BaseModelTrait;
 
-    public $table = 'topic';
+    public $table = 'prize_contest_schedule';
 
     public function __construct()
     {
         parent::__construct();
     }
+
+
+    /**
+     * 批量添加
+     *
+     * @param $list
+     *
+     * @return int
+     */
+    public function batchAdd($list)
+    {
+        $data = [];
+        foreach ($list as $item) {
+            $data[] = [
+                'sort'              => $item['sort'],
+                'prize_contest_id'  => $item['prize_contest_id'],
+                'is_asset_award'    => $item['is_asset_award'],
+                'asset_num'         => $item['asset_num'],
+                'state'             => $item['state'] ?: Constants::YES_VALUE
+            ];
+        }
+        return $this->db->insert_batch($this->myTable(), $data);
+    }
+
+    /**
+     * 批量更新
+     *
+     * @param $list
+     *
+     * @return int
+     */
+    public function batchUpdate($list)
+    {
+        return $this->db->update_batch($this->myTable(), $list, 'id');
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param $idList
+     *
+     * @return int
+     */
+    public function batchDelete($idList)
+    {
+        return $this->db->where_in('id', $idList)->delete($this->myTable());
+    }
+
 
     /**
      * 获取单项
@@ -103,12 +157,16 @@ class Topic_model extends MY_Model
     private function filterQuery(CI_DB_query_builder $query, array $params)
     {
         /** initialize where,group,having,order **/
-        !empty($params['title']) && $query->like('title', $params['title']);
+        !empty($params['prize_contest_id']) && $query->where('prize_contest_id', $params['prize_contest_id']);
 
-        !empty($params['type']) && $query->where('type', $params['type']);
+        !empty($params['sort']) && $query->where('sort', $params['sort']);
 
-        !empty($params['answer_type']) && $query->where('answer_type', $params['answer_type']);
-        !empty($params['knowledge_id']) && $query->where('knowledge_id', $params['knowledge_id']);
+        !empty($params['sorts']) && $query->where_in('sort', $params['sorts']);
+        !empty($params['no_sorts']) && $query->where_not_in('sort', $params['no_sorts']);
+
+        !empty($params['is_asset_award']) && $query->where('is_asset_award', $params['is_asset_award']);
+
+        !empty($params['asset_num']) && $query->where('asset_num', $params['asset_num']);
 
         !empty($params['state']) && $query->where('state', $params['state']);
 
