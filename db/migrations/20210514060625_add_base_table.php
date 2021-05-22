@@ -44,9 +44,13 @@ class AddBaseTable extends AbstractMigration
             'collation' => 'utf8mb4_unicode_ci '
         ]);
 
-        $table->addColumn('name', 'char', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '名称'])
+        $table->addColumn('name', 'char', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '名称名称'])
             ->addColumn('account_id', 'char', ['null' => false, 'default' => '', 'length' => 32, 'comment' => '用户account_id'])
-            ->addColumn('openid', 'char', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '用户微信openid'])
+            ->addColumn('avatar', 'char', ['null' => false, 'default' => '', 'length' => 254, 'comment' => '用户头像'])
+            ->addColumn('session_key', 'char', ['null' => false, 'default' => '', 'length' => 254, 'comment' => '会话密钥'])
+            ->addColumn('openid', 'char', ['null' => false, 'default' => '', 'length' => 254, 'comment' => '用户微信openid'])
+            ->addColumn('unionid', 'char', ['null' => false, 'default' => '', 'length' => 254, 'comment' => '用户在开放平台的唯一标识符，若当前小程序已绑定到微信开放平台帐号下会返回'])
+            ->addColumn('nickname', 'char', ['null' => false, 'default' => '', 'length' => 50, 'comment' => '昵称'])
             ->addColumn('birthday', 'char', ['null' => false, 'default' => '', 'length' => 20, 'comment' => '用户生日'])
             ->addColumn('phone', 'char', ['null' => false, 'default' => '', 'length' => 20, 'comment' => '座机'])
             ->addColumn('mobile', 'char', ['null' => false, 'default' => '', 'length' => 20, 'comment' => '手机号'])
@@ -73,6 +77,7 @@ class AddBaseTable extends AbstractMigration
             ->addIndex(['id'], ['unique' => true, 'name' => 'id'])
             ->addIndex(['account_id'], ['name' => 'idx_account_id'])
             ->addIndex(['openid'], ['name' => 'idx_openid'])
+            ->addIndex(['unionid'], ['name' => 'idx_unionid'])
             ->addIndex(['mobile'], ['name' => 'idx_mobile'])
             ->create();
     }

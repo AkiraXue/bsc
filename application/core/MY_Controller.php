@@ -3,7 +3,10 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
+use Exception\Common\ApiInvalidArgumentException;
 use Service\BaseTrait;
+
+use Service\Wechat\TokenService;
 
 /**
  * Class MY_Controller
@@ -16,6 +19,10 @@ use Service\BaseTrait;
  */
 class MY_Controller extends CI_Controller
 {
+    public $isNeedLogin = 1;
+
+    public $openid;
+    public $accountId;
 
     use BaseTrait;
 
@@ -26,12 +33,53 @@ class MY_Controller extends CI_Controller
     public function __construct()
     {
         parent::__construct();
+
         $this->checkCors();
+
+        if ($this->isNeedLogin == 1) {
+            $this->checkLogin();
+        }
+
         foreach ($_POST as $key => $value) {
             if (substr($key, 0, 3) === 'ext') {
                 $_POST['extra'][$key] = $value;
             }
         }
+    }
+
+    public function isNeedLogin()
+    {
+        // Common class
+        $pathInfo = $_SERVER['PATH_INFO'];
+        $pathArr = array_reverse(explode(DIRECTORY_SEPARATOR, $pathInfo));
+        $className = strtolower($pathArr[1]);
+        // 不用check login 的 api
+        $noCheckLoginApiList = ['common', 'login'];
+        if (in_array($className, $noCheckLoginApiList)) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function checkLogin()
+    {
+        $token = TokenService::getBearerToken();
+        if (empty($token)) {
+            throw new ApiInvalidArgumentException('authorization header token');
+        }
+        $claims = TokenService::parseToken($token);
+        $currentTime = time();
+        $expireTime = $claims['exp']->getValue();
+
+        if ($currentTime > $expireTime) {
+            throw new Exception('current app login token has expired', 2001);
+        }
+
+        $this->accountId = $claims['account_id'];
+        $this->openid = $claims['openid'];
     }
 
     /**

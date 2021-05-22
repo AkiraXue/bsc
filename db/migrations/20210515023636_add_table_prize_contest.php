@@ -175,7 +175,8 @@ class AddTablePrizeContest extends AbstractMigration
             'collation' => 'utf8mb4_unicode_ci '
         ]);
 
-        $table->addColumn('prize_contest_id', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '冲顶赛程id'])
+        $table->addColumn('prize_contest_record_id', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '冲顶赛程记录id'])
+            ->addColumn('prize_contest_id', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '冲顶赛程id'])
             ->addColumn('account_id', 'char', ['null' => false, 'default' => '', 'length' => 32, 'comment' => '用户account_id'])
             ->addColumn('date', 'date', ['null' => false, 'comment' => '参与日期'])
             ->addColumn('knowledge_id', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '知识点id'])
