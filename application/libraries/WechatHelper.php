@@ -35,8 +35,8 @@ class WechatHelper
         ];
         $url = sprintf(self::URL_AUTH_API, http_build_query($params));
         $resultJson = Http::request($url, '', 'GET');
-        $result = json_decode($resultJson);
-        if ($result->errcode > 0) {
+        $result = json_decode($resultJson, true);
+        if ($result['errcode'] && $result['errcode'] > 0) {
             return false;
         }
         return $result;
