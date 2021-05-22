@@ -28,6 +28,26 @@ class UserInfo extends MY_Controller
 
         $this->_success($userInfo);
     }
+
+    /**
+     * 搜索
+     */
+    public function find()
+    {
+        $data = $this->input->post(null, true);
+        $result = UserInfoService::getInstance()->find($data);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function toggle()
+    {
+        $data = $this->input->post(null, true);
+        $result = UserInfoService::getInstance()->toggle($data);
+        $this->_success($result);
+    }
 #endregion
 
 }

@@ -36,7 +36,8 @@ class MY_Controller extends CI_Controller
 
         $this->checkCors();
 
-        if ($this->isNeedLogin == 1) {
+        $isAdmin = $_POST['is_admin'];
+        if ($this->isNeedLogin == 1 && empty($isAdmin)) {
             $this->checkLogin();
         }
 
