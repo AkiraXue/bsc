@@ -8,10 +8,10 @@
  */
 
 use Lib\Constants;
-use Service\PrizeContest\PrizeContestRecordItemService;
+
+use Service\PrizeContest\PrizeContestService;
 use Service\PrizeContest\PrizeContestRecordService;
 use Service\PrizeContest\PrizeContestScheduleService;
-use Service\PrizeContest\PrizeContestService;
 
 /**
  * Class PrizeContest
