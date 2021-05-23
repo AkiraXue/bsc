@@ -45,6 +45,23 @@ class ActivityService extends BaseService
 #endregion
 
 #region func
+    /**
+     * 获取当前活动
+     *
+     * @return array
+     *
+     * @throws Exception
+     */
+    public function getCurrentActivity()
+    {
+        $activity =  IoC()->Activity_model->findOne(['state' => Constants::YES_VALUE]);
+        if (empty($activity) || !isset($activity['id'])) {
+            throw new Exception('current default activity not exist', 3001);
+        }
+        return $activity;
+    }
+
+
     public function find(array $params)
     {
         $condition = [];

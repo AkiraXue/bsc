@@ -82,7 +82,8 @@ class PrizeService extends BaseService
             'prize_contest_id' => $prizeContestId,
             'date' => $date,
         ];
-        return PrizeContestRecordService::getInstance()->save($params);
+        $id = PrizeContestRecordService::getInstance()->save($params);
+        return ['id' => $id];
     }
 
     /**

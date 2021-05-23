@@ -129,31 +129,50 @@ class ActivityParticipateRecordService extends BaseService
     /**
      * @param string $activityCode
      * @param string $accountId
+     * @param string $date
      * @param int $isThrowError
-     * @param int $day
      *
      * @return array
      * @throws DBInvalidObjectException
      */
-    public function checkByActivityCodeAndAccountIdAndDay(
+    public function checkByActivityCodeAndAccountIdAndDate(
         string $activityCode,
         string $accountId,
-        int $day,
+        $date,
         $isThrowError=Constants::YES_VALUE
     ) {
         $condition = [
             'activity_code'  => $activityCode,
             'account_id'     => $accountId,
-            'day'            => $day,
+            'punch_date'     => $date,
         ];
-        $activityParticipateSchedule = IoC()->Activity_participate_schedule_model->get($condition);
-        if (empty($activityParticipateSchedule)) {
+        $activityParticipateRecord = IoC()->Activity_participate_record_model->get($condition);
+        if (empty($activityParticipateRecord)) {
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];
             }
-            throw new DBInvalidObjectException('ActivityParticipateScheduleObj', 'activity_code && account_id');
+            throw new DBInvalidObjectException('ActivityParticipateRecordObj', 'activity_code && account_id');
         }
-        return $activityParticipateSchedule;
+        return $activityParticipateRecord;
+    }
+
+
+    /**
+     * @param string $activityCode
+     * @param string $accountId
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function checkTotalNumByActivityCodeAndAccountId(
+        string $activityCode,
+        string $accountId
+    ) {
+        $condition = [
+            'activity_code'  => $activityCode,
+            'account_id'     => $accountId
+        ];
+        return  IoC()->Activity_participate_record_model->count($condition);
     }
 #endregion
 

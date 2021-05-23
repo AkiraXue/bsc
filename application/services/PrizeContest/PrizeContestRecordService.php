@@ -181,6 +181,8 @@ class PrizeContestRecordService extends BaseService
 
         $prizeContest = IoC()->Prize_contest_model->get(['id' => $prizeContestRecord['prize_contest_id']]);
         $prizeContestRecord['config'] = $prizeContest;
+        $prizeContestRecord['countdown'] = 60;
+
         return $prizeContestRecord;
     }
 
