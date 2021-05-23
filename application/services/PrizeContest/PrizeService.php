@@ -16,6 +16,8 @@ use Service\BaseService;
 
 use Exception;
 use Exception\Common\DBInvalidObjectException;
+use Service\Knowledge\TopicServices;
+use Service\User\UserInfoService;
 
 /**
  * Class PrizeService
@@ -64,10 +66,11 @@ class PrizeService extends BaseService
 
     /**
      * @param $params
+     *
      * @return mixed
      * @throws Exception
      */
-    public function getProblem($params)
+    public function getProblem(array $params)
     {
         /** 1. check base params */
         $necessaryParamArr = [
@@ -92,6 +95,28 @@ class PrizeService extends BaseService
             return  $items['list'][0];
         }
         return [];
+    }
+
+    public function answer(array $params)
+    {
+        /** 1. check base params */
+        $necessaryParamArr = [
+            'account_id', 'item_id', 'answer'
+        ];
+        $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
+        $checkLenLimitList = [
+            'account_id' => 50,
+        ];
+        $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
+
+        /** 2. get prize test record item info */
+        UserInfoService::getInstance()->checkByAccountId($filter['account_id']);
+        $item = PrizeContestRecordItemService::getInstance()->checkPrizeContentRecordItemById($filter['id']);
+
+        /** 3. get related topic info */
+        $topic = TopicServices::getInstance()->checkById($item['topic_id']);
+
+
     }
 #endregion
 

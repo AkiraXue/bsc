@@ -45,13 +45,21 @@ class Prize extends MY_Controller
         $this->_success($result);
     }
 
-    /*
+    /**
      * @throws Exception
      */
     public function getProblem()
     {
         $data = $this->input->post(null, true);
+        $data['account_id'] = $data['account_id'] ?:$this->accountId;
         $result = PrizeService::getInstance()->getProblem($data);
+        $this->_success($result);
+    }
+
+    public function submit()
+    {
+        $data = $this->input->post(null, true);
+        $result = PrizeService::getInstance()->answer($data);
         $this->_success($result);
     }
 }
