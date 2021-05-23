@@ -9,6 +9,8 @@
 
 use Lib\Constants;
 
+use Service\Punch\PunchService;
+
 /**
  * Class Punch
  */
@@ -22,9 +24,15 @@ class Punch extends MY_Controller
 #endregion
 
 #punch punch info
+    /**
+     * @throws Exception
+     */
     public function getConfig()
     {
         $data = $this->input->post(null, true);
+        $date = date('Y-m-d');
+        $result = PunchService::getInstance()->getConfig($this->accountId);
+        $this->_success($result);
     }
 
 

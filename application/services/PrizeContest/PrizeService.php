@@ -53,6 +53,26 @@ class PrizeService extends BaseService
      * @return mixed
      * @throws Exception
      */
+    public function getConfig($accountId, $date='')
+    {
+        $currentConfig = PrizeContestService::getInstance()->getCurrentConfig();
+        $totalNum = PrizeContestRecordService::getInstance()->getPrizeContestRecordNum(
+            $accountId, $currentConfig['id'], $date
+        );
+        return  [
+            'prize_num'   => $totalNum,
+            'prize_total' => $currentConfig['entry_num'],
+            'is_prize_exist' => $currentConfig['state'] == Constants::YES_VALUE ? Constants::YES_VALUE  : Constants::NO_VALUE ,
+        ];
+    }
+
+    /**
+     * @param $accountId
+     * @param $date
+     *
+     * @return mixed
+     * @throws Exception
+     */
     public function init($accountId, $date)
     {
         $prizeContest = PrizeContestService::getInstance()->getCurrentConfig();
@@ -62,7 +82,8 @@ class PrizeService extends BaseService
             'prize_contest_id' => $prizeContestId,
             'date' => $date,
         ];
-        return PrizeContestRecordService::getInstance()->save($params);
+        $id = PrizeContestRecordService::getInstance()->save($params);
+        return ['id' => $id];
     }
 
     /**
