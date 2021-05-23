@@ -151,16 +151,15 @@ class ActivityParticipateScheduleService extends BaseService
         $condition = [
             'account_id'     => $accountId,
             'state'          => Constants::YES_VALUE,
-            'isAll'          => Constants::YES_VALUE
         ];
-        $activityParticipateScheduleList = IoC()->Activity_participate_schedule_model->find($condition, $count);
-        if (empty($activityParticipateScheduleList)) {
+        $activityParticipateSchedule = IoC()->Activity_participate_schedule_model->get($condition);
+        if (empty($activityParticipateSchedule)) {
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];
             }
             throw new DBInvalidObjectException('ActivityParticipateScheduleObj', 'account_id');
         }
-        return $activityParticipateScheduleList;
+        return $activityParticipateSchedule;
     }
 
 

@@ -38,7 +38,8 @@ class Punch extends MY_Controller
 
     public function record()
     {
-
+        $result = PunchService::getInstance()->punch($this->accountId);
+        $this->_success($result);
     }
 
     public function knowledge()

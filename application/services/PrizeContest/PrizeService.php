@@ -60,8 +60,8 @@ class PrizeService extends BaseService
             $accountId, $currentConfig['id'], $date
         );
         return  [
-            'prize_num'   => $totalNum,
-            'prize_total' => $currentConfig['entry_num'],
+            'prize_num'   => intval($totalNum),
+            'prize_total' => intval($currentConfig['entry_num']),
             'is_prize_exist' => $currentConfig['state'] == Constants::YES_VALUE ? Constants::YES_VALUE  : Constants::NO_VALUE ,
         ];
     }

@@ -56,6 +56,44 @@ class PunchService extends BaseService
      */
     public function  getConfig($accountId, $date='')
     {
+        /** 1. check init info*/
+        $response = $this->initPunch($accountId);
+        $day = $response['current_day'];
+        $activity = ActivityService::getInstance()->checkActivityByCode($response['activity_code']);
+
+        /** 2. is_knowledge && current_day  */
+        $isKnowledge = Constants::NO_VALUE;
+        $isPunch = Constants::NO_VALUE;
+
+        $date = date('Y-m-d');
+        $record = ActivityParticipateRecordService::getInstance()->checkByActivityCodeAndAccountIdAndDate(
+            $response['activity_code'], $accountId, $date, Constants::NO_VALUE
+        );
+
+        $response = [
+            'is_punch'     => $record['is_punch'] ?: $isPunch,
+            'is_knowledge' => $record['is_knowledge'] ?:$isKnowledge,
+            'current_day'  => $record['day'],
+            'activity'     => $activity,
+        ];
+        return $response;
+    }
+
+    public function punch()
+    {
+
+    }
+#endregion
+
+#region punch setting
+    /**
+     * @param $accountId
+     * @return mixed
+     *
+     * @throws Exception
+     */
+    public function initPunch($accountId)
+    {
         /** 1. is exist punch record setting */
         $participateSchedule = ActivityParticipateScheduleService::getInstance()->checkByAccountId(
             $accountId, Constants::NO_VALUE
@@ -68,13 +106,9 @@ class PunchService extends BaseService
 
         /** 2. check participate schedule record */
         $date = date('Y-m-d');
-
-
-
         $record = ActivityParticipateRecordService::getInstance()->checkByActivityCodeAndAccountIdAndDate(
             $participateSchedule['activity_code'], $accountId, $date, Constants::NO_VALUE
         );
-        $activity = ActivityService::getInstance()->checkActivityByCode($participateSchedule['activity_code']);
 
         $condition = [
             'activity_code' => $participateSchedule['activity_code'],
@@ -87,50 +121,31 @@ class PunchService extends BaseService
         $totalNum = ActivityParticipateRecordService::getInstance()->checkTotalNumByActivityCodeAndAccountId(
             $participateSchedule['activity_code'], $accountId
         );
-        echo json_encode($totalNum);
 
-//        if (!empty($record) && isset($record['id'])) {
-//            $condition = [
-//                'activity_code' => $participateSchedule['activity_code'],
-//                'account_id'    => $accountId,
-//                'activity_schedule_id' => $participateSchedule['id'],
-//                'day'           => $participateSchedule['id'],
-//                'is_related_knowledge' => $participateSchedule['id'],
-//                'knowledge_id' => $participateSchedule['id'],
-//                'is_asset_award' => $participateSchedule['id'],
-//                'asset_num' => $participateSchedule['id'],
-//                'is_knowledge' => $participateSchedule['id'],
-//                'knowledge_time' => $participateSchedule['id'],
-//                'is_punch'      => $participateSchedule['id'],
-//                'punch_time'    => $participateSchedule['id'],
-//                'punch_date'    => $participateSchedule['id'],
-//                'recent_punch_date' => $participateSchedule['id'],
-//                'next_punch_date' => $participateSchedule['id'],
-//
-//            ];
-//        }
-
-
-        /** 3. is_knowledge && current_day  */
-        $currentDay = 1;
-        $isKnowledge = Constants::NO_VALUE;
-        $isPunch = Constants::NO_VALUE;
-        $response = [
-            'is_punch'     => $isPunch,
-            'is_knowledge' => $isKnowledge,
-            'activity'     => $activity,
-            'current_day'  => $currentDay
-        ];
-        if (!empty($record) && isset($record['id'])) {
-            $response['is_punch'] = $record['is_punch'];
-            $response['is_knowledge'] = $record['is_knowledge'];
-            $response['current_day'] = $record['current_day'];
+        $day = $totalNum + 1;
+        $schedule = $activityScheduleList[$day] ?:[];
+        if (empty($record) && !isset($record['id']) ) {
+            $condition = [
+                'activity_code' => $participateSchedule['activity_code'],
+                'account_id'    => $accountId,
+                'activity_schedule_id' => $schedule['id']?:'',
+                'day'           => $day,
+                'is_related_knowledge' => $schedule['is_related_knowledge']?:Constants::NO_VALUE,
+                'knowledge_id'  => $schedule['knowledge_id'],
+                'is_asset_award' => $schedule['is_asset_award']?:Constants::NO_VALUE,
+                'asset_num'     => $schedule['asset_num']?:'',
+                'is_knowledge'  => Constants::NO_VALUE,
+                'knowledge_time' => '',
+                'is_punch'      => Constants::NO_VALUE,
+                'punch_time'    => '',
+                'punch_date'    => $date,
+                'recent_punch_date' => '',
+                'next_punch_date' => '',
+            ];
+            ActivityParticipateRecordService::getInstance()->save($condition);
         }
-        return $response;
+        return ['current_day' => $day, 'activity_code' => $participateSchedule['activity_code']];
     }
-#endregion
-
-#region punch setting
 #endregion
 }
 

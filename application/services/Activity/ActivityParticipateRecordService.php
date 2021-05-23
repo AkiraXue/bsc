@@ -63,20 +63,27 @@ class ActivityParticipateRecordService extends BaseService
         /** 2. check activity_code & account_id & day & activity_schedule_id */
         $activity = ActivityService::getInstance()->checkActivityByCode($filter['activity_code']);
 
-        $activitySchedule = ActivityScheduleService::getInstance()->checkById($filter['activity_schedule_id']);
-
         $userInfo = UserInfoService::getInstance()->checkByAccountId($filter['account_id']);
 
+        $activitySchedule = [];
+        if( $filter['activity_schedule_id']) {
+            $activitySchedule = ActivityScheduleService::getInstance()->checkById(
+                $filter['activity_schedule_id'], Constants::NO_VALUE
+            );
+        }
+
         /** 3. check data match logic */
-        if ($activity['code'] != $activitySchedule['activity_code']) {
-            throw new ActivityCodeNotMatchSchedule();
+        if (!empty($activitySchedule) && isset($activitySchedule['id'])) {
+            if ($activity['code'] != $activitySchedule['activity_code']) {
+                throw new ActivityCodeNotMatchSchedule();
+            }
+
+            if ($userInfo['account_id'] != $activitySchedule['account_id']) {
+                throw new AccountIdNotMatchSchedule();
+            }
         }
 
-        if ($userInfo['account_id'] != $activitySchedule['account_id']) {
-            throw new AccountIdNotMatchSchedule();
-        }
-
-        /** 3. save activity participate record */
+        /** 4. save activity participate record */
         if ($params['id']) {
             $this->checkById($params['id']);
             $where = ['id' => $params['code']];
@@ -96,10 +103,10 @@ class ActivityParticipateRecordService extends BaseService
                 'account_id'            => $filter['account_id'],
                 'activity_schedule_id'  => $filter['activity_schedule_id'],
                 'day'                   => $filter['day'],
-                'is_related_knowledge'  => $activitySchedule['is_related_knowledge'],
-                'knowledge_id'          => $activitySchedule['knowledge_id'],
-                'is_asset_award'        => $activitySchedule['is_asset_award'],
-                'asset_num'             => $activitySchedule['asset_num'],
+                'is_related_knowledge'  => $activitySchedule['is_related_knowledge']?:Constants::NO_VALUE,
+                'knowledge_id'          => $activitySchedule['knowledge_id']?:'',
+                'is_asset_award'        => $activitySchedule['is_asset_award']?:Constants::NO_VALUE,
+                'asset_num'             => $activitySchedule['asset_num']?:'',
             ];
             return IoC()->Activity_participate_record_model->_insert($insert);
         }
@@ -172,7 +179,7 @@ class ActivityParticipateRecordService extends BaseService
             'activity_code'  => $activityCode,
             'account_id'     => $accountId
         ];
-        return  IoC()->Activity_participate_record_model->count($condition);
+        return  IoC()->Activity_participate_record_model->getTotal($condition);
     }
 #endregion
 
