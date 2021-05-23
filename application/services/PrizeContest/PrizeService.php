@@ -11,14 +11,14 @@ namespace Service\PrizeContest;
 
 use Lib\Constants;
 
-use Service\Asset\AssetService;
 use Service\BaseTrait;
 use Service\BaseService;
+use Service\Asset\AssetService;
+use Service\User\UserInfoService;
+use Service\Knowledge\TopicServices;
 
 use Exception;
 use Exception\Common\DBInvalidObjectException;
-use Service\Knowledge\TopicServices;
-use Service\User\UserInfoService;
 
 /**
  * Class PrizeService

@@ -76,7 +76,7 @@ class MY_Controller extends CI_Controller
         $expireTime = $claims['exp']->getValue();
 
         if ($currentTime > $expireTime) {
-            // throw new Exception('current app login token has expired', 2001);
+            throw new Exception('current app login token has expired', 1001);
         }
 
         $this->accountId = $claims['account_id'];
