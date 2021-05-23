@@ -56,6 +56,9 @@ class Prize extends MY_Controller
         $this->_success($result);
     }
 
+    /**
+     * @throws Exception
+     */
     public function submit()
     {
         $data = $this->input->post(null, true);

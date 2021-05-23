@@ -112,7 +112,7 @@ class PrizeService extends BaseService
     /**
      * @param array $params
      *
-     * @return bool
+     * @return mixed
      * @throws Exception
      */
     public function answer(array $params)
@@ -131,8 +131,9 @@ class PrizeService extends BaseService
         UserInfoService::getInstance()->checkByAccountId($filter['account_id']);
         $item = PrizeContestRecordItemService::getInstance()->checkPrizeContentRecordItemById($filter['item_id']);
 
-        /** 3. get related topic info */
+        /** 3. get related topic &  info */
         $topic = TopicServices::getInstance()->checkById($item['topic_id']);
+        $prizeContest = PrizeContestService::getInstance()->checkPrizeContentById($item['prize_contest_id']);
 
         /** 4. check is correct */
         $correctChoice = $topic['content']['answer_num'];
@@ -166,8 +167,17 @@ class PrizeService extends BaseService
                 $filter['account_id'], $schedule['asset_num'], $type, '冲顶答题'
             );
         }
+        $isNext = Constants::NO_VALUE;
+        if ($item['sort'] < $prizeContest['topic_num'] && $isCorrect) {
+            $isNext = Constants::YES_VALUE;
+        }
 
-        return true;
+        return [
+            'status' => $isCorrect,
+            'is_next' => $isNext,
+            'is_asset_award' => $isCorrect ? $schedule['is_asset_award'] : Constants::NO_VALUE,
+            'asset_num' => $isCorrect ? $schedule['asset_num'] : 0,
+        ];
     }
 
     /**
