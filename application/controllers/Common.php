@@ -27,10 +27,6 @@ class Common extends MY_Controller
     public function login()
     {
         $data = $this->input->post(null, true);
-        if (empty($data)) {
-            $content = file_get_contents('php://input');
-            $data    = (array)json_decode($content, true);
-        }
         $result = LoginService::getInstance()->wxAppLogin($data);
 
         $this->_success($result);

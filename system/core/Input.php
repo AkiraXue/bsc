@@ -253,7 +253,12 @@ class CI_Input {
 	 */
 	public function post($index = NULL, $xss_clean = NULL)
 	{
-		return $this->_fetch_from_array($_POST, $index, $xss_clean);
+		$data = $this->_fetch_from_array($_POST, $index, $xss_clean);
+        if (empty($data)) {
+            $content = file_get_contents('php://input');
+            $data    = (array)json_decode($content, true);
+        }
+        return $data;
 	}
 
 	// --------------------------------------------------------------------
