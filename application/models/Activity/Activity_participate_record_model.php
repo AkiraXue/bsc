@@ -16,7 +16,7 @@ class Activity_participate_record_model extends MY_Model
 {
     use BaseModelTrait;
 
-    public $table = 'Activity_participate_record';
+    public $table = 'activity_participate_record';
 
     public function __construct()
     {
