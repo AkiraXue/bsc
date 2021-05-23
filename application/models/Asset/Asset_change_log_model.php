@@ -1,19 +1,19 @@
 <?php
 /**
- * Topic_model.php
+ * Asset_change_log_model.php
  *
  * @copyright Copyright (c) 2019 AkiraXue
  * @author akira.xue <18862104333@163.com>
- * @created on 5/16/21 11:55 PM
+ * @created on 5/23/21 1:05 PM
  */
 
 use Service\BaseModelTrait;
 
-class Topic_model extends MY_Model
+class Asset_change_log_model extends MY_Model
 {
     use BaseModelTrait;
 
-    public $table = 'topic';
+    public $table = 'asset_change_log';
 
     public function __construct()
     {
@@ -34,6 +34,35 @@ class Topic_model extends MY_Model
             return $arr[0];
         }
         return [];
+    }
+
+    /**
+     * 查询
+     *
+     * @param array $params
+     *  @params  boolean    isAll           是否取全部
+     *
+     * @return array
+     */
+    public function findOne(array $params)
+    {
+        $selectStr = '*';
+        !empty($params['selectStr']) && $selectStr=$params['selectStr'];
+
+        $query = $this->db->select($selectStr)->from($this->myTable() );
+
+        $orderBy = ['id' => 'asc'];
+        !empty($params['orderBy']) && $orderBy = $params['orderBy'];
+        is_array($orderBy) ? $query->order_by(key($orderBy), current($orderBy)) : $query->order_by($orderBy);
+
+        $query = $this->filterQuery($query, $params);
+
+        $query->limit(1);
+        $result = $query->get()->result_array();
+        if (!count($result)) {
+            return [];
+        }
+        return $result[0];
     }
 
     /**
@@ -103,15 +132,12 @@ class Topic_model extends MY_Model
     private function filterQuery(CI_DB_query_builder $query, array $params)
     {
         /** initialize where,group,having,order **/
-        !empty($params['ids']) && $query->where_in('id', $params['ids']);
-        !empty($params['title']) && $query->like('title', $params['title']);
+        !empty($params['unique_code']) && $query->where('unique_code', $params['unique_code']);
 
+        !empty($params['source']) && $query->where('source', $params['source']);
         !empty($params['type']) && $query->where('type', $params['type']);
 
-        !empty($params['answer_type']) && $query->where('answer_type', $params['answer_type']);
-        !empty($params['knowledge_id']) && $query->where('knowledge_id', $params['knowledge_id']);
-
-        !empty($params['state']) && $query->where('state', $params['state']);
+        !empty($params['act']) && $query->where('act', $params['act']);
 
         return $query;
     }

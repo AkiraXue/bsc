@@ -156,7 +156,7 @@ class PrizeContestRecordService extends BaseService
         $problemSetJsonStr = implode( ',', $topicIds);
         IoC()->Prize_contest_record_model->_update(['id' => $id], ['problem_set' => $problemSetJsonStr]);
 
-        return true;
+        return $id;
     }
 #endregion
 

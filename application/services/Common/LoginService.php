@@ -104,6 +104,7 @@ class LoginService extends BaseService
         $accessToken['token_type'] = 'bearer';
         $accessToken['session_key'] = $session_key;
         $accessToken['is_exist'] = $userExist;
+        $accessToken['account_id'] = $accountId;
 
         return $accessToken;
     }

@@ -62,4 +62,11 @@ class Prize extends MY_Controller
         $result = PrizeService::getInstance()->answer($data);
         $this->_success($result);
     }
+
+    public function rank()
+    {
+        $data = $this->input->post(null, true);
+        $result = PrizeService::getInstance()->rank($data);
+        $this->_success($result);
+    }
 }

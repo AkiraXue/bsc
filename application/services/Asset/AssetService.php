@@ -43,6 +43,59 @@ class AssetService extends BaseService
     }
 #endregion
 
+#region base func
+    /**
+     * @param $uniqueCode
+     * @param $num
+     * @param $type
+     * @param $source
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function storage($uniqueCode, $num, $type, $source='')
+    {
+        /** 1. check account */
+        $assetAccount = $this->checkByUniqueCode($uniqueCode, $type, Constants::NO_VALUE);
+        if (empty($assetAccount) || !isset($assetAccount['id'])) {
+            $condition = [
+                'unique_code' => $uniqueCode,
+                'name'        => '积分',
+                'source'      => '',
+                'type'        => 'jifen',
+                'total'       => '0',
+                'used'        => 0,
+                'remaining'   => 0
+            ];
+            $this->save($condition);
+        }
+
+        /** 2. asset change record */
+        $assetAccount = $this->checkByUniqueCode($uniqueCode, $type, Constants::NO_VALUE);
+
+        //$where = ['unique_code'=> $uniqueCode, 'type' => $type];
+        $where = ['id' => $assetAccount['id']];
+        $condition = [
+            'total' => $assetAccount['total']  + $num,
+            'remaining' => $assetAccount['remaining'] + $num
+        ];
+        IoC()->Asset_model->_update($where, $condition);
+
+        /*** 3.add asset change record */
+        $cond = [
+            'unique_code' => $uniqueCode,
+            'source'      => $source,
+            'type'        => 'jifen',
+            'act'         => 'change',
+            'asset_num'   => $num
+        ];
+        IoC()->Asset_change_log_model->_insert($cond);
+
+        return true;
+    }
+
+#endregion
+
 #region func
     public function find(array $params)
     {
@@ -140,14 +193,15 @@ class AssetService extends BaseService
 
     /**
      * @param string  $uniqueCode
+     * @param string  $type
      * @param integer $isThrowError
      *
      * @return array
      * @throws Exception
      */
-    public function checkByUniqueCode(string $uniqueCode, $isThrowError = Constants::YES_VALUE)
+    public function checkByUniqueCode(string $uniqueCode, $type, $isThrowError = Constants::YES_VALUE)
     {
-        $asset = IoC()->Asset_model->findOne(['unique_code' => $uniqueCode]);
+        $asset = IoC()->Asset_model->findOne(['unique_code' => $uniqueCode, 'type' => $type]);
         if (empty($asset)) {
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];

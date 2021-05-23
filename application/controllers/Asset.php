@@ -57,6 +57,16 @@ class Asset extends MY_Controller
         $result = AssetService::getInstance()->find($data);
         $this->_success($result);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function storage()
+    {
+        $data = $this->input->post(null, true);
+        $result = AssetService::getInstance()->storage($this->accountId, 100, 'jifen');
+        $this->_success($result);
+    }
 #endregion
 }
 

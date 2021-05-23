@@ -86,6 +86,7 @@ class IoCMgr
  * @property User_model             $User_model
  *
  * @property Asset_model            $Asset_model
+ * @property Asset_change_log_model $Asset_change_log_model
  * @property Product_model          $Product_model
  *
  * @property Order_model            $Order_model
@@ -124,7 +125,9 @@ class HisIoCMgr extends IoCMgr
         $this->registerModel('Order_model', 'Order/Order_model');
         $this->registerModel('Order_item_model', 'Order/Order_item_model');
 
-        $this->registerModel('Asset_model', 'Asset_model');
+        $this->registerModel('Asset_model', 'Asset/Asset_model');
+        $this->registerModel('Asset_change_log_model', 'Asset/Asset_change_log_model');
+
         $this->registerModel('User_model', 'User_model');
 
         /* library */

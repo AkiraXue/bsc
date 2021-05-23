@@ -48,6 +48,7 @@ class TopicServices extends BaseService
     {
         $condition = [];
 
+        empty($params['ids']) || $condition['ids'] = $params['ids'];
         empty($params['title']) || $condition['title'] = $params['title'];
         empty($params['type']) || $condition['type'] = $params['type'];
 
