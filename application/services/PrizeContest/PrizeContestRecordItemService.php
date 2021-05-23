@@ -150,7 +150,7 @@ class PrizeContestRecordItemService extends BaseService
     public function checkPrizeContentRecordItemById(int $id, $isThrowError=Constants::YES_VALUE)
     {
         $condition = ['id'  => $id];
-        $prizeContestRecordItem = IoC()->Prize_contest_model->get($condition);
+        $prizeContestRecordItem = IoC()->Prize_contest_record_item_model->get($condition);
         if (empty($prizeContestRecordItem)) {
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];

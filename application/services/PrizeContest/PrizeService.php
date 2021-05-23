@@ -130,9 +130,12 @@ class PrizeService extends BaseService
         /** 2. get prize test record item info */
         UserInfoService::getInstance()->checkByAccountId($filter['account_id']);
         $item = PrizeContestRecordItemService::getInstance()->checkPrizeContentRecordItemById($filter['item_id']);
+        if ($item['state'] == Constants::NO_VALUE) {
+            throw new Exception('当前题目已经提交过了！', 3001);
+        }
 
         /** 3. get related topic &  info */
-        $topic = TopicServices::getInstance()->checkById($item['topic_id']);
+        $topic = TopicServices::getInstance()->checkById($item['id']);
         $prizeContest = PrizeContestService::getInstance()->checkPrizeContentById($item['prize_contest_id']);
 
         /** 4. check is correct */
@@ -152,6 +155,7 @@ class PrizeService extends BaseService
         /** 6. check is close current record */
         $where = ['id' => $filter['item_id']];
         $condition = [
+            'state'     => Constants::NO_VALUE,
             'draft'     => $filter['answer'],
             'answer'    => $correctChoice,
             'is_correct'=> $isCorrect,
@@ -166,6 +170,7 @@ class PrizeService extends BaseService
             AssetService::getInstance()->storage(
                 $filter['account_id'], $schedule['asset_num'], $type, '冲顶答题'
             );
+            PrizeContestRankService::getInstance()->save($filter['account_id'], $schedule['asset_num']);
         }
         $isNext = Constants::NO_VALUE;
         if ($item['sort'] < $prizeContest['topic_num'] && $isCorrect) {
@@ -190,8 +195,41 @@ class PrizeService extends BaseService
      */
     public function rank(array $params)
     {
+        $condition = [];
+
+        empty($params['account_id']) || $condition['account_id'] = $params['account_id'];
+
+        $page = $params['page'];
+        $limit = $params['limit'];
+        $page = !empty($page) ? intval($page) : 1;
+        $limit = !empty($limit) ? intval($limit) : 10;
+
+        $condition['orderBy'] = ['asset_num' => 'desc'];
+        $data = IoC()->Prize_contest_rank_model->find($condition, $count, $page, $limit);
+
+        $accountIds = array_column($data, 'account_id');
+        $userInfoRes = UserInfoService::getInstance()->find(['account_id' => $accountIds]);
+
+        $userInfoList = array_column($userInfoRes['list'], null, 'account_id');
+        foreach ($data as &$item) {
+            $accountId = $item['account_id'];
+            if (!array_key_exists($accountId, $userInfoList)) {
+                continue;
+            }
+            $userInfo = $userInfoList[$accountId];
+            $item['name'] = $userInfo['name'];
+            $item['nickname'] = $userInfo['nickname'];
+            $item['avatar'] = $userInfo['avatar'];
+        }
 
 
+        $totalPage = ceil($count / $limit);
+        $totalPage = $totalPage ? $totalPage : 1;
+        return [
+            'list'        => $data,
+            'total'      => $count,
+            'total_page' => $totalPage
+        ];
     }
 #endregion
 

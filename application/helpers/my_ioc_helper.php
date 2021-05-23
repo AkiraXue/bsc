@@ -76,6 +76,7 @@ class IoCMgr
  * @property Knowledge_model        $Knowledge_model
  *
  * @property Prize_contest_model                $Prize_contest_model
+ * @property Prize_contest_rank_model           $Prize_contest_rank_model
  * @property Prize_contest_schedule_model       $Prize_contest_schedule_model
  * @property Prize_contest_record_model         $Prize_contest_record_model
  * @property Prize_contest_record_item_model    $Prize_contest_record_item_model
@@ -113,6 +114,7 @@ class HisIoCMgr extends IoCMgr
         $this->registerModel('Knowledge_model', 'Knowledge/Knowledge_model');
 
         $this->registerModel('Prize_contest_model', 'PrizeContest/Prize_contest_model');
+        $this->registerModel('Prize_contest_rank_model', 'PrizeContest/Prize_contest_rank_model');
         $this->registerModel('Prize_contest_schedule_model', 'PrizeContest/Prize_contest_schedule_model');
         $this->registerModel('Prize_contest_record_model', 'PrizeContest/Prize_contest_record_model');
         $this->registerModel('Prize_contest_record_item_model', 'PrizeContest/Prize_contest_record_item_model');

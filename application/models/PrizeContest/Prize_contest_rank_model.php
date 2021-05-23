@@ -1,19 +1,23 @@
 <?php
 /**
- * User_model.php
+ * Prize_contest_rank_model.php
  *
  * @copyright Copyright (c) 2019 AkiraXue
  * @author akira.xue <18862104333@163.com>
- * @created on 5/16/21 2:55 PM
+ * @created on 5/23/21 1:58 PM
  */
+
 
 use Service\BaseModelTrait;
 
-class User_model extends MY_Model
+/**
+ * Class Prize_contest_rank_model
+ */
+class Prize_contest_rank_model extends MY_Model
 {
     use BaseModelTrait;
 
-    public $table = 'user';
+    public $table = 'prize_contest_rank';
 
     public function __construct()
     {
@@ -34,6 +38,35 @@ class User_model extends MY_Model
             return $arr[0];
         }
         return [];
+    }
+
+    /**
+     * 查询
+     *
+     * @param array $params
+     *  @params  boolean    isAll           是否取全部
+     *
+     * @return array
+     */
+    public function findOne(array $params)
+    {
+        $selectStr = '*';
+        !empty($params['selectStr']) && $selectStr=$params['selectStr'];
+
+        $query = $this->db->select($selectStr)->from($this->myTable() );
+
+        $orderBy = ['id' => 'asc'];
+        !empty($params['orderBy']) && $orderBy = $params['orderBy'];
+        is_array($orderBy) ? $query->order_by(key($orderBy), current($orderBy)) : $query->order_by($orderBy);
+
+        $query = $this->filterQuery($query, $params);
+
+        $query->limit(1);
+        $result = $query->get()->result_array();
+        if (!count($result)) {
+            return [];
+        }
+        return $result[0];
     }
 
     /**
@@ -103,24 +136,8 @@ class User_model extends MY_Model
     private function filterQuery(CI_DB_query_builder $query, array $params)
     {
         /** initialize where,group,having,order **/
-        !empty($params['nameLike']) && $query->like('name', $params['nameLike']);
-        !empty($params['nicknameLike']) && $query->like('nickname', $params['nicknameLike']);
+        !empty($params['account_id']) && $query->where('account_id', $params['account_id']);
 
-        !empty($params['name']) && $query->where('name', $params['name']);
-
-        !empty($params['nickname']) && $query->where('nickname', $params['nickname']);
-
-        !empty($params['account_id']) && !is_array($params['account_id']) &&
-            $query->where('account_id', $params['account_id']);
-        !empty($params['account_id']) && is_array($params['account_id']) &&
-            $query->where_in('account_id', $params['account_id']);
-
-        !empty($params['account_ids']) && $query->where_in('account_id', $params['account_ids']);
-        !empty($params['openid']) && $query->where('openid', $params['openid']);
-
-        !empty($params['birthday']) && $query->where('birthday', $params['birthday']);
-        !empty($params['phone']) && $query->where('phone', $params['phone']);
-        !empty($params['mobile']) && $query->where('mobile', $params['mobile']);
         !empty($params['state']) && $query->where('state', $params['state']);
 
         return $query;
