@@ -15,10 +15,12 @@ use Lib\Constants;
 use Service\Activity\ActivityParticipateRecordService;
 use Service\Activity\ActivityScheduleService;
 use Service\Activity\ActivityService;
+use Service\Asset\AssetService;
 use Service\BaseTrait;
 use Service\BaseService;
 
 use Service\Activity\ActivityParticipateScheduleService;
+use Service\Knowledge\KnowledgeService;
 
 /**
  * Class PunchService
@@ -90,12 +92,85 @@ class PunchService extends BaseService
     {
         $date = date('Y-m-d');
 
+        /** 1. check schedule record list */
         $participateSchedule = ActivityParticipateScheduleService::getInstance()->checkByAccountId($accountId);
 
         $record = ActivityParticipateRecordService::getInstance()->checkByActivityCodeAndAccountIdAndDate(
             $participateSchedule['activity_code'], $accountId, $date
         );
 
+        if ($record['is_punch'] == Constants::YES_VALUE) {
+            throw new Exception('今日已打卡', 3001);
+        }
+
+        /** 2. check schedule record status */
+        $where = ['id' => $record['id']];
+        $update = [
+            'is_punch'   => Constants::YES_VALUE,
+            'punch_time' => date('Y-m-d H:i:s')
+        ];
+        IoC()->Activity_participate_record_model->_update($where, $update);
+
+        /** 3. update asset  */
+        $scheduleId = $record['activity_schedule_id'] ?: 0;
+        if (!$scheduleId) {
+            return true;
+        }
+
+        $schedule = ActivityScheduleService::getInstance()->checkById($scheduleId);
+        if ($schedule['is_asset_award'] == Constants::NO_VALUE) {
+           return true;
+        }
+
+        $where = ['id' => $record['id']];
+        $update = [
+            'is_asset_award'   => $schedule['is_asset_award'],
+            'asset_num'        => $schedule['asset_num']
+        ];
+        IoC()->Activity_participate_record_model->_update($where, $update);
+
+        /** 4. record asset change */
+        AssetService::getInstance()->storage($accountId, $schedule['asset_num'], 'jifen', '每日打卡');
+
+        return true;
+    }
+
+    /**
+     * @param $accountId
+     * @return array|bool
+     * @throws Exception
+     */
+    public function knowledge($accountId)
+    {
+        $date = date('Y-m-d');
+
+        /** 1. check schedule record list */
+        $participateSchedule = ActivityParticipateScheduleService::getInstance()->checkByAccountId($accountId);
+
+        $record = ActivityParticipateRecordService::getInstance()->checkByActivityCodeAndAccountIdAndDate(
+            $participateSchedule['activity_code'], $accountId, $date
+        );
+
+        /** no related knowledge and no punch */
+        if ($record['is_punch'] == Constants::NO_VALUE) {
+            throw new Exception('今日未打卡', 3001);
+        }
+        if ($record['is_related_knowledge'] == Constants::NO_VALUE) {
+            return [];
+        }
+
+        /** 2. get knowledge info */
+        $knowledge = KnowledgeService::getInstance()->checkById($record['knowledge_id']);
+
+        /** 3. check schedule record to get knowledge id */
+        $where = ['id' => $record['id']];
+        $update = [
+            'is_knowledge'   => Constants::YES_VALUE,
+            'knowledge_time' => date('Y-m-d H:i:s')
+        ];
+        IoC()->Activity_participate_record_model->_update($where, $update);
+
+        return $knowledge;
 
     }
 #endregion
