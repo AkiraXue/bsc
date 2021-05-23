@@ -117,6 +117,18 @@ class PrizeContest extends MY_Controller
     /**
      * @throws Exception
      */
+    public function getRecordById()
+    {
+        $data = $this->input->post(null, true);
+        $necessaryParamArr = ['id'];
+        $filter = $this->checkApiInvalidArgument($necessaryParamArr, $data, true);
+        $result = PrizeContestRecordService::getInstance()->checkPrizeContentRecordById($filter['id']);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function getRecord()
     {
         $data = $this->input->post(null, true);

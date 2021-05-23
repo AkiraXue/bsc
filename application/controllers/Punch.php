@@ -21,5 +21,22 @@ class Punch extends MY_Controller
     }
 #endregion
 
+#punch punch info
+    public function getConfig()
+    {
+        $data = $this->input->post(null, true);
+    }
 
+
+    public function record()
+    {
+
+    }
+
+    public function knowledge()
+    {
+
+    }
+
+#endregion
 }
