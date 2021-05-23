@@ -26,7 +26,6 @@ class Prize extends MY_Controller
     public function getConfig()
     {
         $result = PrizeService::getInstance()->getConfig($this->accountId);
-
         $this->_success($result);
     }
 

@@ -44,6 +44,9 @@ class Punch extends MY_Controller
         $this->_success($result);
     }
 
+    /**
+     * @throws Exception
+     */
     public function knowledge()
     {
         $result = PunchService::getInstance()->knowledge($this->accountId);
