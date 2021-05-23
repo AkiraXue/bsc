@@ -56,8 +56,16 @@ class PrizeContestRecordItemService extends BaseService
     public function refreshProblemSet(int $num)
     {
         /** 随机抽取题目，并生成当次的题目列表 */
-
-        return [];
+        $condition = [
+            'page'  => 1,
+            'limit' => $num,
+            'state' => Constants::YES_VALUE
+        ];
+        $topicList = TopicServices::getInstance()->find($condition);
+        if (empty($topicList) || !isset($topicList['list'])) {
+            return [];
+        }
+        return $topicList['list'] ?: [];
     }
 
     /**
@@ -104,7 +112,6 @@ class PrizeContestRecordItemService extends BaseService
         $condition = [];
 
         empty($params['prize_contest_record_id']) || $condition['prize_contest_record_id'] = $params['prize_contest_record_id'];
-
         empty($params['prize_contest_id']) || $condition['prize_contest_id'] = $params['prize_contest_id'];
         empty($params['account_id']) || $condition['account_id'] = $params['account_id'];
         empty($params['date']) || $condition['date'] = $params['date'];

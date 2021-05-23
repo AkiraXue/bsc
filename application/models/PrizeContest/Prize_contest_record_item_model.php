@@ -7,6 +7,7 @@
  * @created on 5/22/21 9:11 PM
  */
 
+use Lib\Constants;
 use Service\BaseModelTrait;
 
 /**
@@ -21,6 +22,60 @@ class Prize_contest_record_item_model extends MY_Model
     public function __construct()
     {
         parent::__construct();
+    }
+
+    /**
+     * 批量添加
+     *
+     * @param $list
+     *
+     * @return int
+     */
+    public function batchAdd($list)
+    {
+        $data = [];
+        foreach ($list as $item) {
+            $data[] = [
+                'prize_contest_record_id' => $item['prize_contest_record_id'],
+                'prize_contest_id'        => $item['prize_contest_id'],
+                'account_id'              => $item['account_id'],
+                'date'                    => $item['date'],
+                'knowledge_id'            => $item['knowledge_id'],
+                'topic_id'                => $item['topic_id'],
+                'sort'                    => $item['sort'],
+                'draft'                   => $item['draft']?:'',
+                'answer'                  => $item['answer']?:'',
+                'is_correct'              => $item['is_correct'],
+                'is_asset_award'          => $item['is_asset_award'],
+                'asset_num'               => $item['asset_num'],
+                'state'                   => $item['state'] ?: Constants::YES_VALUE
+            ];
+        }
+        return $this->db->insert_batch($this->myTable(), $data);
+    }
+
+    /**
+     * 批量更新
+     *
+     * @param $list
+     *
+     * @return int
+     */
+    public function batchUpdate($list)
+    {
+        return $this->db->update_batch($this->myTable(), $list, 'id');
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param $idList
+     *
+     * @return int
+     */
+    public function batchDelete($idList)
+    {
+        return $this->db->where_in('id', $idList)->delete($this->myTable());
     }
 
     /**

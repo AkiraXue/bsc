@@ -9,6 +9,7 @@
 
 use Lib\Constants;
 use Service\PrizeContest\PrizeContestRecordItemService;
+use Service\PrizeContest\PrizeContestRecordService;
 use Service\PrizeContest\PrizeContestScheduleService;
 use Service\PrizeContest\PrizeContestService;
 
@@ -108,7 +109,7 @@ class PrizeContest extends MY_Controller
     public function saveRecord()
     {
         $data = $this->input->post(null, true);
-        $result = PrizeContestRecordItemService::getInstance()->save($data);
+        $result = PrizeContestRecordService::getInstance()->save($data);
         $this->_success($result);
     }
 
@@ -119,9 +120,11 @@ class PrizeContest extends MY_Controller
     public function getRecord()
     {
         $data = $this->input->post(null, true);
-        $necessaryParamArr = ['id'];
+        $necessaryParamArr = ['account_id', 'date'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $data, true);
-        $result = PrizeContestRecordItemService::getInstance()->checkPrizeContentRecordItemById($filter['id']);
+        $result = PrizeContestRecordService::getInstance()->checkPrizeContestRecord(
+            $filter, Constants::NO_VALUE
+        );
         $this->_success($result);
     }
 
@@ -131,7 +134,7 @@ class PrizeContest extends MY_Controller
     public function findRecord()
     {
         $data = $this->input->post(null, true);
-        $result = PrizeContestRecordItemService::getInstance()->find($data);
+        $result = PrizeContestRecordService::getInstance()->find($data);
         $this->_success($result);
     }
 #endregion

@@ -73,6 +73,7 @@ class Prize_contest_record_model extends MY_Model
         $query->limit($limit, $offset);
 
         $result = $query->get()->result_array();
+
         if (!count($result)) {
             return [];
         }
@@ -109,6 +110,8 @@ class Prize_contest_record_model extends MY_Model
         !empty($params['prize_contest_id']) && $query->where('prize_contest_id', $params['prize_contest_id']);
         !empty($params['account_id']) && $query->where('account_id', $params['account_id']);
         !empty($params['date']) && $query->where('date', $params['date']);
+        !empty($params['start_date']) && $query->where('date>=', $params['start_date']);
+        !empty($params['end_date']) && $query->where('date<=', $params['end_date']);
         !empty($params['is_through']) && $query->where('is_through', $params['is_through']);
         !empty($params['asset_num']) && $query->where('asset_num', $params['asset_num']);
 

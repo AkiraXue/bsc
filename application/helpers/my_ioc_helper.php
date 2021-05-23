@@ -114,7 +114,7 @@ class HisIoCMgr extends IoCMgr
         $this->registerModel('Prize_contest_model', 'PrizeContest/Prize_contest_model');
         $this->registerModel('Prize_contest_schedule_model', 'PrizeContest/Prize_contest_schedule_model');
         $this->registerModel('Prize_contest_record_model', 'PrizeContest/Prize_contest_record_model');
-        $this->registerModel('$Prize_contest_record_item_model', 'PrizeContest/$Prize_contest_record_item_model');
+        $this->registerModel('Prize_contest_record_item_model', 'PrizeContest/Prize_contest_record_item_model');
 
         $this->registerModel('Group_model', 'Group/Group_model');
         $this->registerModel('Group_item_model', 'Group/Group_item_model');
