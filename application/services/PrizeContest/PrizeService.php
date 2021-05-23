@@ -61,6 +61,7 @@ class PrizeService extends BaseService
         );
         return  [
             'prize_num'   => intval($totalNum),
+
             'prize_total' => intval($currentConfig['entry_num']),
             'is_prize_exist' => $currentConfig['state'] == Constants::YES_VALUE ? Constants::YES_VALUE  : Constants::NO_VALUE ,
         ];

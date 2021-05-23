@@ -64,10 +64,10 @@ class LoginService extends BaseService
         if (!$wechatSessionInfo || empty($wechatSessionInfo['openid'])) {
             throw new Exception('获取微信信息错误', 3001);
         }
+
 //        $wechatSessionInfo['openid'] = 'openid 2222';
 //        $wechatSessionInfo['session_key'] = 'session_key 3333';
 //        $wechatSessionInfo['unionid'] = 'unionid 4444';
-
 
         $openid = $wechatSessionInfo['openid'];
         $session_key = $wechatSessionInfo['session_key'];
@@ -86,12 +86,12 @@ class LoginService extends BaseService
         $data['session_key'] = $session_key;
         $data['openid'] = $openid;
         $data['unionid'] = $unionid;
-        $data['name'] = $filter['user_info']["name"]?:'';
-        $data['nickname'] = $filter['user_info']["nickname"]?:'';
-        $data['birthday'] = $filter['user_info']["birthday"]?:'';
-        $data['phone'] = $filter['user_info']["phone"]?:'';
-        $data['mobile'] = $filter['user_info']["mobile"]?:'';
-        $data['avatar'] = $filter['user_info']["avatar_url"]?:'';
+        $data['name'] = $filter['user_info']['name']?:'';
+        $data['nickname'] = $filter['user_info']['nickname']?:'';
+        $data['birthday'] = $filter['user_info']['birthday']?:'';
+        $data['phone'] = $filter['user_info']['phone']?:'';
+        $data['mobile'] = $filter['user_info']['mobile']?:'';
+        $data['avatar'] = $filter['user_info']['avatar_url']?:'';
         UserInfoService::getInstance()->save($data);
 
         /** 5. make token */
