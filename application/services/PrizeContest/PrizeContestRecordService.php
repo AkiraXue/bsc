@@ -178,6 +178,9 @@ class PrizeContestRecordService extends BaseService
             }
             throw new DBInvalidObjectException('PrizeContestRecordObj', 'id');
         }
+
+        $prizeContest = IoC()->Prize_contest_model->get(['id' => $prizeContestRecord['prize_contest_id']]);
+        $prizeContestRecord['config'] = $prizeContest;
         return $prizeContestRecord;
     }
 
