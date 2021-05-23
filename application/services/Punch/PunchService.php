@@ -58,7 +58,6 @@ class PunchService extends BaseService
     {
         /** 1. check init info*/
         $response = $this->initPunch($accountId);
-        $day = $response['current_day'];
         $activity = ActivityService::getInstance()->checkActivityByCode($response['activity_code']);
 
         /** 2. is_knowledge && current_day  */
@@ -79,8 +78,24 @@ class PunchService extends BaseService
         return $response;
     }
 
-    public function punch()
+    /**
+     * 打卡
+     *
+     * @param $accountId
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function punch($accountId)
     {
+        $date = date('Y-m-d');
+
+        $participateSchedule = ActivityParticipateScheduleService::getInstance()->checkByAccountId($accountId);
+
+        $record = ActivityParticipateRecordService::getInstance()->checkByActivityCodeAndAccountIdAndDate(
+            $participateSchedule['activity_code'], $accountId, $date
+        );
+
 
     }
 #endregion

@@ -107,6 +107,7 @@ class ActivityParticipateRecordService extends BaseService
                 'knowledge_id'          => $activitySchedule['knowledge_id']?:'',
                 'is_asset_award'        => $activitySchedule['is_asset_award']?:Constants::NO_VALUE,
                 'asset_num'             => $activitySchedule['asset_num']?:'',
+                'punch_date'            => $params['punch_date'],
             ];
             return IoC()->Activity_participate_record_model->_insert($insert);
         }

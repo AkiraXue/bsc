@@ -205,7 +205,7 @@ class AddTableActivity extends AbstractMigration
                 'signed' => false,
                 'comment' => '是否打卡  1-是 2-否'
             ])
-            ->addColumn('punch_time', 'timestamp', ['null' => false , 'default' => 'CURRENT_TIMESTAMP', 'update' => '', 'comment' => '打卡时间'])
+            ->addColumn('punch_time', 'timestamp', ['null' => false , 'default' => '', 'update' => '', 'comment' => '打卡时间'])
             ->addColumn('punch_date', 'date', ['null' => false, 'comment' => '当前打卡日期'])
             ->addColumn('recent_punch_date',  'date', ['null' => false, 'comment' => '上次打卡日期'])
             ->addColumn('next_punch_date', 'date', ['null' => false, 'comment' => '下次打卡日期'])
