@@ -170,19 +170,7 @@ class PrizeService extends BaseService
             'sort'             => $item['sort']
         ];
         $schedule = IoC()->Prize_contest_schedule_model->get($condition);
-        if (!empty($schedule) && !isset($schedule['id'])) {
-            /** 6. check is close current record */
-            $where = ['id' => $filter['item_id']];
-            $condition = [
-                'state'     => Constants::NO_VALUE,
-                'draft'     => $filter['answer'],
-                'answer'    => $correctChoice,
-                'is_correct'=> $isCorrect,
-                'is_asset_award' => $schedule['is_asset_award'],
-                'asset_num' => $schedule['asset_num'],
-            ];
-            IoC()->Prize_contest_record_item_model->_update($where, $condition);
-
+        if (!empty($schedule) && isset($schedule['id'])) {
             /** 7. asset update */
             if ($isCorrect == Constants::YES_VALUE) {
                 $type = 'jifen';
@@ -192,6 +180,18 @@ class PrizeService extends BaseService
                 PrizeContestRankService::getInstance()->save($filter['account_id'], $schedule['asset_num']);
             }
         }
+
+        /** 6. check is close current record */
+        $where = ['id' => $filter['item_id']];
+        $condition = [
+            'state'     => Constants::NO_VALUE,
+            'draft'     => $filter['answer'],
+            'answer'    => $correctChoice,
+            'is_correct'=> $isCorrect,
+            'is_asset_award' => ($schedule && isset($schedule['is_asset_award'])) ? $schedule['is_asset_award'] : Constants::NO_VALUE,
+            'asset_num' => ($schedule && isset($schedule['is_asset_award'])) ? $schedule['asset_num'] : 0,
+        ];
+        IoC()->Prize_contest_record_item_model->_update($where, $condition);
 
         $isNext = Constants::NO_VALUE;
         if (($item['sort'] < $prizeContest['topic_num']) && $isCorrect) {
@@ -214,9 +214,7 @@ class PrizeService extends BaseService
     public function checkPrizeStatus(array $params)
     {
         /** 1. check base params */
-        $necessaryParamArr = [
-            'id'
-        ];
+        $necessaryParamArr = ['id'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
 
 
@@ -235,7 +233,7 @@ class PrizeService extends BaseService
         return [
             'correct_num' => $correctNum,
             'asset_num'   => $prizeContestRecord['asset_num']?:0,
-            'bestRank'    => $bestRank
+            'bestRank'    => $bestRank['sort']?:0
         ];
     }
 
