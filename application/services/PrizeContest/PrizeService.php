@@ -193,7 +193,7 @@ class PrizeService extends BaseService
         }
 
         $isNext = Constants::NO_VALUE;
-        if ($item['sort'] < $prizeContest['topic_num'] && $isCorrect) {
+        if ($item['sort'] <= $prizeContest['topic_num'] && $isCorrect) {
             $isNext = Constants::YES_VALUE;
         }
 

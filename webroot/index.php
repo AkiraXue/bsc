@@ -89,7 +89,6 @@ switch (ENVIRONMENT)
         exit(1); // EXIT_ERROR
 }
 
-    $resource_path = '../resource';
 	$system_path = '../system';
 	$application_folder = '../application';
 	$view_folder = '';

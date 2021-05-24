@@ -1,4 +1,7 @@
 <?php
+
+use Lib\Helper;
+
 /**
  * Upload.php
  *
@@ -32,21 +35,39 @@ class Upload extends MY_Controller
         $this->load->library('upload', $this->config);
     }
 
+    /**
+     * @throws Exception
+     */
     public function index()
     {
-        /** 1. set  filename & path */
-        $string = strrev($_FILES['upfile']['name']);
-        $array = explode('.',$string);
-        $suffix = $array[0];
-        $filename = date('Ymdhis').random_string('alnum',4).'.'.$suffix;
+        /** 1. get base name  */
+        $filename = $_FILES['file']['name'];
+        $suffix = pathinfo($filename, PATHINFO_EXTENSION);;
+        $filename = date('Ymdhis').'_'.Helper::random_string('alnum', 8).'.'.$suffix;
 
-        $this->config['upload_path'] = FCPATH  . ARCHIVE_PATH;
+        /** 2. get base info */
+
+        $resourcePath =  APPPATH . '../'. ARCHIVE_PATH;
+        $levelDir = date('Y/m/d', time());
+        $path = $resourcePath . $levelDir;
+        if(!is_dir($path)){
+            mkdir($path,0777,true);
+        }
+        $imgPath = ARCHIVE_PATH . $levelDir . '/';
+
+        /** 3. get upload path  */
+        $this->config['upload_path'] = $path;
         $this->config['file_name'] = $filename;
 
-        /** 2. init config */
         $this->upload->initialize($this->config);
         $result = $this->upload->do_upload('file');
-        $this->_success($result);
+
+        if (!$result) {
+            $responseMsg = $this->upload->display_errors();
+            throw new Exception($responseMsg, 2001);
+        }
+        $response = ['file_name' => CDN_HOST . $imgPath . $filename];
+        $this->_success($response);
     }
 
 
