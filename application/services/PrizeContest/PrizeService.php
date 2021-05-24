@@ -157,7 +157,7 @@ class PrizeService extends BaseService
         }
 
         /** 3. get related topic &  info */
-        $topic = TopicServices::getInstance()->checkById($item['id']);
+        $topic = TopicServices::getInstance()->checkById($item['topic_id']);
         $prizeContest = PrizeContestService::getInstance()->checkPrizeContentById($item['prize_contest_id']);
 
         /** 4. check is correct */
@@ -194,10 +194,9 @@ class PrizeService extends BaseService
         }
 
         $isNext = Constants::NO_VALUE;
-        if ($item['sort'] <= $prizeContest['topic_num'] && $isCorrect) {
+        if (($item['sort'] < $prizeContest['topic_num']) && $isCorrect) {
             $isNext = Constants::YES_VALUE;
         }
-
         return [
             'status' => $isCorrect,
             'is_next' => $isNext,
