@@ -182,7 +182,7 @@ class PrizeContestRecordService extends BaseService
         $prizeContest = IoC()->Prize_contest_model->get(['id' => $prizeContestRecord['prize_contest_id']]);
         $prizeContest['topic_num'] = intval($prizeContest['topic_num']);
         $prizeContestRecord['config'] = $prizeContest;
-        $prizeContestRecord['countdown'] = 60;
+        $prizeContestRecord['countdown'] = 10;
 
         return $prizeContestRecord;
     }
@@ -227,18 +227,14 @@ class PrizeContestRecordService extends BaseService
     /**
      * 校验当前人的打卡记录
      *
-     * @param $accountId
-     * @param $prizeContestRecordId
-     * @param $date
+     * @param $id
      * @param int $isThrowError
      *
      * @return mixed
      * @throws Exception
      */
     public function checkPrizeContestRecordById($id, $isThrowError=Constants::YES_VALUE) {
-        $condition = [
-            'id'  => $id,
-        ];
+        $condition = ['id'  => $id];
         $prizeContestRecord = IoC()->Prize_contest_record_model->find($condition, $count);
         if (empty($prizeContestRecord)) {
             if ($isThrowError == Constants::NO_VALUE) {

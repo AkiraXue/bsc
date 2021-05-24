@@ -18,7 +18,6 @@ use Service\User\UserInfoService;
 use Service\Knowledge\TopicServices;
 
 use Exception;
-use Exception\Common\DBInvalidObjectException;
 
 /**
  * Class PrizeService
@@ -216,7 +215,6 @@ class PrizeService extends BaseService
         /** 1. check base params */
         $necessaryParamArr = ['id'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
-
 
         /** 2. get current record */
         $prizeContestRecord = PrizeContestRecordService::getInstance()->checkPrizeContestRecordById($filter['id']);
