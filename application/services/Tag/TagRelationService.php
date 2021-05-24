@@ -13,8 +13,8 @@ use Exception;
 
 use Lib\Constants;
 
+use Service\BaseTrait;
 use Service\BaseService;
-
 
 use Exception\Common\DBInvalidObjectException;
 use Exception\Common\ApiInvalidArgumentException;
@@ -25,6 +25,8 @@ use Exception\Common\ApiInvalidArgumentException;
  */
 class TagRelationService extends BaseService
 {
+    use BaseTrait;
+
 #region init
     const USER_TAG_LENGTH_LIMIT = 20;
 
@@ -56,39 +58,32 @@ class TagRelationService extends BaseService
      */
     public function save(array $params)
     {
-        $unique_code = $params['unique_code'];
-        $type = $params['type'];
-        $tagId = $params['tag_id'];
-        $desc = $params['desc'];
+        $filter = $this->checkBaseTagRelationEntryApiArgument($params);
 
         if ($params['act'] === Constants::ACT_ADD) {
             $addCondition = [
-                'account_id'    =>  $unique_code,
-                'tag_id'        =>  $tagId,
-                'type'          =>  $type,
-                'unique_code'   =>  $unique_code,
-                'desc'          =>  $desc
+                'unique_code'   =>  $filter['unique_code'],
+                'type'          =>  $filter['type'],
+                'tag_id'        =>  $filter['tag_id'],
+                'desc'          =>  $filter['desc'],
             ];
             $id = IoC()->Tag_relation_model->_insert($addCondition);
+            IoC()->Tag_relation_model->_update(['id' => $id], ['sort' => $id]);
         } else {
             $id = intval($params['id']);
             if (empty($id)) {
                 throw new ApiInvalidArgumentException('id');
             }
-            $oldUserTagRelation = IoC()->Tag_relation_model->getById($id);
-            if (empty($oldUserTagRelation)) {
+            $oldTagRelation = IoC()->Tag_relation_model->getById($id);
+            if (empty($oldTagRelation)) {
                 throw new DBInvalidObjectException('TagRelation', 'id=' . $id);
             }
-            $tag = IoC()->Tag_model->getById($tagId);
-            if (empty($tag)) {
-                throw new DBInvalidObjectException('Tag', 'tagId=' . $tagId);
-            }
+            TagService::getInstance()->checkById($filter['tag_id']);
             $updateCondition = [
-                'account_id'    =>  $unique_code,
-                'tag_id'        =>  $tagId,
-                'type'          =>  $type,
-                'unique_code'   =>  $unique_code,
-                'desc'          =>  $desc
+                'unique_code'   =>  $filter['unique_code'],
+                'type'          =>  $filter['type'],
+                'tag_id'        =>  $filter['tag_id'],
+                'desc'          =>  $filter['desc'],
             ];
             IoC()->Tag_relation_model->_update(['id' => $id], $updateCondition);
         }
@@ -239,6 +234,25 @@ class TagRelationService extends BaseService
 
 #region base
     /**
+     * @param integer  $id
+     * @param integer $isThrowError
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function checkById(int $id, $isThrowError=Constants::YES_VALUE)
+    {
+        $tagRelRation = IoC()->Tag_model->getByID($id);
+        if (empty($tagRelRation)) {
+            if ($isThrowError == Constants::NO_VALUE) {
+                return [];
+            }
+            throw new DBInvalidObjectException('TagRelationObj', 'id');
+        }
+        return $tagRelRation;
+    }
+
+    /**
      * @param $params
      * @return array|bool
      *
@@ -249,12 +263,33 @@ class TagRelationService extends BaseService
         $necessaryParamArr = ['tag_id', 'tag_relation_list'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
 
-        $necessaryParamArr = ['tag_id', 'desc'];
+        $necessaryParamArr = ['desc', 'unique_code', 'type'];
         $checkLenLimitList = [
             'desc' => 254
         ];
         $this->checkArrayParamArgItem($params['tag_relation_list'], $necessaryParamArr, $checkLenLimitList);
 
+        return $filter;
+    }
+
+    /**
+     * @param $params
+     *
+     * @return array|bool
+     * @throws Exception
+     */
+    public function checkBaseTagRelationEntryApiArgument($params)
+    {
+        $necessaryParamArr = ['unique_code', 'type', 'tag_id', 'desc'];
+        $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
+
+        $checkLenLimitList = [
+            'unique_code'      => 32,
+            'desc'      => 254,
+        ];
+        $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
+
+        $filter['sort'] = empty($params['sort']) ? 0 : intval($params['sort']);
         return $filter;
     }
 #endregion

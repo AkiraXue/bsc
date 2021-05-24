@@ -32,7 +32,7 @@ class Tag_model extends MY_Model
      */
     public function find(array $params, &$count, $page=1, $limit=100)
     {
-        $selectStr = 'id, name, sub_name, desc, bg_pic, bg_video, sort, state';
+        $selectStr = '*';
         !empty($params['selectStr']) && $selectStr = $params['selectStr'];
 
         $query = $this->db->select($selectStr);

@@ -11,12 +11,12 @@ namespace Service\Tag;
 
 use Exception;
 
+use Exception\Common\DBInvalidObjectException;
 use Lib\Constants;
 
 use Service\BaseTrait;
 use Service\BaseService;
 
-use Exception\Common\DBInvalidObjectException;
 use Exception\Common\ApiInvalidArgumentException;
 
 
@@ -57,58 +57,27 @@ class TagService extends BaseService
     public function save(array $params)
     {
         /** 1. check base params */
-        $necessaryParamArr = [
-            'sort', 'prize_contest_id', 'is_asset_award', 'asset_num'
-        ];
-        $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
-        $checkLenLimitList = [
-            'asset_num' => 50,
-        ];
-        $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
+        $filter = $this->checkTagEntryApiArgument($params);
 
         /** 2. check data */
         $id = $params['id'];
 
-
         /** 3. save prize contest schedule info */
         $condition = [
-            'sort'              => $filter['sort'],
-            'prize_contest_id'  => $filter['prize_contest_id'],
-            'is_asset_award'    => $filter['is_asset_award'],
-            'asset_num'         => $filter['asset_num']
+            'name'     => $filter['name'],
+            'sub_name' => $filter['sub_name'],
+            'desc'     => $filter['desc'],
+            'bg_pic'   => $filter['bg_pic'],
+            'bg_video' => $filter['bg_video'],
+            'sort'     => $filter['sort'],
+            'relation_type' => $filter['relation_type']?:'',
+            'state'    => $filter['state'] ?: Constants::NO_VALUE
         ];
         if ($id) {
             return IoC()->Tag_model->_update(['id' => $id], $condition);
         } else {
             return IoC()->Tag_model->_insert($condition);
         }
-    }
-
-    /**
-     * 删除tag
-     *
-     * @param integer $id
-     *
-     * @return mixed
-     * @throws Exception
-     */
-    public function delete($id)
-    {
-        $oldUserTag = TagModel::getIns()->getById($id);
-        if (empty($oldUserTag)) {
-            throw new DBInvalidObjectException('HrUserTag', 'id');
-        }
-
-        /** 1. delete user tag relation data*/
-        $totalNum = TagRelationModel::getIns()->num(['tag_id' => $id]);
-        if ($totalNum) {
-            TagRelationModel::getIns()->del(['tagId' => $id]);
-        }
-
-        /** 2. delete user tag data */
-        TagModel::getIns()->del(['id' => $id]);
-
-        return true;
     }
 
     /**
@@ -121,24 +90,21 @@ class TagService extends BaseService
     {
         $condition = [];
 
-        empty($params['account_id']) || $condition['account_id'] = $params['account_id'];
         empty($params['name']) || $condition['name'] = $params['name'];
         empty($params['desc']) || $condition['desc'] = $params['desc'];
 
         empty($params['tag_id']) || $condition['id'] = $params['tag_id'];
+        empty($params['orderBy']) || $condition['orderBy'] = $params['orderBy'];
+        empty($params['isAll']) || $condition['isAll'] = $params['isAll'];
 
         $page = $params['page'];
         $limit = $params['limit'];
         $page = !empty($page) ? intval($page) : 1;
         $limit = !empty($limit) ? intval($limit) : 10;
 
-        $response = TagModel::getIns()->allItems($page, $limit, $condition);
-        $count = $response['total'];
-        $data = $response['items'];
-
+        $data =  IoC()->Tag_model->find($condition,$count, $page, $limit);
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
-
         return [
             'list'       => $data,
             'total'      => $count,
@@ -150,6 +116,25 @@ class TagService extends BaseService
 
 #region base func
     /**
+     * @param integer  $id
+     * @param integer $isThrowError
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function checkById(int $id, $isThrowError=Constants::YES_VALUE)
+    {
+        $tag = IoC()->Tag_model->getByID($id);
+        if (empty($tag)) {
+            if ($isThrowError == Constants::NO_VALUE) {
+                return [];
+            }
+            throw new DBInvalidObjectException('TagObj', 'id');
+        }
+        return $tag;
+    }
+
+    /**
      * @param $params
      *
      * @return array|bool
@@ -157,7 +142,7 @@ class TagService extends BaseService
      */
     public function checkTagEntryApiArgument($params)
     {
-        $necessaryParamArr = ['name', 'sub_name', 'desc', 'bg_pic', 'bg_video', 'sort', 'act'];
+        $necessaryParamArr = ['name', 'sub_name', 'desc', 'bg_pic', 'bg_video', 'sort'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
 
         $checkLenLimitList = [
@@ -170,10 +155,6 @@ class TagService extends BaseService
         $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
 
         $filter['sort'] = empty($params['sort']) ? 0 : intval($params['sort']);
-
-        if (!in_array($params['act'], [Constants::ACT_ADD, Constants::ACT_MODIFY])) {
-            throw new ApiInvalidArgumentException('act');
-        }
 
         return $filter;
     }

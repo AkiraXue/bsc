@@ -50,6 +50,7 @@ class Knowledge extends MY_Controller
 
     /**
      * 搜索
+     *  @throws Exception
      */
     public function find()
     {
@@ -60,11 +61,34 @@ class Knowledge extends MY_Controller
 #endregion
 
 #region function api
-    public function findByCategoryId()
+    /**
+     * @throws Exception
+     */
+    public function banner()
     {
-        $array = [
+        $data = $this->input->post(null, true);
+        $result = KnowledgeService::getInstance()->banner($data);
+        $this->_success($result);
+    }
 
-        ];
+    /**
+     * @throws Exception
+     */
+    public function guide()
+    {
+        $data = $this->input->post(null, true);
+        $result = KnowledgeService::getInstance()->guide($data);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function findByTagId()
+    {
+        $data = $this->input->post(null, true);
+        $result = KnowledgeService::getInstance()->findByTagId($data);
+        $this->_success($result);
     }
 #endregion
 

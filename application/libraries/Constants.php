@@ -25,4 +25,7 @@ class Constants
     const MATERIAL_TYPE_GRAPHIC = 'graphic';
     const MATERIAL_TYPE_TEXT = 'text';
 
+    const KNOWLEDGE_TYPE_BANNER = 'banner';
+    const KNOWLEDGE_TYPE_GUIDE = 'guide';
+
 }

@@ -141,6 +141,7 @@ class Tag_relation_model extends MY_Model
         !empty($params['ids']) && is_array($params['ids']) ? $query->where_in('id', $params['ids']) : null;
         !empty($params['desc']) ? $query->like('desc', $params['desc']) : null;
 
+        !empty($params['tag_id']) ? $query->where_in('tag_id', $params['tag_id']) : null;
         !empty($params['tag_ids']) ? $query->where_in('tag_id', $params['tag_ids']) : null;
         !empty($params['no_tag_ids']) ? $query->where_not_in('tag_id', $params['no_tag_ids']) : null;
 
@@ -169,17 +170,18 @@ class Tag_relation_model extends MY_Model
             ->join(IoC()->Knowledge_model->myTable() . ' knowledge', 'relation.unique_code=knowledge.id', 'left')
             ->order_by('tag.sort asc');
 
-        !empty($params['tag_id']) && $query->where('relation.tag_id', $params['tag_id']);
+        !empty($params['tag_id']) && !is_array($params['tag_id']) &&
+            $query->where('relation.tag_id', $params['tag_id']);
+        !empty($params['tag_id']) && is_array($params['tag_id']) &&
+        $query->where_in('relation.tag_id', $params['tag_id']);
+
+        !empty($params['type']) && $query->where_in('relation.type', $params['type']);
 
         !empty($params['unique_code']) && !is_array($params['unique_code']) &&
-        $query->where('relation.unique_code', $params['unique_code']);
+            $query->where('relation.unique_code', $params['unique_code']);
         !empty($params['unique_code']) && is_array($params['unique_code']) &&
-        $query->where_in('relation.unique_code', $params['unique_code']);
+            $query->where_in('relation.unique_code', $params['unique_code']);
 
-
-        !empty($params['tag_id_arr']) && $query->where_in('relation.tag_id', $params['tag_id_arr']);
-        !empty($params['unique_code_arr']) && $query->where_in('relation.unique_code', $params['unique_code_arr']);
-        !empty($params['type']) && $query->where_in('relation.type', $params['type']);
 
         $count = $query->count_all_results('',false);
 

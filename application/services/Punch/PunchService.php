@@ -158,7 +158,6 @@ class PunchService extends BaseService
         if ($record['is_related_knowledge'] == Constants::NO_VALUE) {
             return [];
         }
-        return $record['knowledge_id'];
 
         /** 2. get knowledge info */
         $knowledge = KnowledgeService::getInstance()->checkById($record['knowledge_id']);

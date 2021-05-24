@@ -43,8 +43,16 @@ class AddTableTagRelation extends AbstractMigration
 
         $table->addColumn('name', 'char', ['null' => false, 'length' => 32, 'default' => '', 'comment' => '字段名称'])
             ->addColumn('sub_name', 'char', ['null' => false, 'length' => 32, 'default' => '', 'comment' => '字段子名称'])
+            ->addColumn('relation_type', 'string', ['limit' => 254, 'default' => '', 'comment' => '关联的数据类型'])
             ->addColumn('desc', 'string', ['null' => false, 'limit' => 254, 'default' => '', 'comment' => '字段描述'])
             ->addColumn('bg_pic', 'string', ['null' => false, 'limit' => 254, 'default' => '', 'comment' => '背景图片地址'])
+            ->addColumn('pic_type', 'integer', [
+                'default' => 1,
+                'null' => false,
+                'limit' => MysqlAdapter::INT_TINY,
+                'signed' => false,
+                'comment' => '图片类型 1-小图 2-大图'
+            ])
             ->addColumn('bg_video', 'string', ['null' => false, 'limit' => 254, 'default' => '', 'comment' => '背景视频地址'])
             ->addColumn('sort', 'integer', ['null' => false, 'signed' => false, 'default' => 0, 'comment' => '默认排序-升序'])
             ->addColumn('state', 'integer', [
