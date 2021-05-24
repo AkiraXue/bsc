@@ -152,7 +152,7 @@ class PrizeService extends BaseService
         UserInfoService::getInstance()->checkByAccountId($filter['account_id']);
         $item = PrizeContestRecordItemService::getInstance()->checkPrizeContentRecordItemById($filter['item_id']);
         if ($item['state'] == Constants::NO_VALUE) {
-            throw new Exception('当前题目已经提交过了！', 3001);
+            // throw new Exception('当前题目已经提交过了！', 3001);
         }
 
         /** 3. get related topic &  info */

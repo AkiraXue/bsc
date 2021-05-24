@@ -59,4 +59,13 @@ class Knowledge extends MY_Controller
     }
 #endregion
 
+#region function api
+    public function findByCategoryId()
+    {
+        $array = [
+
+        ];
+    }
+#endregion
+
 }
