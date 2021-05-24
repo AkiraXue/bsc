@@ -179,9 +179,7 @@ class PrizeContestRecordItemService extends BaseService
         empty($params['sort']) || $condition['sort'] = $params['sort'];
         empty($params['state']) || $condition['state'] = $params['state'];
 
-        empty($params['state']) || $condition['state'] = $params['state'];
-
-        $params['orderBy'] = ['sort' => 'desc'];
+        $condition['orderBy'] = ['sort' => 'desc'];
 
         return   IoC()->Prize_contest_record_item_model->findOne($condition);
     }

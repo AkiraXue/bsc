@@ -61,6 +61,9 @@ class Prize extends MY_Controller
         $this->_success($result);
     }
 
+    /**
+     * @throws Exception
+     */
     public function checkPrizeStatus()
     {
         $data = $this->input->post(null, true);
