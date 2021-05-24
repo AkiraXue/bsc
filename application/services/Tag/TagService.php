@@ -13,20 +13,21 @@ use Exception;
 
 use Lib\Constants;
 
+use Service\BaseTrait;
 use Service\BaseService;
-
-use Model\TagModel;
-use Model\TagRelationModel;
 
 use Exception\Common\DBInvalidObjectException;
 use Exception\Common\ApiInvalidArgumentException;
 
+
 /**
  * Class TagService
- * @package Service
+ * @package Service\Tag
  */
 class TagService extends BaseService
 {
+    use BaseTrait;
+
 #region init
     const USER_TAG_LENGTH_LIMIT = 20;
 
@@ -55,19 +56,32 @@ class TagService extends BaseService
      */
     public function save(array $params)
     {
-        $name = $params['name'];
-        $desc = $params['desc'];
-        $sort = $params['sort'];
-        $act = $params['act'];
-        $state = $params['state']?:Constants::YES_VALUE;
+        /** 1. check base params */
+        $necessaryParamArr = [
+            'sort', 'prize_contest_id', 'is_asset_award', 'asset_num'
+        ];
+        $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
+        $checkLenLimitList = [
+            'asset_num' => 50,
+        ];
+        $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
 
-        if ($act === 'add') {
-            $id = $this->add($name, $desc, $sort);
+        /** 2. check data */
+        $id = $params['id'];
+
+
+        /** 3. save prize contest schedule info */
+        $condition = [
+            'sort'              => $filter['sort'],
+            'prize_contest_id'  => $filter['prize_contest_id'],
+            'is_asset_award'    => $filter['is_asset_award'],
+            'asset_num'         => $filter['asset_num']
+        ];
+        if ($id) {
+            return IoC()->Tag_model->_update(['id' => $id], $condition);
         } else {
-            $id = intval($params['id']);
-            $this->update($id, $name, $desc, $sort, $state);
+            return IoC()->Tag_model->_insert($condition);
         }
-        return $id;
     }
 
     /**
@@ -133,64 +147,6 @@ class TagService extends BaseService
     }
 #endregion
 
-#region func item with tag
-    /**
-     * @param string  $name
-     * @param string  $desc
-     * @param integer $sort
-     *
-     * @return int|string
-     * @throws Exception
-     */
-    private function add($name, $desc, $sort)
-    {
-        /** 判定长度，默认只能插入20个tag */
-        $totalNum = TagModel::getIns()->num();
-        if ($totalNum >= self::USER_TAG_LENGTH_LIMIT) {
-            throw new Exception('标签数目超过限制', 3001);
-        }
-        $insertCondition = [
-            'name'    => $name,
-            'desc'    => $desc,
-            'sort'    => $sort
-        ];
-        $id =  TagModel::getIns()->add($insertCondition);
-        /** update sort */
-        TagModel::getIns()->update(['id' => $id], ['sort' => $id]);
-
-        return $id;
-    }
-
-    /**
-     * @param integer $id
-     * @param string  $name
-     * @param string  $desc
-     * @param integer $sort
-     * @param integer $state
-     *
-     * @return mixed
-     * @throws Exception
-     */
-    private function update($id, $name, $desc, $sort, $state)
-    {
-        if (empty($id)) {
-            throw new ApiInvalidArgumentException('id');
-        }
-        $oldUserTag = TagModel::getIns()->getById($id);
-        if (empty($oldUserTag)) {
-            throw new DBInvalidObjectException('HrUserTag','id');
-        }
-        $updateCondition = [
-            'name'    => $name,
-            'desc'    => $desc,
-            'sort'    => $sort,
-            'state'  => $state
-        ];
-        TagModel::getIns()->update(['id' => $id], $updateCondition);
-
-        return $id;
-    }
-#endregion
 
 #region base func
     /**
@@ -201,12 +157,15 @@ class TagService extends BaseService
      */
     public function checkTagEntryApiArgument($params)
     {
-        $necessaryParamArr = ['name', 'desc', 'act'];
+        $necessaryParamArr = ['name', 'sub_name', 'desc', 'bg_pic', 'bg_video', 'sort', 'act'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
 
         $checkLenLimitList = [
-            'name' => 32,
-            'desc' => 254
+            'name'      => 32,
+            'sub_name'  => 32,
+            'desc'      => 254,
+            'bg_pic'    => 254,
+            'bg_video'  => 254
         ];
         $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
 

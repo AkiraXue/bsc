@@ -220,7 +220,7 @@ class PrizeService extends BaseService
         $prizeContestRecord = PrizeContestRecordService::getInstance()->checkPrizeContestRecordById($filter['id']);
 
         $condition = [
-            'prize_contest_record_id' => $prizeContestRecord['id'],
+            'prize_contest_record_id' => $filter['id'],
             'is_correct'              => Constants::YES_VALUE
         ];
         $correctNum = PrizeContestRecordItemService::getInstance()->getTotal($condition);

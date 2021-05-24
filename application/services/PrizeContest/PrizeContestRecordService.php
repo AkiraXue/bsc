@@ -182,7 +182,7 @@ class PrizeContestRecordService extends BaseService
         $prizeContest = IoC()->Prize_contest_model->get(['id' => $prizeContestRecord['prize_contest_id']]);
         $prizeContest['topic_num'] = intval($prizeContest['topic_num']);
         $prizeContestRecord['config'] = $prizeContest;
-        $prizeContestRecord['countdown'] = 10;
+        $prizeContestRecord['countdown'] = 60;
 
         return $prizeContestRecord;
     }
@@ -233,14 +233,14 @@ class PrizeContestRecordService extends BaseService
      * @return mixed
      * @throws Exception
      */
-    public function checkPrizeContestRecordById($id, $isThrowError=Constants::YES_VALUE) {
-        $condition = ['id'  => $id];
-        $prizeContestRecord = IoC()->Prize_contest_record_model->find($condition, $count);
+    public function checkPrizeContestRecordById($id, $isThrowError=Constants::YES_VALUE)
+    {
+        $prizeContestRecord = IoC()->Prize_contest_record_model->get($id);
         if (empty($prizeContestRecord)) {
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];
             }
-            throw new DBInvalidObjectException('PrizeContestRecordObjList', 'id');
+            throw new DBInvalidObjectException('PrizeContestRecordObj', 'id');
         }
         return $prizeContestRecord;
     }

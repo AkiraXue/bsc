@@ -72,6 +72,9 @@ class IoCMgr
  * @property Activity_participate_record_model      $Activity_participate_record_model
  * @property Activity_participate_schedule_model    $Activity_participate_schedule_model
  *
+ * @property Tag_model             $Tag_model
+ * @property Tag_relation_model    $Tag_relation_model
+ *
  * @property Topic_model            $Topic_model
  * @property Knowledge_model        $Knowledge_model
  *
@@ -109,6 +112,9 @@ class HisIoCMgr extends IoCMgr
         $this->registerModel('Activity_schedule_model', 'Activity/Activity_schedule_model');
         $this->registerModel('Activity_participate_schedule_model', 'Activity/Activity_participate_schedule_model');
         $this->registerModel('Activity_participate_record_model', 'Activity/Activity_participate_record_model');
+
+        $this->registerModel('Tag_model', 'Tag/Tag_model');
+        $this->registerModel('Tag_relation_model', 'Tag/Tag_relation_model');
 
         $this->registerModel('Topic_model', 'Knowledge/Topic_model');
         $this->registerModel('Knowledge_model', 'Knowledge/Knowledge_model');

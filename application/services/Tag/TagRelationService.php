@@ -12,13 +12,12 @@ namespace Service\Tag;
 use Exception;
 
 use Lib\Constants;
-use Model\TagModel;
-use Model\TagRelationModel;
+
+use Service\BaseService;
+
 
 use Exception\Common\DBInvalidObjectException;
-use Exception\Common\DBInvalidArgumentException;
 use Exception\Common\ApiInvalidArgumentException;
-use Service\BaseService;
 
 /**
  * Class TagRelationService
@@ -57,36 +56,41 @@ class TagRelationService extends BaseService
      */
     public function save(array $params)
     {
-        $accountId = $params['account_id'];
+        $unique_code = $params['unique_code'];
+        $type = $params['type'];
         $tagId = $params['tag_id'];
         $desc = $params['desc'];
 
         if ($params['act'] === Constants::ACT_ADD) {
             $addCondition = [
-                'account_id' =>  $accountId,
-                'tag_id'     =>  $tagId,
-                'desc'       =>  $desc
+                'account_id'    =>  $unique_code,
+                'tag_id'        =>  $tagId,
+                'type'          =>  $type,
+                'unique_code'   =>  $unique_code,
+                'desc'          =>  $desc
             ];
-            $id = TagRelationModel::getIns()->add($addCondition);
+            $id = IoC()->Tag_relation_model->_insert($addCondition);
         } else {
             $id = intval($params['id']);
             if (empty($id)) {
                 throw new ApiInvalidArgumentException('id');
             }
-            $oldUserTagRelation = TagRelationModel::getIns()->getById($id);
+            $oldUserTagRelation = IoC()->Tag_relation_model->getById($id);
             if (empty($oldUserTagRelation)) {
-                throw new DBInvalidObjectException('HrUserTagRelation', 'id=' . $id);
+                throw new DBInvalidObjectException('TagRelation', 'id=' . $id);
             }
-            $tag = TagModel::getIns()->getById($tagId);
+            $tag = IoC()->Tag_model->getById($tagId);
             if (empty($tag)) {
-                throw new DBInvalidObjectException('HrUserTag', 'tagId=' . $tagId);
+                throw new DBInvalidObjectException('Tag', 'tagId=' . $tagId);
             }
             $updateCondition = [
-                'account_id' =>  $accountId,
-                'tag_id'     =>  $tagId,
-                'desc'       =>  $desc
+                'account_id'    =>  $unique_code,
+                'tag_id'        =>  $tagId,
+                'type'          =>  $type,
+                'unique_code'   =>  $unique_code,
+                'desc'          =>  $desc
             ];
-            TagRelationModel::getIns()->update(['id' => $id], $updateCondition);
+            IoC()->Tag_relation_model->_update(['id' => $id], $updateCondition);
         }
 
         return $id;
@@ -102,50 +106,50 @@ class TagRelationService extends BaseService
     public function batchSave(array $params)
     {
         /** 1. check base params & activity_code */
-        $filter = $this->checkActivityScheduleEntryApiArgument($params);
+        $filter = $this->checkTagRelationEntryApiArgument($params);
 
-        ActivityService::getInstance()->checkActivityByCode($filter['activity_code']);
+        /** toDo: default 60 */
+        TagService::getInstance()->checkById($filter['tag_id']);
 
         /** 2. get update & insert & delete data list */
-        $days = array_column($filter['schedule_list'], 'day');
+        $uniqueCodes = array_column($filter['tag_relation_list'], 'unique_code');
         $delCondition = [
-            'no_days'       => $days,
-            'activity_code' => $params['activity_code'],
-            'isAll'         => Constants::YES_VALUE
+            'no_unique_codes'   => $uniqueCodes,
+            'tag_id'            => $filter['tag_id'],
+            'isAll'             => Constants::YES_VALUE
         ];
-        $deleteItemList =  IoC()->Activity_schedule_model->find($delCondition, $count);
-        $deleteIds = array_column($deleteItemList, 'id');
+        $deleteItemList =  IoC()->Tag_relation_model->find($delCondition, $count);
+        $deleteIds = array_column($deleteItemList, 'unique_code');
 
         $oldCondition = [
-            'days'          => $days,
-            'activity_code' => $params['activity_code'],
-            'isAll'         => Constants::YES_VALUE
+            'unique_codes'      => $uniqueCodes,
+            'tag_id'            => $filter['tag_id'],
+            'isAll'             => Constants::YES_VALUE
         ];
-        $oldItemList = IoC()->Activity_schedule_model->find($oldCondition, $count);
-        $oldItemList = array_column($oldItemList, null, 'day');
+        $oldItemList = IoC()->Tag_relation_model->find($oldCondition, $count);
+        $oldItemList = array_column($oldItemList, null, 'unique_code');
 
         $addList = [];
         $updateList = [];
-        foreach ($filter['schedule_list'] as $item) {
-            if (array_key_exists($item['day'], $oldItemList)) {
-                $item['id'] = $oldItemList[$item['day']]['id'];
+        foreach ($filter['tag_relation_list'] as $item) {
+            if (array_key_exists($item['unique_code'], $oldItemList)) {
+                $item['id'] = $oldItemList[$item['unique_code']]['id'];
                 $updateList[] = $item;
             } else {
-                $item['activity_code'] = $params['activity_code'];
+                $item['tag_id'] = $params['tag_id'];
                 $addList[] = $item;
             }
         }
 
         /** 3. update & insert & delete data */
         if (is_array($deleteIds) && count($deleteIds) > 0) {
-            IoC()->Activity_schedule_model->batchDelete($deleteIds);
+            IoC()->Tag_relation_model->batchDelete($deleteIds);
         }
         if (is_array($updateList) && count($updateList) > 0) {
-            IoC()->Activity_schedule_model->batchUpdate($updateList);
+            IoC()->Tag_relation_model->batchUpdate($updateList);
         }
-
         if (is_array($addList) && count($addList) > 0) {
-            IoC()->Activity_schedule_model->batchAdd($addList);
+            IoC()->Tag_relation_model->batchAdd($addList);
         }
 
         return true;
@@ -161,33 +165,11 @@ class TagRelationService extends BaseService
      */
     public function deleteRelationById(int $id)
     {
-        $oldUserTagRelation = TagRelationModel::getIns()->getById($id);
-        if (empty($oldUserTagRelation)) {
-            throw new DBInvalidObjectException('HrUserTagRelation','id');
-        }
-        TagRelationModel::getIns()->del(['id' => $id]);
-        return true;
-    }
-
-    /**
-     * 根据accountId删除关联关系
-     *
-     * @param string $accountId
-     *
-     * @return bool
-     * @throws Exception
-     */
-    public function deleteRelationByAccountId(string $accountId)
-    {
-        UserService::getInstance()->checkUserInfoByAccountId($accountId);
-
-        $countCondition = ['account_id' => $accountId];
-        $oldTagRelation = TagRelationModel::getIns()->num($countCondition);
+        $oldTagRelation = IoC()->Tag_relation_model->getById($id);
         if (empty($oldTagRelation)) {
-            throw new DBInvalidObjectException('TagRelation','account_id');
+            throw new DBInvalidObjectException('TagRelation','id');
         }
-        $delCondition = ['account_id' => $accountId];
-        TagRelationModel::getIns()->del($delCondition);
+        IoC()->Tag_relation_model->delByWhere(['id' => $id]);
         return true;
     }
 #endregion
@@ -203,18 +185,17 @@ class TagRelationService extends BaseService
     public function find(array $params)
     {
         $condition = [];
-        empty($params['account_id']) || $condition['account_id'] = $params['account_id'];
         empty($params['tag_id']) || $condition['tag_id'] = $params['tag_id'];
+        empty($params['unique_code']) || $condition['unique_code'] = $params['unique_code'];
+        empty($params['type']) || $condition['type'] = $params['type'];
+
 
         $page = $params['page'];
         $limit = $params['limit'];
         $page = !empty($page) ? intval($page) : 1;
-        $limit = !empty($limit) ? intval($limit) : 1000;
+        $limit = !empty($limit) ? intval($limit) : 10;
 
-        $response = TagRelationModel::getIns()->allItems($page, $limit, $condition);
-        $count = $response['total'];
-        $data = $response['items'];
-
+        $data =  IoC()->Tag_relation_model->find($condition, $count, $page, $limit);
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
 
@@ -234,18 +215,17 @@ class TagRelationService extends BaseService
     public function findRelationLeftJoinTag(array $params)
     {
         $condition = [];
-        empty($params['account_id']) || $condition['account_id'] = $params['account_id'];
+
+        empty($params['type']) || $condition['type'] = $params['type'];
         empty($params['tag_id']) || $condition['tag_id'] = $params['tag_id'];
+        empty($params['unique_code']) || $condition['unique_code'] = $params['unique_code'];
 
         $page = $params['page'];
         $limit = $params['limit'];
         $page = !empty($page) ? intval($page) : 1;
         $limit = !empty($limit) ? intval($limit) : 1000;
 
-        $response = TagRelationModel::getIns()->findRelationLeftJoinTag($condition, $page, $limit);
-        $count = $response['total'];
-        $data = $response['items'];
-
+        $data =  IoC()->Tag_relation_model->findRelationLeftJoinTag($condition, $count, $page, $limit);
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
 
@@ -266,7 +246,7 @@ class TagRelationService extends BaseService
      */
     public function checkTagRelationEntryApiArgument($params)
     {
-        $necessaryParamArr = ['account_id', 'tag_relation_list'];
+        $necessaryParamArr = ['tag_id', 'tag_relation_list'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
 
         $necessaryParamArr = ['tag_id', 'desc'];

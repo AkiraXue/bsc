@@ -70,6 +70,7 @@ class AddTableTagRelation extends AbstractMigration
             ->addColumn('type', 'string', ['null' => false, 'limit' => 254, 'default' => '', 'comment' => '唯一code类型'])
             ->addColumn('tag_id', 'integer', ['null' => false, 'signed' => false, 'default' => 0, 'comment' => '用户标签关联id'])
             ->addColumn('desc', 'string', ['null' => false, 'limit' => 254, 'default' => '', 'comment' => '关联信息描述'])
+            ->addColumn('sort', 'integer', ['null' => false, 'signed' => false, 'default' => 0, 'comment' => '用户标签关联id排序'])
             ->addColumn('state', 'integer', [
                 'default' => 1,
                 'null' => false,

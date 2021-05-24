@@ -33,12 +33,10 @@ class Tag_relation_model extends MY_Model
         $data = [];
         foreach ($list as $item) {
             $data[] = [
-                'name'             => $item['name'],
-                'sub_name'         => $item['sub_name'],
+                'unique_code'      => $item['unique_code'],
+                'type'             => $item['type'],
+                'tag_id'           => $item['tag_id'],
                 'desc'             => $item['desc'],
-                'bg_pic'           => $item['bg_pic'],
-                'bg_video'         => $item['bg_video'],
-                'sort'             => $item['sort'],
                 'state'            => $item['state'] ?: Constants::YES_VALUE
             ];
         }
@@ -85,7 +83,7 @@ class Tag_relation_model extends MY_Model
      */
     public function find(array $params, &$count, $page=1, $limit=100)
     {
-        $selectStr = 'id, name, desc, sort';
+        $selectStr = 'tag_id, desc, unique_code, type, desc, sort';
         !empty($params['selectStr']) && $selectStr = $params['selectStr'];
 
         $query = $this->db->select($selectStr);
@@ -141,9 +139,62 @@ class Tag_relation_model extends MY_Model
     {
         /** initialize where,group,having,order **/
         !empty($params['ids']) && is_array($params['ids']) ? $query->where_in('id', $params['ids']) : null;
-        isset($params['name']) ? $query->like('name', $params['name']) : null;
+        !empty($params['desc']) ? $query->like('desc', $params['desc']) : null;
+
+        !empty($params['tag_ids']) ? $query->where_in('tag_id', $params['tag_ids']) : null;
+        !empty($params['no_tag_ids']) ? $query->where_not_in('tag_id', $params['no_tag_ids']) : null;
+
+        !empty($params['type']) ? $query->where('type', $params['type']) : null;
+
+        !empty($params['unique_codes']) ? $query->where_in('unique_code', $params['unique_codes']) : null;
+        !empty($params['no_unique_codes']) ? $query->where_not_in('unique_code', $params['no_unique_codes']) : null;
 
         return $query;
+    }
+
+
+    /**
+     * @param array $params
+     * @param $count
+     * @param int $page
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function findRelationLeftJoinTag(array $params, &$count, $page=1, $limit=100)
+    {
+        $query = $this->db->select('relation.id, relation.unique_code, relation.tag_id, relation.desc, tag.name, knowledge.id as knowledge_id')
+            ->from($this->myTable() . ' relation')
+            ->join(IoC()->Tag_model->myTable() . ' tag', 'tag.id=relation.tag_id','left')
+            ->join(IoC()->Knowledge_model->myTable() . ' knowledge', 'relation.unique_code=knowledge.id', 'left')
+            ->order_by('tag.sort asc');
+
+        !empty($params['tag_id']) && $query->where('relation.tag_id', $params['tag_id']);
+
+        !empty($params['unique_code']) && !is_array($params['unique_code']) &&
+        $query->where('relation.unique_code', $params['unique_code']);
+        !empty($params['unique_code']) && is_array($params['unique_code']) &&
+        $query->where_in('relation.unique_code', $params['unique_code']);
+
+
+        !empty($params['tag_id_arr']) && $query->where_in('relation.tag_id', $params['tag_id_arr']);
+        !empty($params['unique_code_arr']) && $query->where_in('relation.unique_code', $params['unique_code_arr']);
+        !empty($params['type']) && $query->where_in('relation.type', $params['type']);
+
+        $count = $query->count_all_results('',false);
+
+        /** 是否单次取全部 */
+        $limit = !empty($params['isAll']) ? $count : $limit;
+
+        $offset = ($page - 1) * $limit;
+        $query->limit($limit , $offset);
+
+        $result = $query->get()->result_array();
+        if (!count($result)) {
+            return [];
+        }
+
+        return $result;
     }
 }
 
