@@ -235,7 +235,8 @@ class PrizeContestRecordService extends BaseService
      */
     public function checkPrizeContestRecordById($id, $isThrowError=Constants::YES_VALUE)
     {
-        $prizeContestRecord = IoC()->Prize_contest_record_model->get(['id' => $id]);
+        $condition = ['id' => $id];
+        $prizeContestRecord = IoC()->Prize_contest_record_model->get($condition);
         if (empty($prizeContestRecord)) {
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];
