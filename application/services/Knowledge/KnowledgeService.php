@@ -206,10 +206,13 @@ class KnowledgeService extends BaseService
                     continue;
                 }
                 $knowledgeItem = $knowledgeList[$tagRelation['knowledge_id']];
-                $knowledgeItem = json_decode($knowledgeItem, true);
-                $list[] = $knowledgeItem;
+                $knowledgeItem['content'] = json_decode($knowledgeItem['content'], true);
+                $list[] = [
+                    'title' => $knowledgeItem['title'],
+                    'text'  => $knowledgeItem['content'],
+                    'img'   => $knowledgeItem['pic'],
+                ];
             }
-
         }
 
         $floor = [
