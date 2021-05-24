@@ -200,8 +200,8 @@ class PrizeService extends BaseService
         return [
             'status' => $isCorrect,
             'is_next' => $isNext,
-            'is_asset_award' => $isCorrect ? $schedule['is_asset_award'] : Constants::NO_VALUE,
-            'asset_num' => $isCorrect ? $schedule['asset_num'] : 0,
+            'is_asset_award' => $isCorrect ? ($schedule['is_asset_award']?: Constants::NO_VALUE) : Constants::NO_VALUE,
+            'asset_num' => $isCorrect ? ($schedule['asset_num'] ?:0 ) : 0,
         ];
     }
 
