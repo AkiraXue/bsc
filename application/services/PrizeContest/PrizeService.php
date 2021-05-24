@@ -206,6 +206,40 @@ class PrizeService extends BaseService
     }
 
     /**
+     * @param array $params
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function checkPrizeStatus(array $params)
+    {
+        /** 1. check base params */
+        $necessaryParamArr = [
+            'id'
+        ];
+        $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
+
+
+        /** 2. get current record */
+        $prizeContestRecord = PrizeContestRecordService::getInstance()->checkPrizeContestRecordById($filter['id']);
+
+        $condition = [
+            'prize_contest_record_id' => $prizeContestRecord['id'],
+            'is_correct'              => Constants::YES_VALUE
+        ];
+        $correctNum = PrizeContestRecordItemService::getInstance()->getTotal($condition);
+
+        $bestRank = PrizeContestRecordItemService::getInstance()->getBest($condition);
+
+        /** 3. get content record result */
+        return [
+            'correct_num' => $correctNum,
+            'asset_num'   => $prizeContestRecord['asset_num']?:0,
+            'bestRank'    => $bestRank
+        ];
+    }
+
+    /**
      * 排行榜
      *
      * @param array $params
