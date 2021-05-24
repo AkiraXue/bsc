@@ -35,8 +35,13 @@ class Upload extends MY_Controller
     public function index()
     {
         /** 1. set  filename & path */
-        $filename = date('Ymdhis').random_string('alnum',4).'.jpeg';
+        $string = strrev($_FILES['upfile']['name']);
+        $array = explode('.',$string);
+        $suffix = $array[0];
+        $filename = date('Ymdhis').random_string('alnum',4).'.'.$suffix;
+
         $this->config['upload_path'] = FCPATH  . ARCHIVE_PATH;
+        $this->config['file_name'] = $filename;
 
         /** 2. init config */
         $this->upload->initialize($this->config);

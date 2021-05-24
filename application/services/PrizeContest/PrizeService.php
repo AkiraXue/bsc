@@ -169,30 +169,29 @@ class PrizeService extends BaseService
             'sort'             => $item['sort']
         ];
         $schedule = IoC()->Prize_contest_schedule_model->get($condition);
-        if (empty($schedule) || !isset($schedule['id'])) {
-            throw new DBInvalidObjectException('PrizeContestScheduleObj', 3001);
+        if (!empty($schedule) && !isset($schedule['id'])) {
+            /** 6. check is close current record */
+            $where = ['id' => $filter['item_id']];
+            $condition = [
+                'state'     => Constants::NO_VALUE,
+                'draft'     => $filter['answer'],
+                'answer'    => $correctChoice,
+                'is_correct'=> $isCorrect,
+                'is_asset_award' => $schedule['is_asset_award'],
+                'asset_num' => $schedule['asset_num'],
+            ];
+            IoC()->Prize_contest_record_item_model->_update($where, $condition);
+
+            /** 7. asset update */
+            if ($isCorrect == Constants::YES_VALUE) {
+                $type = 'jifen';
+                AssetService::getInstance()->storage(
+                    $filter['account_id'], $schedule['asset_num'], $type, '冲顶答题'
+                );
+                PrizeContestRankService::getInstance()->save($filter['account_id'], $schedule['asset_num']);
+            }
         }
 
-        /** 6. check is close current record */
-        $where = ['id' => $filter['item_id']];
-        $condition = [
-            'state'     => Constants::NO_VALUE,
-            'draft'     => $filter['answer'],
-            'answer'    => $correctChoice,
-            'is_correct'=> $isCorrect,
-            'is_asset_award' => $schedule['is_asset_award'],
-            'asset_num' => $schedule['asset_num'],
-        ];
-        IoC()->Prize_contest_record_item_model->_update($where, $condition);
-
-        /** 7. asset update */
-        if ($isCorrect == Constants::YES_VALUE) {
-            $type = 'jifen';
-            AssetService::getInstance()->storage(
-                $filter['account_id'], $schedule['asset_num'], $type, '冲顶答题'
-            );
-            PrizeContestRankService::getInstance()->save($filter['account_id'], $schedule['asset_num']);
-        }
         $isNext = Constants::NO_VALUE;
         if ($item['sort'] < $prizeContest['topic_num'] && $isCorrect) {
             $isNext = Constants::YES_VALUE;
