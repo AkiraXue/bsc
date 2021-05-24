@@ -231,9 +231,9 @@ class PrizeService extends BaseService
 
         /** 3. get content record result */
         return [
-            'correct_num' => $correctNum,
-            'asset_num'   => $prizeContestRecord['asset_num']?:0,
-            'bestRank'    => $bestRank['sort']?:0
+            'correct_num' => intval($correctNum),
+            'asset_num'   => $prizeContestRecord['asset_num']?intval($prizeContestRecord['asset_num']):0,
+            'bestRank'    => $bestRank['sort']?intval($bestRank['sort']):0
         ];
     }
 
