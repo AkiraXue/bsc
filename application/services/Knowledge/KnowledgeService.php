@@ -146,7 +146,8 @@ class KnowledgeService extends BaseService
             'isAll'  => Constants::YES_VALUE
         ];
         $tagRelationListRes = TagRelationService::getInstance()->findRelationLeftJoinTag($condition);
-        $knowledgeIdList = array_column($tagRelationListRes['list'], 'knowledge_id');
+
+        $knowledgeIdList = array_column($tagRelationListRes['list'], 'unique_code');
         if (empty($tagRelationListRes) || !is_array($tagRelationListRes)) {
             return [];
         }
@@ -171,7 +172,6 @@ class KnowledgeService extends BaseService
         }
 
         /** 3. get related knowledge */
-        $floors = [];
         $list = [];
         if (!empty($relationList[$tag['id']])) {
             $tagRelationList = $relationList[$tag['id']];
@@ -180,25 +180,24 @@ class KnowledgeService extends BaseService
                     continue;
                 }
                 $knowledgeItem = $knowledgeList[$tagRelation['knowledge_id']];
-                $knowledgeItem['content'] = json_decode($knowledgeItem['content'], true);
+                $knowledgeContent = json_decode($knowledgeItem['content'], true);
                 $list[] = [
                     'title' => $knowledgeItem['title'],
-                    'text'  => $knowledgeItem['content'],
-                    'img'   => $knowledgeItem['pic'],
+                    'is_contain'  => $knowledgeContent['is_contain'],
+                    'text'  => $knowledgeContent['text'],
+                    'img'   => $knowledgeContent['img'],
                 ];
             }
         }
 
-        $floor = [
+        $floors = [
             'title'     => $tag['name'],
             'subtitle'  => $tag['sub_name'],
             'bg_pic'    => $tag['bg_pic'],
             'bg_video'  => $tag['bg_video'],
-            'type'      => $tag['relation_type'],
-            'list'      => $list
+            'data_type' => $tag['relation_type'],
+            'content'   => $list
         ];
-
-        $floors[] = $floor;
 
         return $floors;
     }
@@ -285,8 +284,25 @@ class KnowledgeService extends BaseService
     {
         $knowledge = $this->checkById($id, Constants::NO_VALUE);
 
+        $knowledgeContent = json_decode($knowledge['content'], true);
 
-        return $knowledge;
+        $content = [
+            'title' => $knowledge['title'],
+            'is_contain'  => $knowledgeContent['is_contain'],
+            'text'  => $knowledgeContent['text'],
+            'img'   => $knowledgeContent['img'],
+        ];
+
+        $floor = [
+            'title'     => $knowledge['title'],
+            'subtitle'  => '',
+            'bg_pic'    => $knowledge['pic'],
+            'data_type' => $knowledge['type'],
+            'bg_video'  => '',
+            'content'   => $content
+        ];
+
+        return $floor;
     }
 
 
