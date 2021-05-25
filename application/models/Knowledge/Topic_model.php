@@ -37,6 +37,20 @@ class Topic_model extends MY_Model
     }
 
     /**
+     * @param $num
+     * @return array
+     */
+    public function random_topic($num)
+    {
+       $sql = "SELECT * FROM " . $this->table . " ORDER BY RAND() LIMIT ".$num;
+       $result = $this->db->query($sql)->result_array();
+        if (!count($result)) {
+            return [];
+        }
+        return $result;
+    }
+
+    /**
      * 查询
      *
      * @param array $params

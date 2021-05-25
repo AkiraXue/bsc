@@ -56,16 +56,11 @@ class PrizeContestRecordItemService extends BaseService
     public function refreshProblemSet(int $num)
     {
         /** 随机抽取题目，并生成当次的题目列表 */
-        $condition = [
-            'page'  => 1,
-            'limit' => $num,
-            'state' => Constants::YES_VALUE
-        ];
-        $topicList = TopicServices::getInstance()->find($condition);
-        if (empty($topicList) || !isset($topicList['list'])) {
+        $topicList = TopicServices::getInstance()->randomTopic($num);
+        if (empty($topicList) || !isset($topicList)) {
             return [];
         }
-        return $topicList['list'] ?: [];
+        return $topicList ?: [];
     }
 
     /**

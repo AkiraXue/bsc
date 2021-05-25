@@ -44,6 +44,11 @@ class TopicServices extends BaseService
 #endregion
 
 #region func
+    public function randomTopic($num)
+    {
+        return IoC()->Topic_model->random_topic($num);
+    }
+
     public function find(array $params)
     {
         $condition = [];
