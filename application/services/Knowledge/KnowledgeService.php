@@ -75,6 +75,34 @@ class KnowledgeService extends BaseService
     }
 
     /**
+     * @param array $list
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    private function cycleTagList(array $list)
+    {
+        foreach ($list as &$tag) {
+            $condition = [
+                'desc'  => Constants::KNOWLEDGE_TYPE_GUIDE,
+                'state' => Constants::YES_VALUE,
+                'parent_tag_id' => $tag['id'],
+                'isAll' => Constants::YES_VALUE
+            ];
+            $tagRes= TagService::getInstance()->find($condition);
+            $tagList = $tagRes['list'] ?:[];
+            if (empty($tagList) || !is_array($tagList)) {
+                return [];
+            }
+            $tag['list'] = $tagList;
+
+            $this->cycleTagList($tag['list']);
+        }
+
+        return $list;
+    }
+
+    /**
      * @param array $params
      * @return array
      * @throws Exception
@@ -85,71 +113,17 @@ class KnowledgeService extends BaseService
         $condition = [
             'desc'  => Constants::KNOWLEDGE_TYPE_GUIDE,
             'state' => Constants::YES_VALUE,
+            'parent_tag_id' => 0,
             'isAll' => Constants::YES_VALUE
         ];
-        $tagBannerRes= TagService::getInstance()->find($condition);
-        $tagBannerList = $tagBannerRes['list'] ?:[];
-        if (empty($tagBannerList) || !is_array($tagBannerList)) {
+        $tagRes= TagService::getInstance()->find($condition);
+        $tagList = $tagRes['list'] ?:[];
+        if (empty($tagList) || !is_array($tagList)) {
             return [];
         }
+        $tagList = $this->cycleTagList($tagList);
 
-        /** 2. get relation tag_relation list */
-        $tagIds = array_column($tagBannerList, 'id');
-        $condition = [
-            'tag_id' => $tagIds,
-            'isAll'  => Constants::YES_VALUE
-        ];
-        $tagRelationListRes = TagRelationService::getInstance()->findRelationLeftJoinTag($condition);
-        $knowledgeIdList = array_column($tagRelationListRes['list'], 'knowledge_id');
-        if (empty($tagRelationListRes) || !is_array($tagRelationListRes)) {
-            return [];
-        }
-        $relationList = [];
-        foreach ($tagRelationListRes['list'] as $tagRelationList) {
-            if (empty($tagRelationList['tag_id'])) {
-                continue;
-            }
-
-            $relationList[$tagRelationList['tag_id']][] = $tagRelationList['knowledge_id'];
-        }
-
-        /** 3. get relation tag_relation knowledge content */
-        $condition = [
-            'ids'    => $knowledgeIdList,
-            'isAll'  => Constants::YES_VALUE
-        ];
-        $knowledgeListRes = KnowledgeService::getInstance()->find($condition);
-        $knowledgeList = array_column($knowledgeListRes['list'], null, 'id');
-        if (empty($knowledgeList) || !is_array($knowledgeList)) {
-            return [];
-        }
-
-        /** 3. get related knowledge */
-        $floors = [];
-        foreach ($tagBannerList as $tagBanner) {
-            $list = [];
-            if (!empty($relationList[$tagBanner['id']])) {
-                $tagRelationList = $relationList[$tagBanner['id']];
-                foreach ($tagRelationList as $tagRelation) {
-                    if (!$knowledgeList[$tagRelation['knowledge_id']]) {
-                        continue;
-                    }
-                    $list[] = $knowledgeList[$tagRelation['knowledge_id']];
-                }
-
-            }
-
-            $floor = [
-                'title'     => $tagBanner['name'],
-                'subtitle'  => $tagBanner['sub_name'],
-                'type'      => $tagBanner['pic_type'],
-                'list'      => $list
-            ];
-
-            $floors[] = $floor;
-        }
-
-        return $floors;
+        return $tagList;
     }
 
     /**

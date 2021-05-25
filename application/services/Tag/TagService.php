@@ -71,6 +71,7 @@ class TagService extends BaseService
             'bg_video' => $filter['bg_video'],
             'sort'     => $filter['sort'],
             'relation_type' => $filter['relation_type']?:'',
+            'parent_tag_id'     => $filter['parent_tag_id']?:0,
             'state'    => $filter['state'] ?: Constants::NO_VALUE
         ];
         if ($id) {
@@ -96,6 +97,7 @@ class TagService extends BaseService
         empty($params['tag_id']) || $condition['id'] = $params['tag_id'];
         empty($params['orderBy']) || $condition['orderBy'] = $params['orderBy'];
         empty($params['isAll']) || $condition['isAll'] = $params['isAll'];
+        !isset($params['parent_tag_id']) || $condition['parent_tag_id'] = $params['parent_tag_id'];
 
         $page = $params['page'];
         $limit = $params['limit'];

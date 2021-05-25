@@ -87,7 +87,12 @@ class Tag_model extends MY_Model
     private function filterQuery(CI_DB_query_builder $query, array $params)
     {
         /** initialize where,group,having,order **/
+        !empty($params['parent_tag_id']) ? $query->where('parent_tag_id', $params['parent_tag_id']) : null;
         !empty($params['ids']) && is_array($params['ids']) ? $query->where_in('id', $params['ids']) : null;
+        !empty($params['desc']) ? $query->where('desc', $params['desc']) : null;
+
+        isset($params['parent_tag_id']) ? $query->where('parent_tag_id', $params['parent_tag_id']) : null;
+
         isset($params['name']) ? $query->like('name', $params['name']) : null;
 
         return $query;
