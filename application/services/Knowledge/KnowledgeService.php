@@ -277,6 +277,20 @@ class KnowledgeService extends BaseService
 
 #region base func
     /**
+     * @param int $id
+     * @return array
+     * @throws Exception
+     */
+    public function getById(int $id)
+    {
+        $knowledge = $this->checkById($id, Constants::NO_VALUE);
+
+
+        return $knowledge;
+    }
+
+
+    /**
      * @param integer  $id
      * @param integer $isThrowError
      *

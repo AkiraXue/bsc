@@ -44,7 +44,7 @@ class Knowledge extends MY_Controller
         $data = $this->input->post(null, true);
         $necessaryParamArr = ['id'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $data, true);
-        $result = KnowledgeService::getInstance()->checkById($filter['id'], Constants::NO_VALUE);
+        $result = KnowledgeService::getInstance()->getById($filter['id']);
         $this->_success($result);
     }
 

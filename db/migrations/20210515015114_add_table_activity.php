@@ -89,7 +89,7 @@ class AddTableActivity extends AbstractMigration
             ->addColumn('day', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '活动第几天'])
             ->addColumn('is_related_knowledge', 'integer', [
                 'null' => false,
-                'default' => 1,
+                'default' => 2,
                 'limit' => MysqlAdapter::INT_TINY,
                 'signed' => false,
                 'comment' => '是否关联知识科普 1-是 2-否'
@@ -97,7 +97,7 @@ class AddTableActivity extends AbstractMigration
             ->addColumn('knowledge_id', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '知识库id'])
             ->addColumn('is_asset_award', 'integer', [
                 'null' => false,
-                'default' => 1,
+                'default' => 2,
                 'limit' => MysqlAdapter::INT_TINY,
                 'signed' => false,
                 'comment' => '是否资产奖励 1-是 2-否'
@@ -105,7 +105,7 @@ class AddTableActivity extends AbstractMigration
             ->addColumn('asset_num', 'decimal', ['precision' => '10', 'scale' => '2', 'comment' => '资产奖励额度', 'default' => '1'])
             ->addColumn('state', 'integer', [
                 'null' => false,
-                'default' => 1,
+                'default' => 2,
                 'limit' => MysqlAdapter::INT_TINY,
                 'signed' => false,
                 'comment' => '状态 1-正常 2-关闭'
@@ -176,7 +176,7 @@ class AddTableActivity extends AbstractMigration
             ->addColumn('activity_schedule_id', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '活动关联排期id'])
             ->addColumn('is_related_knowledge', 'integer', [
                 'null' => false,
-                'default' => 1,
+                'default' => 2,
                 'limit' => MysqlAdapter::INT_TINY,
                 'signed' => false,
                 'comment' => '是否关联知识科普 1-是 2-否'
@@ -184,7 +184,7 @@ class AddTableActivity extends AbstractMigration
             ->addColumn('knowledge_id', 'integer', ['null' => false, 'default' => 0, 'signed' => false, 'comment' => '知识库id'])
             ->addColumn('is_asset_award', 'integer', [
                 'null' => false,
-                'default' => 1,
+                'default' => 2,
                 'limit' => MysqlAdapter::INT_TINY,
                 'signed' => false,
                 'comment' => '是否资产奖励 1-是 2-否'
@@ -192,7 +192,7 @@ class AddTableActivity extends AbstractMigration
             ->addColumn('asset_num', 'decimal', ['precision' => '10', 'scale' => '2', 'comment' => '资产奖励额度', 'default' => '1'])
             ->addColumn('is_knowledge', 'integer', [
                 'null' => false,
-                'default' => 1,
+                'default' => 2,
                 'limit' => MysqlAdapter::INT_TINY,
                 'signed' => false,
                 'comment' => '是否已知识科普 1-是 2-否'
@@ -200,7 +200,7 @@ class AddTableActivity extends AbstractMigration
             ->addColumn('knowledge_time', 'timestamp', ['null' => false , 'default' => 'CURRENT_TIMESTAMP', 'update' => '', 'comment' => '知识科普时间'])
             ->addColumn('is_punch', 'integer', [
                 'null' => false,
-                'default' => 1,
+                'default' => 2,
                 'limit' => MysqlAdapter::INT_TINY,
                 'signed' => false,
                 'comment' => '是否打卡  1-是 2-否'
