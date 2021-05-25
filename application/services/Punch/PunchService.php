@@ -12,15 +12,16 @@ namespace Service\Punch;
 use Exception;
 use Lib\Constants;
 
-use Service\Activity\ActivityParticipateRecordService;
-use Service\Activity\ActivityScheduleService;
-use Service\Activity\ActivityService;
-use Service\Asset\AssetService;
 use Service\BaseTrait;
 use Service\BaseService;
 
-use Service\Activity\ActivityParticipateScheduleService;
+
+use Service\Asset\AssetService;
 use Service\Knowledge\KnowledgeService;
+use Service\Activity\ActivityService;
+use Service\Activity\ActivityScheduleService;
+use Service\Activity\ActivityParticipateRecordService;
+use Service\Activity\ActivityParticipateScheduleService;
 
 /**
  * Class PunchService
@@ -63,6 +64,7 @@ class PunchService extends BaseService
         $activity = ActivityService::getInstance()->checkActivityByCode($response['activity_code']);
 
         /** 2. is_knowledge && current_day  */
+        $isRelatedKnowledge = Constants::NO_VALUE;
         $isKnowledge = Constants::NO_VALUE;
         $isPunch = Constants::NO_VALUE;
 
@@ -71,8 +73,14 @@ class PunchService extends BaseService
             $response['activity_code'], $accountId, $date, Constants::NO_VALUE
         );
 
+        $activitySchedule = [];
+        if ($record['activity_schedule_id']) {
+            $activitySchedule = ActivityScheduleService::getInstance()->checkById($record['activity_schedule_id']);
+        }
+
         $response = [
             'is_punch'     => $record['is_punch'] ?: $isPunch,
+            'is_related_knowledge' => $activitySchedule['is_related_knowledge'] ?:$isRelatedKnowledge,
             'is_knowledge' => $record['is_knowledge'] ?:$isKnowledge,
             'current_day'  => $record['day'],
             'activity'     => $activity,
@@ -204,14 +212,14 @@ class PunchService extends BaseService
             'isAll'         => Constants::YES_VALUE
         ];
         $activityScheduleRes = ActivityScheduleService::getInstance()->find($condition);
-        $activityScheduleList = array_column($activityScheduleRes, null, 'day');
+        $activityScheduleList = array_column($activityScheduleRes['list'], null, 'day');
 
         /** 3. get current schedule list */
         $totalNum = ActivityParticipateRecordService::getInstance()->checkTotalNumByActivityCodeAndAccountId(
             $participateSchedule['activity_code'], $accountId
         );
 
-        $day = $totalNum + 1;
+        $day = intval($totalNum) + 1;
         $schedule = $activityScheduleList[$day] ?:[];
         if (empty($record) && !isset($record['id']) ) {
             $condition = [
@@ -219,9 +227,9 @@ class PunchService extends BaseService
                 'account_id'    => $accountId,
                 'activity_schedule_id' => $schedule['id']?:'',
                 'day'           => $day,
-                'is_related_knowledge' => $schedule['is_related_knowledge']?:Constants::NO_VALUE,
+                'is_related_knowledge' => Constants::NO_VALUE,
                 'knowledge_id'  => $schedule['knowledge_id'],
-                'is_asset_award' => $schedule['is_asset_award']?:Constants::NO_VALUE,
+                'is_asset_award' => Constants::NO_VALUE,
                 'asset_num'     => $schedule['asset_num']?:'',
                 'is_knowledge'  => Constants::NO_VALUE,
                 'knowledge_time' => '',

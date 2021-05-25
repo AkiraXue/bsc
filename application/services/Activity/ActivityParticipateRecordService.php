@@ -70,16 +70,18 @@ class ActivityParticipateRecordService extends BaseService
             $activitySchedule = ActivityScheduleService::getInstance()->checkById(
                 $filter['activity_schedule_id'], Constants::NO_VALUE
             );
+
+            $activityParticipateSchedule = ActivityParticipateScheduleService::getInstance()->checkByAccountId($userInfo['account_id']);
+
+            if ($activityParticipateSchedule['account_id'] != $userInfo['account_id']) {
+                throw new AccountIdNotMatchSchedule();
+            }
         }
 
         /** 3. check data match logic */
         if (!empty($activitySchedule) && isset($activitySchedule['id'])) {
             if ($activity['code'] != $activitySchedule['activity_code']) {
                 throw new ActivityCodeNotMatchSchedule();
-            }
-
-            if ($userInfo['account_id'] != $activitySchedule['account_id']) {
-                throw new AccountIdNotMatchSchedule();
             }
         }
 
