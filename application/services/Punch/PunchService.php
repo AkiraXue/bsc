@@ -170,8 +170,7 @@ class PunchService extends BaseService
         ];
         IoC()->Activity_participate_record_model->_update($where, $update);
 
-        return $knowledge;
-
+        return ['id' => $knowledge['id'], 'type' => $knowledge['type']];
     }
 #endregion
 
