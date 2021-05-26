@@ -201,7 +201,11 @@ class AssetService extends BaseService
      */
     public function checkByUniqueCode(string $uniqueCode, $type, $isThrowError = Constants::YES_VALUE)
     {
-        $asset = IoC()->Asset_model->findOne(['unique_code' => $uniqueCode, 'type' => $type]);
+        $condition = ['unique_code' => $uniqueCode];
+        if ($type) {
+            $condition['type'] = $type;
+        }
+        $asset = IoC()->Asset_model->findOne($condition);
         if (empty($asset)) {
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];
