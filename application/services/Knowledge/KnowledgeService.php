@@ -300,7 +300,7 @@ class KnowledgeService extends BaseService
             'bg_pic'    => $knowledge['pic'],
             'data_type' => $knowledge['type'],
             'bg_video'  => '',
-            'content'   => $content
+            'content'   => [$content]
         ];
 
         return $floor;
