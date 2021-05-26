@@ -12,6 +12,7 @@ namespace Service\User;
 use Exception;
 use Lib\Constants;
 
+use Service\Asset\AssetService;
 use Service\BaseTrait;
 use Service\BaseService;
 
@@ -129,7 +130,7 @@ class UserInfoService extends BaseService
      * @param int $isThrowError
      *
      * @return array
-     * @throws DBInvalidObjectException
+     * @throws Exception
      */
     public function checkByAccountId(string $accountId, $isThrowError=Constants::YES_VALUE)
     {
@@ -143,6 +144,10 @@ class UserInfoService extends BaseService
             }
             throw new DBInvalidObjectException('UserObj', 'account_id');
         }
+        $asset = AssetService::getInstance()->checkByUniqueCode($accountId, null, Constants::NO_VALUE);
+        $userInfo['asset_num'] = ($asset && $asset['remaining']) ? $asset['remaining'] : '0.00';
+        setlocale(LC_TIME, 'en_US');
+        $userInfo['register_time'] = gmstrftime("%d %b %Y", strtotime($userInfo['register_time']));
         return $userInfo;
     }
 
@@ -151,7 +156,7 @@ class UserInfoService extends BaseService
      * @param int $isThrowError
      *
      * @return array
-     * @throws DBInvalidObjectException
+     * @throws Exception
      */
     public function checkByOpenId(string $openId, $isThrowError=Constants::YES_VALUE)
     {
