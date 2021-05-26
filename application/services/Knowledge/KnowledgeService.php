@@ -134,9 +134,10 @@ class KnowledgeService extends BaseService
     public function findByTagId(array $params)
     {
         /** 1. check base params */
-        $necessaryParamArr = ['tag_id'];
+        $necessaryParamArr = ['category_id'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
 
+        $filter['tag_id'] = $filter['category_id'];
         /** 1. check tag_id */
         $tag = TagService::getInstance()->checkById($filter['tag_id']);
 
