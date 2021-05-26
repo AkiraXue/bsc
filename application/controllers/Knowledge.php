@@ -30,9 +30,7 @@ class Knowledge extends MY_Controller
     public function save()
     {
         $data = $this->input->post(null, true);
-
         $result = KnowledgeService::getInstance()->save($data);
-
         $this->_success($result);
     }
 
