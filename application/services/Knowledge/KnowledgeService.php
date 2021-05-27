@@ -185,10 +185,13 @@ class KnowledgeService extends BaseService
                 $knowledgeContent = json_decode($knowledgeItem['content'], true);
 
                 $item = [];
-                ($knowledgeItem['title'] && $knowledgeContent['text'] ) && $item['title'] = $knowledgeItem['title'];
-                $knowledgeContent['is_contain'] && $item['is_contain'] = $knowledgeContent['is_contain'];
-                $knowledgeContent['text'] && $item['text'] = $knowledgeContent['text'];
-                $knowledgeContent['img'] && $item['img'] =  CDN_HOST. (strpos($knowledgeContent['img'], 'upload') ? '' : '/origin') . $knowledgeContent['img'];
+                $item['title'] = ($knowledgeItem['title'] && $knowledgeContent['text']) ? $knowledgeItem['title'] : '';
+                $item['is_contain'] = $knowledgeContent['is_contain'] ? $knowledgeContent['is_contain'] : 2;
+                $item['text'] = $knowledgeContent['text'] ? $knowledgeContent['text'] : '';
+                $item['img'] =  '';
+                if ($knowledgeContent['img']) {
+                    $item['img'] = CDN_HOST. (strpos($knowledgeContent['img'], 'upload') ? '' : '/origin') . $knowledgeContent['img'];
+                }
 
                 $list[] = $item;
             }
