@@ -161,6 +161,7 @@ class KnowledgeService extends BaseService
             $relationList[$tagRelationList['tag_id']][] = $tagRelationList['knowledge_id'];
         }
 
+
         /** 3. get relation tag_relation knowledge content */
         $condition = [
             'ids'    => $knowledgeIdList,
@@ -171,22 +172,22 @@ class KnowledgeService extends BaseService
         if (empty($knowledgeList) || !is_array($knowledgeList)) {
             return [];
         }
-
         /** 3. get related knowledge */
         $list = [];
+
         if (!empty($relationList[$tag['id']])) {
             $tagRelationList = $relationList[$tag['id']];
-            foreach ($tagRelationList as $tagRelation) {
-                if (!$knowledgeList[$tagRelation['knowledge_id']]) {
+            foreach ($tagRelationList as $tagId) {
+                if (!$knowledgeList[$tagId]) {
                     continue;
                 }
-                $knowledgeItem = $knowledgeList[$tagRelation['knowledge_id']];
+                $knowledgeItem = $knowledgeList[$tagId];
                 $knowledgeContent = json_decode($knowledgeItem['content'], true);
                 $list[] = [
                     'title' => $knowledgeItem['title'],
                     'is_contain'  => $knowledgeContent['is_contain'],
                     'text'  => $knowledgeContent['text'],
-                    'img'   => $knowledgeContent['img'],
+                    'img'   => CDN_HOST . $knowledgeContent['img'],
                 ];
             }
         }
