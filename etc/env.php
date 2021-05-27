@@ -35,4 +35,4 @@ define('ARCHIVE_PATH',  'resource/upload/');
 define('ALLOW_RESOURCE_TYPE', 'gif|jpg|png|jpeg|mp4');
 define('MAX_BUFFER_LIMIT', '2048');
 
-define('CDN_HOST', 'https://cdn.sixtyden.com');
+define('CDN_HOST', 'https://cdn.akiraxue.com');
