@@ -39,6 +39,16 @@ class Tag Extends MY_Controller
     /**
      * @throws Exception
      */
+    public function delete()
+    {
+        $data = $this->input->post(null, true);
+        $result = TagService::getInstance()->delete($data);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function get()
     {
         $data = $this->input->post(null, true);

@@ -185,10 +185,13 @@ class KnowledgeService extends BaseService
                 $knowledgeContent = json_decode($knowledgeItem['content'], true);
 
                 $item = [];
-                ($knowledgeItem['title'] && $knowledgeContent['text'] ) && $item['title'] = $knowledgeItem['title'];
-                $knowledgeContent['is_contain'] && $item['is_contain'] = $knowledgeContent['is_contain'];
-                $knowledgeContent['text'] && $item['text'] = $knowledgeContent['text'];
-                $knowledgeContent['img'] && $item['img'] =  CDN_HOST . $knowledgeContent['img'];
+                $item['title'] = ($knowledgeItem['title'] && $knowledgeContent['text']) ? $knowledgeItem['title'] : '';
+                $item['is_contain'] = $knowledgeContent['is_contain'] ? $knowledgeContent['is_contain'] : 2;
+                $item['text'] = $knowledgeContent['text'] ? $knowledgeContent['text'] : '';
+                $item['img'] =  '';
+                if ($knowledgeContent['img']) {
+                    $item['img'] = CDN_HOST . $knowledgeContent['img'];
+                }
 
                 $list[] = $item;
             }
@@ -208,6 +211,18 @@ class KnowledgeService extends BaseService
 #endregion
 
 #region func
+    /**
+     * @param array $params
+     * @return bool
+     * @throws Exception
+     */
+    public function delete(array $params)
+    {
+        $this->checkById($params['id']);
+        IoC()->Knowledge_model->_update(['id' => $params['id']],  ['state' => Constants::NO_VALUE]);
+        return true;
+    }
+
     public function find(array $params)
     {
         $condition = [];
@@ -226,6 +241,11 @@ class KnowledgeService extends BaseService
         $limit = !empty($limit) ? intval($limit) : 10;
 
         $data =  IoC()->Knowledge_model->find($condition, $count, $page, $limit);
+        foreach ($data as &$knowledge) {
+            $knowledge['content'] = $knowledge['content'] ? json_decode($knowledge['content'], true) : [];
+
+            $knowledge['content']['img'] = strpos($knowledge['content']['img'], '://') ?  $knowledge['content']['img'] : CDN_HOST . $knowledge['content']['img'];
+        }
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
         return [
@@ -244,7 +264,7 @@ class KnowledgeService extends BaseService
     public function save(array $params)
     {
         /** 1. check base params */
-        $necessaryParamArr = ['title', 'type', 'pic', 'content'];
+        $necessaryParamArr = ['title', 'type'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
         $checkLenLimitList = [
             'pic' => 254
@@ -257,12 +277,18 @@ class KnowledgeService extends BaseService
             $state = $params['state'];
         }
 
+        $content = json_encode([
+            'title' => $params['sub_title']?:'',
+            'img'   => $params['img']?:'',
+            'text'  => $params['text']?:'',
+        ]);
+
         /** 3. save knowledge info */
         $condition = [
             'title'         => $filter['title'],
             'type'          => $filter['type'],
-            'pic'           => $filter['pic'],
-            'content'       => $filter['content'],
+            'pic'           => $params['pic']?:'',
+            'content'       => $content,
             'state'         => $state
         ];
         if ($params['id']) {

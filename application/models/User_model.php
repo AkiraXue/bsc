@@ -107,7 +107,6 @@ class User_model extends MY_Model
         !empty($params['nicknameLike']) && $query->like('nickname', $params['nicknameLike']);
 
         !empty($params['name']) && $query->where('name', $params['name']);
-
         !empty($params['nickname']) && $query->where('nickname', $params['nickname']);
 
         !empty($params['account_id']) && !is_array($params['account_id']) &&

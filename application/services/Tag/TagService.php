@@ -11,12 +11,12 @@ namespace Service\Tag;
 
 use Exception;
 
-use Exception\Common\DBInvalidObjectException;
 use Lib\Constants;
 
 use Service\BaseTrait;
 use Service\BaseService;
 
+use Exception\Common\DBInvalidObjectException;
 use Exception\Common\ApiInvalidArgumentException;
 
 
@@ -50,6 +50,18 @@ class TagService extends BaseService
 #region func with tag
     /**
      * @param array $params
+     * @return bool
+     * @throws Exception
+     */
+    public function delete(array $params)
+    {
+        $this->checkById($params['id']);
+        IoC()->Tag_model->_update(['id' => $params['id']], ['state' => Constants::NO_VALUE]);
+        return true;
+    }
+
+    /**
+     * @param array $params
      *
      * @return mixed
      * @throws Exception
@@ -65,11 +77,11 @@ class TagService extends BaseService
         /** 3. save prize contest schedule info */
         $condition = [
             'name'     => $filter['name'],
-            'sub_name' => $filter['sub_name'],
-            'desc'     => $filter['desc'],
-            'bg_pic'   => $filter['bg_pic'],
-            'bg_video' => $filter['bg_video'],
-            'sort'     => $filter['sort'],
+            'sub_name' => $filter['sub_name']?:'',
+            'desc'     => $filter['desc']?:'',
+            'bg_pic'   => $filter['bg_pic']?:'',
+            'bg_video' => $filter['bg_video']?:'',
+            'sort'     => $filter['sort']?:0,
             'relation_type' => $filter['relation_type']?:'',
             'parent_tag_id'     => $filter['parent_tag_id']?:0,
             'state'    => $filter['state'] ?: Constants::NO_VALUE
@@ -92,6 +104,8 @@ class TagService extends BaseService
         $condition = [];
 
         empty($params['name']) || $condition['name'] = $params['name'];
+        empty($params['sub_name']) || $condition['sub_name'] = $params['sub_name'];
+        empty($params['state']) || $condition['state'] = $params['state'];
         empty($params['desc']) || $condition['desc'] = $params['desc'];
 
         empty($params['tag_id']) || $condition['id'] = $params['tag_id'];
@@ -107,6 +121,18 @@ class TagService extends BaseService
         $data =  IoC()->Tag_model->find($condition,$count, $page, $limit);
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
+
+        $parentTagIds = array_column($data, 'parent_tag_id');
+        $condition = ['ids' => $parentTagIds, 'isAll' => Constants::YES_VALUE];
+        $tagList =  IoC()->Tag_model->find($condition,$tagCount);
+        $tagList = array_column($tagList, null, 'id');
+        foreach ($data as &$tag) {
+            if (!$tag['bg_pic']) {
+                continue;
+            }
+            $tag['bg_pic'] = strpos($tag['bg_pic'], '://') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
+            $tag['parent_tag_name'] = $tagList[$tag['parent_tag_id']]['name'];
+        }
         return [
             'list'       => $data,
             'total'      => $count,
@@ -133,6 +159,9 @@ class TagService extends BaseService
             }
             throw new DBInvalidObjectException('TagObj', 'id');
         }
+        if ($tag['bg_pic']) {
+            $tag['bg_pic'] = strpos($tag['bg_pic'], '://') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
+        }
         return $tag;
     }
 
@@ -144,15 +173,14 @@ class TagService extends BaseService
      */
     public function checkTagEntryApiArgument($params)
     {
-        $necessaryParamArr = ['name', 'sub_name', 'desc', 'bg_pic', 'bg_video', 'sort'];
+        $necessaryParamArr = ['name', 'desc', 'bg_pic', 'relation_type', 'state'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
 
         $checkLenLimitList = [
             'name'      => 32,
             'sub_name'  => 32,
             'desc'      => 254,
-            'bg_pic'    => 254,
-            'bg_video'  => 254
+            'bg_pic'    => 254
         ];
         $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
 

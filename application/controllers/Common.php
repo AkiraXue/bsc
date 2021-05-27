@@ -28,7 +28,6 @@ class Common extends MY_Controller
     {
         $data = $this->input->post(null, true);
         $result = LoginService::getInstance()->wxAppLogin($data);
-
         $this->_success($result);
     }
 }
