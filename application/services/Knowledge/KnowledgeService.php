@@ -211,6 +211,18 @@ class KnowledgeService extends BaseService
 #endregion
 
 #region func
+    /**
+     * @param array $params
+     * @return bool
+     * @throws Exception
+     */
+    public function delete(array $params)
+    {
+        $this->checkById($params['id']);
+        IoC()->Knowledge_model->_update(['id' => $params['id']],  ['state' => Constants::NO_VALUE]);
+        return true;
+    }
+
     public function find(array $params)
     {
         $condition = [];
