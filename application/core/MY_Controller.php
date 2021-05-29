@@ -1,13 +1,4 @@
 <?php
-if (!defined('BASEPATH')) {
-    exit('No direct script access allowed');
-}
-
-use Exception\Common\ApiInvalidArgumentException;
-use Service\BaseTrait;
-
-use Service\Wechat\TokenService;
-
 /**
  * Class MY_Controller
  * CI_Controller封装
@@ -16,6 +7,21 @@ use Service\Wechat\TokenService;
  * @property MY_Output output
  * @property CI_Router router
  * @property CI_Lang   lang
+ */
+
+if (!defined('BASEPATH')) {
+    exit('No direct script access allowed');
+}
+
+use Service\BaseTrait;
+
+use Service\Wechat\TokenService;
+use Service\User\UserInfoService;
+
+use Exception\Common\ApiInvalidArgumentException;
+
+/**
+ * Class MY_Controller
  */
 class MY_Controller extends CI_Controller
 {
@@ -36,9 +42,15 @@ class MY_Controller extends CI_Controller
 
         $this->checkCors();
 
-        $isAdmin = $_POST['is_admin'];
-        if ($this->isNeedLogin == 1 && empty($isAdmin)) {
+        if ($this->isNeedLogin == 1) {
             $this->checkLogin();
+        }
+
+        $isAdmin = $_POST['is_admin'];
+        if ($isAdmin) {
+
+        } else {
+            UserInfoService::getInstance()->checkByAccountId($this->accountId);
         }
 
         foreach ($_POST as $key => $value) {
