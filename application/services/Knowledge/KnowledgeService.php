@@ -252,7 +252,7 @@ class KnowledgeService extends BaseService
     public function save(array $params)
     {
         /** 1. check base params */
-        $necessaryParamArr = ['title', 'type', 'pic', 'content'];
+        $necessaryParamArr = ['title', 'type'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
         $checkLenLimitList = [
             'pic' => 254
@@ -265,12 +265,18 @@ class KnowledgeService extends BaseService
             $state = $params['state'];
         }
 
+        $content = json_encode([
+            'title' => $params['sub_title']?:'',
+            'img'   => $params['img']?:'',
+            'text'  => $params['text']?:'',
+        ]);
+
         /** 3. save knowledge info */
         $condition = [
             'title'         => $filter['title'],
             'type'          => $filter['type'],
             'pic'           => $filter['pic'],
-            'content'       => $filter['content'],
+            'content'       => $content,
             'state'         => $state
         ];
         if ($params['id']) {
