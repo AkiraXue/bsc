@@ -50,6 +50,18 @@ class TagService extends BaseService
 #region func with tag
     /**
      * @param array $params
+     * @return bool
+     * @throws Exception
+     */
+    public function delete(array $params)
+    {
+        $this->checkById($params['id']);
+        IoC()->Tag_model->_update(['id' => $params['id']], ['state' => Constants::NO_VALUE]);
+        return true;
+    }
+
+    /**
+     * @param array $params
      *
      * @return mixed
      * @throws Exception
