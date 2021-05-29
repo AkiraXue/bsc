@@ -190,7 +190,7 @@ class KnowledgeService extends BaseService
                 $item['text'] = $knowledgeContent['text'] ? $knowledgeContent['text'] : '';
                 $item['img'] =  '';
                 if ($knowledgeContent['img']) {
-                    $item['img'] = CDN_HOST. (strpos($knowledgeContent['img'], 'upload') ? '' : '/origin') . $knowledgeContent['img'];
+                    $item['img'] = CDN_HOST . $knowledgeContent['img'];
                 }
 
                 $list[] = $item;
