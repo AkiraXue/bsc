@@ -106,7 +106,7 @@ class TagService extends BaseService
 
         $data =  IoC()->Tag_model->find($condition,$count, $page, $limit);
         foreach ($data as &$tag) {
-            $tag['bg_pic'] = strpos($tag['bg_pic'], 'http') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
+            $tag['bg_pic'] = strpos($tag['bg_pic'], '://') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
         }
 
         $totalPage = ceil($count / $limit);
@@ -137,7 +137,7 @@ class TagService extends BaseService
             }
             throw new DBInvalidObjectException('TagObj', 'id');
         }
-        $tag['bg_pic'] = strpos($tag['bg_pic'], 'http') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
+        $tag['bg_pic'] = strpos($tag['bg_pic'], '://') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
         return $tag;
     }
 
