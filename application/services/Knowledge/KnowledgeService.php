@@ -83,7 +83,6 @@ class KnowledgeService extends BaseService
     private function cycleTagList(array $list)
     {
         foreach ($list as &$tag) {
-            $tag['bg_pic'] = strpos($tag['bg_pic'], 'http') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
             $condition = [
                 'desc'  => Constants::KNOWLEDGE_TYPE_GUIDE,
                 'state' => Constants::YES_VALUE,
