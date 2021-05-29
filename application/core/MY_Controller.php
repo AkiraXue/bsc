@@ -50,7 +50,7 @@ class MY_Controller extends CI_Controller
         if ($isAdmin) {
 
         } else {
-            UserInfoService::getInstance()->checkByAccountId($this->accountId);
+            // UserInfoService::getInstance()->checkByAccountId($this->accountId);
         }
 
         foreach ($_POST as $key => $value) {
