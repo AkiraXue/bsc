@@ -30,7 +30,7 @@ class Knowledge extends MY_Controller
     public function delete()
     {
         $data = $this->input->post(null, true);
-        $result = KnowledgeService::getInstance()->save($data);
+        $result = KnowledgeService::getInstance()->delete($data);
         $this->_success($result);
     }
 
