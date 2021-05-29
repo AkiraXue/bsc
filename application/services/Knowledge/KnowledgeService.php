@@ -275,7 +275,7 @@ class KnowledgeService extends BaseService
         $condition = [
             'title'         => $filter['title'],
             'type'          => $filter['type'],
-            'pic'           => $filter['pic'],
+            'pic'           => $params['pic']?:'',
             'content'       => $content,
             'state'         => $state
         ];
