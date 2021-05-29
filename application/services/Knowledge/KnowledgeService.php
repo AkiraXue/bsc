@@ -229,6 +229,9 @@ class KnowledgeService extends BaseService
         $limit = !empty($limit) ? intval($limit) : 10;
 
         $data =  IoC()->Knowledge_model->find($condition, $count, $page, $limit);
+        foreach ($data as &$knowledge) {
+            $knowledge['content'] = $knowledge['content'] ? json_decode($knowledge['content'], true) : [];
+        }
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
         return [
