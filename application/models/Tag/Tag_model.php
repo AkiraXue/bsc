@@ -94,6 +94,9 @@ class Tag_model extends MY_Model
         isset($params['parent_tag_id']) ? $query->where('parent_tag_id', $params['parent_tag_id']) : null;
 
         isset($params['name']) ? $query->like('name', $params['name']) : null;
+        isset($params['sub_name']) ? $query->like('sub_name', $params['sub_name']) : null;
+
+        !empty($params['state']) ? $query->where('state', $params['state']) : null;
 
         return $query;
     }
