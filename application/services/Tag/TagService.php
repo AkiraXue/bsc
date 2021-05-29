@@ -104,6 +104,8 @@ class TagService extends BaseService
         $condition = [];
 
         empty($params['name']) || $condition['name'] = $params['name'];
+        empty($params['sub_name']) || $condition['sub_name'] = $params['sub_name'];
+        empty($params['state']) || $condition['state'] = $params['state'];
         empty($params['desc']) || $condition['desc'] = $params['desc'];
 
         empty($params['tag_id']) || $condition['id'] = $params['tag_id'];
