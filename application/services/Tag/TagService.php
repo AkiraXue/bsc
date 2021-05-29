@@ -115,7 +115,7 @@ class TagService extends BaseService
                 continue;
             }
             $tag['bg_pic'] = strpos($tag['bg_pic'], '://') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
-            $tag['parent_tag_name'] = $tagList[$tag['id']]['name'];
+            $tag['parent_tag_name'] = $tagList[$tag['parent_tag_id']]['name'];
         }
 
         $totalPage = ceil($count / $limit);
