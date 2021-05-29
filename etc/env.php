@@ -35,8 +35,8 @@ define('ARCHIVE_PATH',  'upload/');
 define('ALLOW_RESOURCE_TYPE', 'gif|jpg|png|jpeg|mp4');
 define('MAX_BUFFER_LIMIT', '512000');
 
-// define('CDN_HOST', 'https://cdn.akiraxue.com');
-define('CDN_HOST', 'https://cdn.bsc.com/');
+define('CDN_HOST', 'https://cdn.akiraxue.com');
+//define('CDN_HOST', 'https://cdn.bsc.com/');
 
 /** ali oss config */
 define('ALI_OSS_ACCESS_KEY_ID', 'LTAI5tJo9ujyKrPktDmB194r');
