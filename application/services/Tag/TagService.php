@@ -65,11 +65,11 @@ class TagService extends BaseService
         /** 3. save prize contest schedule info */
         $condition = [
             'name'     => $filter['name'],
-            'sub_name' => $filter['sub_name'],
-            'desc'     => $filter['desc'],
-            'bg_pic'   => $filter['bg_pic'],
-            'bg_video' => $filter['bg_video'],
-            'sort'     => $filter['sort'],
+            'sub_name' => $filter['sub_name']?:'',
+            'desc'     => $filter['desc']?:'',
+            'bg_pic'   => $filter['bg_pic']?:'',
+            'bg_video' => $filter['bg_video']?:'',
+            'sort'     => $filter['sort']?:0,
             'relation_type' => $filter['relation_type']?:'',
             'parent_tag_id'     => $filter['parent_tag_id']?:0,
             'state'    => $filter['state'] ?: Constants::NO_VALUE
