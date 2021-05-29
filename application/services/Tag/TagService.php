@@ -144,7 +144,7 @@ class TagService extends BaseService
      */
     public function checkTagEntryApiArgument($params)
     {
-        $necessaryParamArr = ['name', 'sub_name', 'desc', 'bg_pic', 'sort'];
+        $necessaryParamArr = ['name', 'sub_name', 'desc', 'bg_pic'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
 
         $checkLenLimitList = [
