@@ -105,6 +105,8 @@ class TagService extends BaseService
         $limit = !empty($limit) ? intval($limit) : 10;
 
         $data =  IoC()->Tag_model->find($condition,$count, $page, $limit);
+        $totalPage = ceil($count / $limit);
+        $totalPage = $totalPage ? $totalPage : 1;
 
         $parentTagIds = array_column($data, 'parent_tag_id');
         $condition = ['ids' => $parentTagIds, 'isAll' => Constants::YES_VALUE];
@@ -117,9 +119,6 @@ class TagService extends BaseService
             $tag['bg_pic'] = strpos($tag['bg_pic'], '://') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
             $tag['parent_tag_name'] = $tagList[$tag['parent_tag_id']]['name'];
         }
-
-        $totalPage = ceil($count / $limit);
-        $totalPage = $totalPage ? $totalPage : 1;
         return [
             'list'       => $data,
             'total'      => $count,
