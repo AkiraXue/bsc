@@ -31,7 +31,7 @@ define('AES_KEY', '');
 
 
 /** upload config */
-define('ARCHIVE_PATH',  'upload/');
+define('ARCHIVE_PATH',  '/upload/');
 define('ALLOW_RESOURCE_TYPE', 'gif|jpg|png|jpeg|mp4');
 define('MAX_BUFFER_LIMIT', '512000');
 

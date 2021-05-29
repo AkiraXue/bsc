@@ -231,6 +231,8 @@ class KnowledgeService extends BaseService
         $data =  IoC()->Knowledge_model->find($condition, $count, $page, $limit);
         foreach ($data as &$knowledge) {
             $knowledge['content'] = $knowledge['content'] ? json_decode($knowledge['content'], true) : [];
+
+            $knowledge['content']['img'] = strpos($knowledge['content']['img'], '://') ?  $knowledge['content']['img'] : CDN_HOST . $knowledge['content']['img'];
         }
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
