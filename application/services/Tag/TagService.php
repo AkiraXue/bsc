@@ -108,7 +108,7 @@ class TagService extends BaseService
 
         $parentTagIds = array_column($data, 'parent_tag_id');
         $condition = ['ids' => $parentTagIds, 'isAll' => Constants::YES_VALUE];
-        $tagList =  IoC()->Tag_model->find($condition,$count);
+        $tagList =  IoC()->Tag_model->find($condition,$tagCount);
         $tagList = array_column($tagList, null, 'id');
         foreach ($data as &$tag) {
             if (!$tag['bg_pic']) {
