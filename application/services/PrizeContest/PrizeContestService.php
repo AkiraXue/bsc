@@ -43,6 +43,18 @@ class PrizeContestService extends BaseService
 #endregion
 
 #region test init
+    /**
+     * @param array $params
+     * @return bool
+     * @throws Exception
+     */
+    public function delete(array $params)
+    {
+        $this->checkPrizeContentById($params['id']);
+        IoC()->Prize_contest_model->_update(['id' => $params['id']],  ['state' => Constants::NO_VALUE]);
+        return true;
+    }
+
     public function find(array $params)
     {
         $condition = [];
