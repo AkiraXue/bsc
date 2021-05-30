@@ -194,7 +194,7 @@ class KnowledgeService extends BaseService
         $floors = [
             'title'     => $tag['name'],
             'subtitle'  => $tag['sub_name'],
-            'bg_pic'    => $tag['bg_pic'],
+            'bg_pic'    => $tag['top_pic'] ? $tag['top_pic'] : $tag['bg_pic'],
             'bg_video'  => $tag['bg_video'],
             'data_type' => $tag['relation_type'],
             'content'   => $list
