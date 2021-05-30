@@ -83,8 +83,10 @@ class TagService extends BaseService
             'bg_video' => $params['bg_video']?:'',
             'sort'     => $params['sort']?:0,
             'relation_type' => $filter['relation_type']?:'',
-            'parent_tag_id'     => $params['parent_tag_id']?:0,
-            'state'    => $filter['state'] ?: Constants::NO_VALUE
+            'parent_tag_id' => $params['parent_tag_id']?:0,
+            'is_show_title' => $params['is_show_title']?:'',
+            'top_pic'       => $params['top_pic']?:'',
+            'state'         => $filter['state'] ?: Constants::NO_VALUE
         ];
         if ($id) {
             return IoC()->Tag_model->_update(['id' => $id], $condition);
