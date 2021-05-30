@@ -90,7 +90,7 @@ class TopicServices extends BaseService
     public function save(array $params)
     {
         /** 1. check base params */
-        $necessaryParamArr = ['title', 'type', 'answer_type', 'knowledge_id', 'answer_num', 'contentList'];
+        $necessaryParamArr = ['title', 'type', 'answer_type', 'knowledge_id', 'answer_num', 'contentList', 'state'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
         $checkLenLimitList = [
             'title' => 50,
