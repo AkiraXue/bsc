@@ -77,14 +77,16 @@ class TagService extends BaseService
         /** 3. save prize contest schedule info */
         $condition = [
             'name'     => $filter['name'],
-            'sub_name' => $filter['sub_name']?:'',
+            'sub_name' => $params['sub_name']?:'',
             'desc'     => $filter['desc']?:'',
             'bg_pic'   => $filter['bg_pic']?:'',
-            'bg_video' => $filter['bg_video']?:'',
-            'sort'     => $filter['sort']?:0,
+            'bg_video' => $params['bg_video']?:'',
+            'sort'     => $params['sort']?:0,
             'relation_type' => $filter['relation_type']?:'',
-            'parent_tag_id'     => $filter['parent_tag_id']?:0,
-            'state'    => $filter['state'] ?: Constants::NO_VALUE
+            'parent_tag_id' => $params['parent_tag_id']?:0,
+            'is_show_title' => $params['is_show_title']?:'',
+            'top_pic'       => $params['top_pic']?:'',
+            'state'         => $filter['state'] ?: Constants::NO_VALUE
         ];
         if ($id) {
             return IoC()->Tag_model->_update(['id' => $id], $condition);
@@ -127,12 +129,15 @@ class TagService extends BaseService
         $tagList =  IoC()->Tag_model->find($condition,$tagCount);
         $tagList = array_column($tagList, null, 'id');
         foreach ($data as &$tag) {
-            if (!$tag['bg_pic']) {
-                continue;
-            }
-            $tag['bg_pic'] = strpos($tag['bg_pic'], '://') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
             $tag['parent_tag_name'] = $tagList[$tag['parent_tag_id']]['name'];
+            if ($tag['bg_pic']) {
+                $tag['bg_pic'] = strpos($tag['bg_pic'], '://') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
+            }
+            if ($tag['top_pic']) {
+                $tag['top_pic'] = strpos($tag['top_pic'], '://') ?  $tag['top_pic'] : CDN_HOST . $tag['top_pic'];
+            }
         }
+
         return [
             'list'       => $data,
             'total'      => $count,
@@ -161,6 +166,9 @@ class TagService extends BaseService
         }
         if ($tag['bg_pic']) {
             $tag['bg_pic'] = strpos($tag['bg_pic'], '://') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
+        }
+        if ($tag['top_pic']) {
+            $tag['top_pic'] = strpos($tag['top_pic'], '://') ?  $tag['top_pic'] : CDN_HOST . $tag['top_pic'];
         }
         return $tag;
     }

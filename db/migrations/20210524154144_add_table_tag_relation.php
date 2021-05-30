@@ -55,6 +55,14 @@ class AddTableTagRelation extends AbstractMigration
                 'comment' => '图片类型 1-小图 2-大图'
             ])
             ->addColumn('bg_video', 'string', ['null' => false, 'limit' => 254, 'default' => '', 'comment' => '背景视频地址'])
+            ->addColumn('is_show_title', 'integer', [
+                'default' => 1,
+                'null' => false,
+                'limit' => MysqlAdapter::INT_TINY,
+                'signed' => false,
+                'comment' => '标题 1-显示 2-不显示'
+            ])
+            ->addColumn('top_pic', 'string', ['null' => false, 'limit' => 254, 'default' => '', 'comment' => '顶部图片地址'])
             ->addColumn('sort', 'integer', ['null' => false, 'signed' => false, 'default' => 0, 'comment' => '默认排序-升序'])
             ->addColumn('state', 'integer', [
                 'default' => 1,
