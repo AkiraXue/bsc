@@ -92,7 +92,7 @@ class KnowledgeService extends BaseService
             $tagRes= TagService::getInstance()->find($condition);
             $tagList = $tagRes['list'] ?:[];
             if (empty($tagList) || !is_array($tagList)) {
-                return [];
+               continue;
             }
             $tag['list'] = $tagList;
 
@@ -174,7 +174,6 @@ class KnowledgeService extends BaseService
         }
         /** 3. get related knowledge */
         $list = [];
-
         if (!empty($relationList[$tag['id']])) {
             $tagRelationList = $relationList[$tag['id']];
             foreach ($tagRelationList as $tagId) {
@@ -182,8 +181,7 @@ class KnowledgeService extends BaseService
                     continue;
                 }
                 $knowledgeItem = $knowledgeList[$tagId];
-                $knowledgeContent = json_decode($knowledgeItem['content'], true);
-
+                $knowledgeContent = $knowledgeItem['content'];
                 $item = [];
                 $item['title'] = ($knowledgeItem['title'] && $knowledgeContent['text']) ? $knowledgeItem['title'] : '';
                 $item['is_contain'] = $knowledgeContent['is_contain'] ? $knowledgeContent['is_contain'] : 2;
