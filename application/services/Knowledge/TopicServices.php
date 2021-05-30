@@ -115,9 +115,20 @@ class TopicServices extends BaseService
         if (count($params['contentList']) === 0) {
             throw new Exception('题目内容不能为空', 3001);
         }
-        if($filter['answer_num'] < 1) {
-            throw new Exception('正确题目选项错误', 3001);
+        if (in_array($filter['answer_type'], ['choice', 'dupChoice'])) {
+            if($filter['answer_num'] < 1) {
+                throw new Exception('正确题目选项错误', 3001);
+            }
+            $answerNum = $filter['answer_num'] - 1;
+        } else if ($filter['answer_type'] == 'dupChoice') {
+            if(count($filter['answer_num']) < 1) {
+                throw new Exception('正确题目选项错误', 3001);
+            }
+            $answerNum = $filter['answer_num'];
+        } else {
+            throw new Exception('题型错误！', 3001);
         }
+
         /** 3. check data */
         $state = Constants::YES_VALUE;
         if ($params['state'] && in_array($params['state'], [Constants::YES_VALUE, Constants::NO_VALUE])) {
@@ -127,7 +138,7 @@ class TopicServices extends BaseService
 
         /** 4. save topic info */
         $content = [
-            'answer_num' => $filter['answer_num'] - 1,
+            'answer_num' => $answerNum,
             'list'       => $filter['contentList'],
             'pic'        => $params['pic'] ? $params['pic'] : '',
         ];

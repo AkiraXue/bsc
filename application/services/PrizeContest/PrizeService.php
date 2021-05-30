@@ -152,7 +152,7 @@ class PrizeService extends BaseService
         UserInfoService::getInstance()->checkByAccountId($filter['account_id']);
         $item = PrizeContestRecordItemService::getInstance()->checkPrizeContentRecordItemById($filter['item_id']);
         if ($item['state'] == Constants::NO_VALUE) {
-            // throw new Exception('当前题目已经提交过了！', 3001);
+            throw new Exception('当前题目已经提交过了！', 3001);
         }
 
         /** 3. get related topic &  info */
@@ -161,6 +161,13 @@ class PrizeService extends BaseService
 
         /** 4. check is correct */
         $correctChoice = $topic['content']['answer_num'];
+        if ($topic['answer_type'] == 'dupChoice') {
+            sort($filter['answer']);
+            sort($correctChoice);
+
+            $filter['answer'] = json_encode($filter['answer']);
+            $correctChoice = json_encode($correctChoice);
+        }
         $isCorrect = ($filter['answer'] == $correctChoice) ? Constants::YES_VALUE : Constants::NO_VALUE;
 
         /** 5. check prize schedule && prize */
