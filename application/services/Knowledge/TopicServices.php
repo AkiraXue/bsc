@@ -90,7 +90,7 @@ class TopicServices extends BaseService
     public function save(array $params)
     {
         /** 1. check base params */
-        $necessaryParamArr = ['title', 'type', 'answer_type', 'knowledge_id', 'content'];
+        $necessaryParamArr = ['title', 'type', 'answer_type', 'knowledge_id', 'answer_num', 'contentList'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
         $checkLenLimitList = [
             'title' => 50,
@@ -99,10 +99,12 @@ class TopicServices extends BaseService
         $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
 
         /** 2. check topic content */
-        if (!isset($params['content']['list']) && $params['content']['answer_num'] ) {
-            throw new Exception('content format not correct', 3001);
+        if (count($params['contentList']) === 0) {
+            throw new Exception('题目内容不能为空', 3001);
         }
-
+        if($filter['answer_num'] < 1) {
+            throw new Exception('正确题目选项错误', 3001);
+        }
         /** 3. check data */
         $state = Constants::YES_VALUE;
         if ($params['state'] && in_array($params['state'], [Constants::YES_VALUE, Constants::NO_VALUE])) {
@@ -111,14 +113,21 @@ class TopicServices extends BaseService
         KnowledgeService::getInstance()->checkById($filter['knowledge_id']);
 
         /** 4. save topic info */
+        $content = [
+            'answer_num' => $filter['answer_num'] - 1,
+            'list'       => $filter['contentList'],
+            'pic'        => $params['pic'] ? $params['pic'] : '',
+        ];
         $condition = [
             'title'         => $filter['title'],
             'type'          => $filter['type'],
             'answer_type'   => $filter['answer_type'],
             'knowledge_id'  => $filter['knowledge_id'],
-            'content'       => json_encode($filter['content'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
+            'content'       => json_encode($content, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
             'state'         => $state
         ];
+
+        /** 5. update base knowledge */
         if ($params['id']) {
             $this->checkById($params['id']);
             $where = ['id' => $params['id']];

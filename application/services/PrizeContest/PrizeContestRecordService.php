@@ -73,7 +73,6 @@ class PrizeContestRecordService extends BaseService
         ];
     }
 
-
     /**
      * 保存用户冲顶记录
      *
