@@ -127,11 +127,13 @@ class TagService extends BaseService
         $tagList =  IoC()->Tag_model->find($condition,$tagCount);
         $tagList = array_column($tagList, null, 'id');
         foreach ($data as &$tag) {
-            if (!$tag['bg_pic']) {
-                continue;
-            }
-            $tag['bg_pic'] = strpos($tag['bg_pic'], '://') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
             $tag['parent_tag_name'] = $tagList[$tag['parent_tag_id']]['name'];
+            if ($tag['bg_pic']) {
+                $tag['bg_pic'] = strpos($tag['bg_pic'], '://') ?  $tag['bg_pic'] : CDN_HOST . $tag['bg_pic'];
+            }
+            if ($tag['top_pic']) {
+                $tag['top_pic'] = strpos($tag['top_pic'], '://') ?  $tag['top_pic'] : CDN_HOST . $tag['top_pic'];
+            }
         }
         return [
             'list'       => $data,
