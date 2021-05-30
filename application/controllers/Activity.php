@@ -155,9 +155,7 @@ class Activity extends MY_Controller
     public function getParticipateRecordList()
     {
         $data = $this->input->post(null, true);
-
         $result = [];
-
         $this->_success($result);
     }
 #region
