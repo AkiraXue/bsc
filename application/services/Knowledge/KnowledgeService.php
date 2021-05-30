@@ -186,11 +186,7 @@ class KnowledgeService extends BaseService
                 $item['title'] = ($knowledgeItem['title'] && $knowledgeContent['text']) ? $knowledgeItem['title'] : '';
                 $item['is_contain'] = $knowledgeContent['is_contain'] ? $knowledgeContent['is_contain'] : 2;
                 $item['text'] = $knowledgeContent['text'] ? $knowledgeContent['text'] : '';
-                $item['img'] =  '';
-                if ($knowledgeContent['img']) {
-                    $item['img'] = CDN_HOST . $knowledgeContent['img'];
-                }
-
+                $item['img'] =  $knowledgeContent['img'] ? $knowledgeContent['img'] : '';
                 $list[] = $item;
             }
         }
