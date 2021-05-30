@@ -106,7 +106,7 @@ class TopicServices extends BaseService
         $necessaryParamArr = ['title', 'type', 'answer_type', 'knowledge_id', 'answer_num', 'contentList', 'state'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
         $checkLenLimitList = [
-            'title' => 50,
+            'title' => 254,
             'answer_type' => 50
         ];
         $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
