@@ -27,6 +27,16 @@ class Topic extends MY_Controller
     /**
      * @throws Exception
      */
+    public function delete()
+    {
+        $data = $this->input->post(null, true);
+        $result = TopicServices::getInstance()->delete($data);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function save()
     {
         $data = $this->input->post(null, true);

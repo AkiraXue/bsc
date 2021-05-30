@@ -44,6 +44,19 @@ class TopicServices extends BaseService
 #endregion
 
 #region func
+
+    /**
+     * @param array $params
+     * @return bool
+     * @throws Exception
+     */
+    public function delete(array $params)
+    {
+        $this->checkById($params['id']);
+        IoC()->Topic_model->_update(['id' => $params['id']], ['state' => Constants::NO_VALUE]);
+        return true;
+    }
+
     public function randomTopic($num)
     {
         return IoC()->Topic_model->random_topic($num);
