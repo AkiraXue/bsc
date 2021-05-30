@@ -135,6 +135,7 @@ class TagService extends BaseService
                 $tag['top_pic'] = strpos($tag['top_pic'], '://') ?  $tag['top_pic'] : CDN_HOST . $tag['top_pic'];
             }
         }
+
         return [
             'list'       => $data,
             'total'      => $count,
