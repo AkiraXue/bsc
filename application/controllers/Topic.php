@@ -30,9 +30,7 @@ class Topic extends MY_Controller
     public function save()
     {
         $data = $this->input->post(null, true);
-
         $result = TopicServices::getInstance()->save($data);
-
         $this->_success($result);
     }
 
