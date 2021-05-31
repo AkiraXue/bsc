@@ -115,7 +115,7 @@ class TopicServices extends BaseService
         if (count($params['contentList']) === 0) {
             throw new Exception('题目内容不能为空', 3001);
         }
-        if (in_array($filter['answer_type'], ['choice', 'dupChoice'])) {
+        if (in_array($filter['answer_type'], ['choice', 'judge'])) {
             if($filter['answer_num'] < 1) {
                 throw new Exception('正确题目选项错误', 3001);
             }
