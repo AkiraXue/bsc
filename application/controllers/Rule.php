@@ -11,7 +11,7 @@
 /**
  * Class Punch
  */
-class Punch extends MY_Controller
+class Rule extends MY_Controller
 {
 #region init
     public function __construct()
