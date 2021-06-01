@@ -314,7 +314,7 @@ class KnowledgeService extends BaseService
             'title' => $knowledge['title'],
             'is_contain'  => $knowledgeContent['is_contain'],
             'text'  => $knowledgeContent['text'],
-            'img'   => $knowledgeContent['img'],
+            'img'   =>  strpos($knowledgeContent['img'], '://') ?  $knowledgeContent['img'] : CDN_HOST . $knowledgeContent['img']
         ];
 
         $floor = [

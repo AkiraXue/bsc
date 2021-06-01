@@ -73,14 +73,17 @@ class PunchService extends BaseService
             $response['activity_code'], $accountId, $date, Constants::NO_VALUE
         );
 
+        /*
         $activitySchedule = [];
         if ($record['activity_schedule_id']) {
             $activitySchedule = ActivityScheduleService::getInstance()->checkById($record['activity_schedule_id']);
         }
+        */
 
+        /** 3. make response */
         $response = [
             'is_punch'     => $record['is_punch'] ?: $isPunch,
-            'is_related_knowledge' => $activitySchedule['is_related_knowledge'] ?:$isRelatedKnowledge,
+            'is_related_knowledge' => $record['is_related_knowledge'] ?:$isRelatedKnowledge,
             'is_knowledge' => $record['is_knowledge'] ?:$isKnowledge,
             'current_day'  => $record['day'],
             'activity'     => $activity,
@@ -227,11 +230,13 @@ class PunchService extends BaseService
                 'account_id'    => $accountId,
                 'activity_schedule_id' => $schedule['id']?:'',
                 'day'           => $day,
+                /** activity schedule setting start */
                 'is_related_knowledge' => Constants::NO_VALUE,
                 'knowledge_id'  => $schedule['knowledge_id'],
                 'is_asset_award' => Constants::NO_VALUE,
                 'asset_num'     => $schedule['asset_num']?:'',
                 'is_knowledge'  => Constants::NO_VALUE,
+                /** activity schedule setting stop */
                 'knowledge_time' => '',
                 'is_punch'      => Constants::NO_VALUE,
                 'punch_time'    => '',
