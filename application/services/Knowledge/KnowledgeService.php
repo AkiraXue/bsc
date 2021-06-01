@@ -184,7 +184,7 @@ class KnowledgeService extends BaseService
                 $knowledgeContent = $knowledgeItem['content'];
                 $item = [];
                 $item['title'] = ($knowledgeItem['title'] && $knowledgeContent['text']) ? $knowledgeItem['title'] : '';
-                $item['is_contain'] = $knowledgeContent['is_contain'] ? $knowledgeContent['is_contain'] : 2;
+                $item['is_contain'] = $knowledgeContent['is_contain'] ? $knowledgeContent['is_contain'] : Constants::NO_VALUE;
                 $item['text'] = $knowledgeContent['text'] ? $knowledgeContent['text'] : '';
                 $item['img'] =  $knowledgeContent['img'] ? $knowledgeContent['img'] : '';
                 $list[] = $item;
@@ -275,6 +275,7 @@ class KnowledgeService extends BaseService
             'title' => $params['sub_title']?:'',
             'img'   => $params['img']?:'',
             'text'  => $params['text']?:'',
+            'is_contain'  => $params['is_contain']?:Constants::NO_VALUE,
         ]);
 
         /** 3. save knowledge info */
@@ -312,7 +313,7 @@ class KnowledgeService extends BaseService
 
         $content = [
             'title' => $knowledge['title'],
-            'is_contain'  => $knowledgeContent['is_contain'],
+            'is_contain' => $knowledgeContent['is_contain']?:Constants::NO_VALUE,
             'text'  => $knowledgeContent['text'],
             'img'   =>  strpos($knowledgeContent['img'], '://') ?  $knowledgeContent['img'] : CDN_HOST . $knowledgeContent['img']
         ];
