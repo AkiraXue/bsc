@@ -237,7 +237,9 @@ class KnowledgeService extends BaseService
         $data =  IoC()->Knowledge_model->find($condition, $count, $page, $limit);
         foreach ($data as &$knowledge) {
             $knowledge['content'] = $knowledge['content'] ? json_decode($knowledge['content'], true) : [];
-
+            if (empty($knowledge['content']['img'])) {
+                continue;
+            }
             $knowledge['content']['img'] = strpos($knowledge['content']['img'], '://') ?  $knowledge['content']['img'] : CDN_HOST . $knowledge['content']['img'];
         }
         $totalPage = ceil($count / $limit);
@@ -315,8 +317,11 @@ class KnowledgeService extends BaseService
             'title' => $knowledge['title'],
             'is_contain' => $knowledgeContent['is_contain']?:Constants::NO_VALUE,
             'text'  => $knowledgeContent['text'],
-            'img'   =>  strpos($knowledgeContent['img'], '://') ?  $knowledgeContent['img'] : CDN_HOST . $knowledgeContent['img']
+            'img'   =>  ''
         ];
+        if (!empty($knowledgeContent['img'])) {
+            $content['img'] = strpos($knowledgeContent['img'], '://') ?  $knowledgeContent['img'] : CDN_HOST . $knowledgeContent['img'];
+        }
 
         $floor = [
             'title'     => $knowledge['title'],
