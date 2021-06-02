@@ -28,4 +28,7 @@ class Constants
     const KNOWLEDGE_TYPE_BANNER = 'banner';
     const KNOWLEDGE_TYPE_GUIDE = 'guide';
 
+    // tag type
+    const TAG_RELATION_TYPE_KNOWLEDGE_ID = 'knowledge_id';
+
 }

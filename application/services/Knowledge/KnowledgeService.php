@@ -286,17 +286,41 @@ class KnowledgeService extends BaseService
             'type'          => $filter['type'],
             'pic'           => $params['pic']?:'',
             'content'       => $content,
+            'sort'          => $params['sort']?:0,
             'state'         => $state
         ];
         if ($params['id']) {
             $this->checkById($params['id']);
             $where = ['id' => $params['id']];
             $update = $condition;
-            return IoC()->Knowledge_model->_update($where, $update);
+            $res = IoC()->Knowledge_model->_update($where, $update);
+            $id = $params['id'];
         } else {
             $insert = $condition;
-            return IoC()->Knowledge_model->_insert($insert);
+            $id = IoC()->Knowledge_model->_insert($insert);
         }
+
+        /** 4. save relation info */
+        if ($params['tag_id']) {
+            $oldTagRelation = IoC()->Tag_relation_model->findOne([
+                'unique_code' => $params['unique_code'],
+                'state'       => Constants::YES_VALUE
+            ]);
+
+            $condition = [
+                'unique_code' => $id,
+                'type'        => Constants::TAG_RELATION_TYPE_KNOWLEDGE_ID,
+                'tag_id'      => $params['tag_id'],
+                'desc'        => $params['tag_desc'],
+                'sort'        => $params['tag_sort'],
+                'state'       => Constants::YES_VALUE,
+                'act'         => $oldTagRelation['id'] ? Constants::ACT_MODIFY : Constants::ACT_ADD
+            ];
+            TagRelationService::getInstance()->save($condition);
+        }
+
+
+        return $id;
     }
 
 #endregion
