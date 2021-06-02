@@ -77,16 +77,16 @@ class TagService extends BaseService
         /** 3. save prize contest schedule info */
         $condition = [
             'name'     => $filter['name'],
-            'sub_name' => $params['sub_name']?:'',
             'desc'     => $filter['desc']?:'',
-            'bg_pic'   => $filter['bg_pic']?:'',
+            'relation_type' => $filter['relation_type']?:'',
+            'state'         => $filter['state'] ?: Constants::NO_VALUE,
+            'sub_name' => $params['sub_name']?:'',
+            'bg_pic'   => $params['bg_pic']?:'',
             'bg_video' => $params['bg_video']?:'',
             'sort'     => $params['sort']?:0,
-            'relation_type' => $filter['relation_type']?:'',
             'parent_tag_id' => $params['parent_tag_id']?:0,
             'is_show_title' => $params['is_show_title']?:'',
-            'top_pic'       => $params['top_pic']?:'',
-            'state'         => $filter['state'] ?: Constants::NO_VALUE
+            'top_pic'       => $params['top_pic']?:''
         ];
         if ($id) {
             return IoC()->Tag_model->_update(['id' => $id], $condition);
@@ -181,7 +181,7 @@ class TagService extends BaseService
      */
     public function checkTagEntryApiArgument($params)
     {
-        $necessaryParamArr = ['name', 'desc', 'bg_pic', 'relation_type', 'state'];
+        $necessaryParamArr = ['name', 'desc', 'relation_type', 'state'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
 
         $checkLenLimitList = [
