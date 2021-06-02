@@ -316,9 +316,11 @@ class KnowledgeService extends BaseService
                 'state'       => Constants::YES_VALUE,
                 'act'         => $oldTagRelation['id'] ? Constants::ACT_MODIFY : Constants::ACT_ADD
             ];
+            if ($oldTagRelation['id']) {
+                $condition['id'] = $oldTagRelation['id'];
+            }
             TagRelationService::getInstance()->save($condition);
         }
-
 
         return $id;
     }
