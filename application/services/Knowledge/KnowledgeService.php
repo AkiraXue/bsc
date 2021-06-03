@@ -229,6 +229,16 @@ class KnowledgeService extends BaseService
         empty($params['state']) || $condition['state'] = $params['state'];
         empty($params['isAll']) || $condition['isAll'] = $params['isAll'];
 
+        /** tag_id */
+        if ($params['tag_id']) {
+            $condition = [
+                'tag_id' => $params['tag_id'],
+                'isAll'  => Constants::YES_VALUE
+            ];
+            $tagRelation = IoC()->Tag_relation_model->find($condition, $tagRelationCount);
+            $condition['ids'] = array_column($tagRelation, 'unique_code');
+        }
+
         $page = $params['page'];
         $limit = $params['limit'];
         $page = !empty($page) ? intval($page) : 1;
