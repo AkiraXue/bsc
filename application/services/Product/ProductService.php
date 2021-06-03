@@ -13,6 +13,7 @@ use Exception;
 
 use Lib\Constants;
 
+use Lib\Helper;
 use Service\BaseTrait;
 use Service\BaseService;
 
@@ -79,12 +80,11 @@ class ProductService extends BaseService
     {
         /** 1. check base params */
         $necessaryParamArr = [
-            'sku', 'unique_code', 'trade_no', 'type', 'price', 'name', 'pic', 'detail', 'remark'
+            'type', 'name', 'pic', 'price',  'detail', 'remark'
         ];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
         $checkLenLimitList = [
-            'unique_code' => 50,
-            'trade_no' => 50
+            'name' => 50,
         ];
         $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
 
@@ -94,15 +94,15 @@ class ProductService extends BaseService
             $state = $params['state'];
         }
 
+        $sku = $filter['sku'] ?: $this->makeSkuNo($filter['type']);
+
         /** 3. save topic info */
         $condition = [
-            'sku' => $filter['sku'],
-            'unique_code' => $filter['unique_code'],
-            'trade_no' => $filter['trade_no'],
-            'type' => $filter['type'],
+            'sku'   => $sku,
+            'type'  => $filter['type'],
+            'name'  => $filter['name'],
+            'pic'   => $filter['pic'],
             'price' => $filter['price'],
-            'name' => $filter['name'],
-            'pic' => $filter['pic'],
             'detail' => $filter['detail'],
             'remark' => $filter['remark'],
             'state' => $state,
@@ -116,6 +116,18 @@ class ProductService extends BaseService
             $insert = $condition;
             return IoC()->Product_model->_insert($insert);
         }
+    }
+
+    /**
+     * @param array $params
+     * @return bool
+     * @throws Exception
+     */
+    public function delete(array $params)
+    {
+        $this->checkBySku($params['sku']);
+        IoC()->Product_model->_update(['sku' => $params['sku']], ['state' => Constants::NO_VALUE]);
+        return true;
     }
 
     /**
@@ -175,6 +187,18 @@ class ProductService extends BaseService
 #endregion
 
 #region base func
+    /**
+     * @param $type
+     *
+     * @return string
+     * @throws Exception
+     */
+    private function makeSkuNo($type)
+    {
+        $typeList = ['A', 'B', 'C', 'D', 'E'];
+        return $typeList[$type - 1] . Helper::random_string('numeric', '6');
+    }
+
     /**
      * @param integer $id
      * @param integer $isThrowError
