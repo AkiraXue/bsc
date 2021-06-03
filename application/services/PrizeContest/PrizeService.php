@@ -125,7 +125,9 @@ class PrizeService extends BaseService
             if (!array_key_exists($topicId, $topicList)) {
                 continue;
             }
-            $item['topic'] = $topicList[$topicId];
+            $topic = $topicList[$topicId];
+            $topic['content']['list'] = array_filter($topic['content']['list']);
+            $item['topic'] = $topic;
         }
         return $itemRes;
     }
