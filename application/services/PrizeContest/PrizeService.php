@@ -78,9 +78,9 @@ class PrizeService extends BaseService
         $prizeContest = PrizeContestService::getInstance()->getCurrentConfig();
         $prizeContestId = $prizeContest['id'];
         $params = [
-            'account_id' => $accountId,
-            'prize_contest_id' => $prizeContestId,
-            'date' => $date,
+            'account_id'        => $accountId,
+            'prize_contest_id'  => $prizeContestId,
+            'date'              => $date,
         ];
         $id = PrizeContestRecordService::getInstance()->save($params);
         return ['id' => $id];
