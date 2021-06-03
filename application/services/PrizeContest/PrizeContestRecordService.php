@@ -183,7 +183,7 @@ class PrizeContestRecordService extends BaseService
         $prizeContestRecord['config'] = $prizeContest;
 
         /** toDo: get config */
-        $prizeContestRecord['countdown'] = 60;
+        $prizeContestRecord['countdown'] = 120;
 
         return $prizeContestRecord;
     }

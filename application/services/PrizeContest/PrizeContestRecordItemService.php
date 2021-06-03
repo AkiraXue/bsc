@@ -55,6 +55,13 @@ class PrizeContestRecordItemService extends BaseService
      */
     public function refreshProblemSet(int $num)
     {
+        /** toDo: return mock data */
+        return [
+            ['knowledge_id' => '1', 'topic_id' => '1'],
+            ['knowledge_id' => '1', 'topic_id' => '10'],
+            ['knowledge_id' => '1', 'topic_id' => '12'],
+        ];
+
         /** 随机抽取题目，并生成当次的题目列表 */
         $topicList = TopicServices::getInstance()->randomTopic($num);
         if (empty($topicList) || !isset($topicList)) {
