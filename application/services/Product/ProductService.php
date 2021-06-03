@@ -61,6 +61,14 @@ class ProductService extends BaseService
         $limit = !empty($limit) ? intval($limit) : 10;
 
         $data = IoC()->Product_model->find($condition, $count, $page, $limit);
+
+        foreach ($data as &$item) {
+            if (empty($item['pic'])) {
+                continue;
+            }
+            $item['pic'] = strpos($item['pic'], '://') ?  $item['pic'] : CDN_HOST . $item['pic'];
+        }
+
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
         return [
