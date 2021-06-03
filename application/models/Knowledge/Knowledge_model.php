@@ -110,4 +110,49 @@ class Knowledge_model extends MY_Model
 
         return $query;
     }
+
+    /**
+     * @param array $params
+     * @param $count
+     * @param int $page
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function findRelationLeftJoinTag(array $params, &$count, $page=1, $limit=100)
+    {
+        $query = $this->db->select('relation.id, relation.unique_code, relation.tag_id, relation.desc, tag.name, knowledge.id as knowledge_id')
+            ->from($this->myTable() . ' relation')
+            ->join(IoC()->Tag_model->myTable() . ' tag', 'tag.id=relation.tag_id','left')
+            ->join(IoC()->Tag_relation_model->myTable() . ' tagRelation', 'tagRelation.unique_code=knowledge.id', 'left')
+            ->order_by('knowledge.sort asc');
+
+        !empty($params['tag_id']) && !is_array($params['tag_id']) &&
+        $query->where('relation.tag_id', $params['tag_id']);
+        !empty($params['tag_id']) && is_array($params['tag_id']) &&
+        $query->where_in('relation.tag_id', $params['tag_id']);
+
+        !empty($params['type']) && $query->where_in('relation.type', $params['type']);
+
+        !empty($params['unique_code']) && !is_array($params['unique_code']) &&
+        $query->where('relation.unique_code', $params['unique_code']);
+        !empty($params['unique_code']) && is_array($params['unique_code']) &&
+        $query->where_in('relation.unique_code', $params['unique_code']);
+
+
+        $count = $query->count_all_results('',false);
+
+        /** 是否单次取全部 */
+        $limit = !empty($params['isAll']) ? $count : $limit;
+
+        $offset = ($page - 1) * $limit;
+        $query->limit($limit , $offset);
+
+        $result = $query->get()->result_array();
+        if (!count($result)) {
+            return [];
+        }
+
+        return $result;
+    }
 }

@@ -235,7 +235,25 @@ class KnowledgeService extends BaseService
         $limit = !empty($limit) ? intval($limit) : 10;
 
         $data =  IoC()->Knowledge_model->find($condition, $count, $page, $limit);
+
+        $ids = array_column($data, 'id');
+        $tagRelationCondition = [
+            'unique_codes' => $ids,
+            'type'         => Constants::TAG_RELATION_TYPE_KNOWLEDGE_ID,
+            'isAll'        => Constants::YES_VALUE
+        ];
+        $tagRelationRes = IoC()->Tag_relation_model->findRelationLeftJoinTag($tagRelationCondition, $relationCount);
+        $tagRelations = [];
+        foreach ($tagRelationRes as $tagRelation) {
+            $tagRelations[$tagRelation['unique_code']][] = $tagRelation;
+        }
+
         foreach ($data as &$knowledge) {
+            /** add tag relation => toDo: limit num */
+            $knowledge['tag_id'] = $tagRelations[$knowledge['id']][0]['tag_id'];
+            $knowledge['tag_name'] = $tagRelations[$knowledge['id']][0]['name'];
+            $knowledge['tag_sort'] = $tagRelations[$knowledge['id']][0]['sort'];
+
             $knowledge['content'] = $knowledge['content'] ? json_decode($knowledge['content'], true) : [];
             if (empty($knowledge['content']['img'])) {
                 continue;
@@ -303,7 +321,7 @@ class KnowledgeService extends BaseService
         /** 4. save relation info */
         if ($params['tag_id']) {
             $oldTagRelation = IoC()->Tag_relation_model->findOne([
-                'unique_code' => $params['unique_code'],
+                'unique_code' => $id,
                 'state'       => Constants::YES_VALUE
             ]);
 

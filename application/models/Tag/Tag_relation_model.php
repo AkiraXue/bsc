@@ -193,7 +193,7 @@ class Tag_relation_model extends MY_Model
      */
     public function findRelationLeftJoinTag(array $params, &$count, $page=1, $limit=100)
     {
-        $query = $this->db->select('relation.id, relation.unique_code, relation.tag_id, relation.desc, tag.name, knowledge.id as knowledge_id')
+        $query = $this->db->select('relation.id, relation.unique_code, relation.tag_id, relation.desc, relation.sort, tag.name, knowledge.id as knowledge_id')
             ->from($this->myTable() . ' relation')
             ->join(IoC()->Tag_model->myTable() . ' tag', 'tag.id=relation.tag_id','left')
             ->join(IoC()->Knowledge_model->myTable() . ' knowledge', 'relation.unique_code=knowledge.id', 'left')
