@@ -167,6 +167,8 @@ class PrizeService extends BaseService
 
             $filter['answer'] = json_encode($filter['answer']);
             $correctChoice = json_encode($correctChoice);
+        } else {
+            $filter['answer'] = $filter['answer'][0];
         }
         $isCorrect = ($filter['answer'] == $correctChoice) ? Constants::YES_VALUE : Constants::NO_VALUE;
 

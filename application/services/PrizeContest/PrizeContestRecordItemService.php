@@ -57,9 +57,9 @@ class PrizeContestRecordItemService extends BaseService
     {
         /** toDo: return mock data */
         return [
-            ['knowledge_id' => '1', 'topic_id' => '1'],
-            ['knowledge_id' => '1', 'topic_id' => '10'],
-            ['knowledge_id' => '1', 'topic_id' => '12'],
+            ['knowledge_id' => '1', 'id' => '1'],
+            ['knowledge_id' => '1', 'id' => '10'],
+            ['knowledge_id' => '1', 'id' => '12'],
         ];
 
         /** 随机抽取题目，并生成当次的题目列表 */
