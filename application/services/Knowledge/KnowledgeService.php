@@ -329,7 +329,7 @@ class KnowledgeService extends BaseService
                 'unique_code' => $id,
                 'type'        => Constants::TAG_RELATION_TYPE_KNOWLEDGE_ID,
                 'tag_id'      => $params['tag_id'],
-                'desc'        => $params['tag_desc'],
+                'desc'        => $params['tag_desc']?:'',
                 'sort'        => $params['tag_sort'],
                 'state'       => Constants::YES_VALUE,
                 'act'         => $oldTagRelation['id'] ? Constants::ACT_MODIFY : Constants::ACT_ADD
