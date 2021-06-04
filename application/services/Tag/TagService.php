@@ -170,6 +170,9 @@ class TagService extends BaseService
         if ($tag['top_pic']) {
             $tag['top_pic'] = strpos($tag['top_pic'], '://') ?  $tag['top_pic'] : CDN_HOST . $tag['top_pic'];
         }
+        if ($tag['bg_video']) {
+            $tag['bg_video'] = strpos($tag['bg_video'], '://') ?  $tag['bg_video'] : CDN_HOST . $tag['bg_video'];
+        }
         return $tag;
     }
 
