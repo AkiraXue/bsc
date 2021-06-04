@@ -63,6 +63,7 @@ class ProductService extends BaseService
         $data = IoC()->Product_model->find($condition, $count, $page, $limit);
 
         foreach ($data as &$item) {
+            $item['price'] = intval($item['price']);
             if (empty($item['pic'])) {
                 continue;
             }
