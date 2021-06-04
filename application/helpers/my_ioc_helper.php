@@ -96,6 +96,8 @@ class IoCMgr
  * @property Order_model            $Order_model
  * @property Order_item_model       $Order_item_model
  *
+ * @property Rule_model             $Rule_model
+ *
  * libraries/
  *
  * App/
@@ -135,6 +137,8 @@ class HisIoCMgr extends IoCMgr
 
         $this->registerModel('Asset_model', 'Asset/Asset_model');
         $this->registerModel('Asset_change_log_model', 'Asset/Asset_change_log_model');
+
+        $this->registerModel('Rule_model', 'BaseSetting/Rule_model');
 
         $this->registerModel('User_model', 'User_model');
 

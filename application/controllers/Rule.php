@@ -7,6 +7,10 @@
  * @created on 5/31/21 9:31 PM
  */
 
+use Lib\Constants;
+use Service\Activity\ActivityService;
+use Service\BaseSetting\RuleService;
+
 
 /**
  * Class Punch
@@ -20,8 +24,73 @@ class Rule extends MY_Controller
     }
 #endregion
 
+#region func
+    /**
+     * @throws Exception
+     */
+    public function save()
+    {
+        $data = $this->input->post(null, true);
+
+        $result = RuleService::getInstance()->save($data);
+
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function get()
+    {
+        $data = $this->input->post(null, true);
+        $necessaryParamArr = ['id'];
+        $filter = $this->checkApiInvalidArgument($necessaryParamArr, $data, true);
+        $result = RuleService::getInstance()->checkById($filter['id'], Constants::NO_VALUE);
+        $this->_success($result);
+    }
+
+    /**
+     * 搜索
+     */
+    public function find()
+    {
+        $data = $this->input->post(null, true);
+        $result = RuleService::getInstance()->find($data);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function toggle()
+    {
+        $data = $this->input->post(null, true);
+        $result = RuleService::getInstance()->toggle($data);
+        $this->_success($result);
+    }
+#endregion
+
 #region base
+    /**
+     * @throws Exception
+     */
     public function index()
+    {
+        $result = RuleService::getInstance()->checkByType(Constants::RULE_TYPE_ALL);
+        $this->_success($result['remark']);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function prize()
+    {
+        $result = RuleService::getInstance()->checkByType(Constants::RULE_TYPE_PRIZE);
+        $this->_success($result['remark']);
+    }
+
+
+    public function oldRule()
     {
         $result = <<<EOF
 个人积分组成：
@@ -46,11 +115,7 @@ class Rule extends MY_Controller
 5. 积分兑换
 积分有效期28天，从员工登录小程序第1天起始，已兑换的积分将做扣除，过期后所有积分清零，请及时兑换
 EOF;
-        $this->_success($result);
-    }
 
-    public function prize()
-    {
         $result = <<<EOF
 活动规则：
 　　活动期间，每人每日有1次冲顶答题的机会，将随机出现5题，每答对1题可获得30积分，冲顶成功则可额外获得50积分的加权分，若在答题过程中回答错误，则此次冲顶失败，答题结束。　
@@ -58,13 +123,7 @@ EOF;
 封顶积分：200分
 活动封顶积分：4200积分
 EOF;
-        ;
-        $this->_success($result);
-    }
 
-
-    public function oldRule()
-    {
         $result1 = <<<EOF
 个人积分组成：
 　　 活动期间打卡

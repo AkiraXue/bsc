@@ -31,4 +31,7 @@ class Constants
     // tag type
     const TAG_RELATION_TYPE_KNOWLEDGE_ID = 'knowledge_id';
 
+    // 1-总规则 2-冲顶规则
+    const RULE_TYPE_ALL = 1;
+    const RULE_TYPE_PRIZE = 2;
 }
