@@ -211,6 +211,7 @@ class TagRelationService extends BaseService
     {
         $condition = [];
 
+        empty($params['state']) || $condition['state'] = $params['state'];
         empty($params['type']) || $condition['type'] = $params['type'];
         empty($params['tag_id']) || $condition['tag_id'] = $params['tag_id'];
         empty($params['unique_code']) || $condition['unique_code'] = $params['unique_code'];

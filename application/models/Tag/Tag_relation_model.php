@@ -205,6 +205,7 @@ class Tag_relation_model extends MY_Model
         $query->where_in('relation.tag_id', $params['tag_id']);
 
         !empty($params['type']) && $query->where_in('relation.type', $params['type']);
+        !empty($params['state']) && $query->where('knowledge.state', $params['state']);
 
         !empty($params['unique_code']) && !is_array($params['unique_code']) &&
             $query->where('relation.unique_code', $params['unique_code']);

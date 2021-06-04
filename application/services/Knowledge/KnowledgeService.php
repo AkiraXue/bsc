@@ -144,6 +144,7 @@ class KnowledgeService extends BaseService
         /** 2. get relation tag_relation list */
         $condition = [
             'tag_id' => $filter['tag_id'],
+            'state'  => Constants::YES_VALUE,
             'isAll'  => Constants::YES_VALUE
         ];
         $tagRelationListRes = TagRelationService::getInstance()->findRelationLeftJoinTag($condition);
