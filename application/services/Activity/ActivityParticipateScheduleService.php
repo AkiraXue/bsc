@@ -46,6 +46,35 @@ class ActivityParticipateScheduleService extends BaseService
 #endregion
 
 #region func
+
+    /**
+     * @param array $params
+     * @return array
+     */
+    public function find(array $params)
+    {
+        $condition = [];
+
+        empty($params['activity_code']) || $condition['activity_code'] = $params['activity_code'];
+        empty($params['account_id']) || $condition['account_id'] = $params['account_id'];
+
+        empty($params['state']) || $condition['state'] = $params['state'];
+
+        $page = $params['page'];
+        $limit = $params['limit'];
+        $page = !empty($page) ? intval($page) : 1;
+        $limit = !empty($limit) ? intval($limit) : 10;
+
+        $data =  IoC()->Activity_participate_schedule_model->find($condition, $count, $page, $limit);
+        $totalPage = ceil($count / $limit);
+        $totalPage = $totalPage ? $totalPage : 1;
+        return [
+            'list'       => $data,
+            'total'      => $count,
+            'total_page' => $totalPage
+        ];
+    }
+
     /**
      * @param array $params
      *

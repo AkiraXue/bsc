@@ -79,9 +79,7 @@ class Activity extends MY_Controller
     public function saveSchedule()
     {
         $data = $this->input->post(null, true);
-
         $result = ActivityScheduleService::getInstance()->save($data);
-
         $this->_success($result);
     }
 
@@ -91,9 +89,7 @@ class Activity extends MY_Controller
     public function batchSaveSchedule()
     {
         $data = $this->input->post(null, true);
-
         $result = ActivityScheduleService::getInstance()->batchSave($data);
-
         $this->_success($result);
     }
 
@@ -103,12 +99,10 @@ class Activity extends MY_Controller
     public function findSchedule()
     {
         $data = $this->input->post(null, true);
-
         $result = ActivityScheduleService::getInstance()->find($data);
-
         $this->_success($result);
     }
-#region
+#endregion
 
 #region activity participate schedule
     /**
@@ -117,24 +111,20 @@ class Activity extends MY_Controller
     public function saveParticipateSchedule()
     {
         $data = $this->input->post(null, true);
-
         $result = ActivityParticipateScheduleService::getInstance()->save($data);
-
         $this->_success($result);
     }
 
     /**
      * @throws Exception
      */
-    public function getParticipateSchedule()
+    public function findParticipateSchedule()
     {
         $data = $this->input->post(null, true);
-
         $result = ActivityParticipateScheduleService::getInstance()->getByAccountId($data['accountId']);
-
         $this->_success($result);
     }
-#region
+#endregion
 
 #region activity participate schedule
     /**
@@ -143,20 +133,18 @@ class Activity extends MY_Controller
     public function saveParticipateRecord()
     {
         $data = $this->input->post(null, true);
-
         $result = ActivityParticipateRecordService::getInstance()->save($data);
-
         $this->_success($result);
     }
 
     /**
      * @throws Exception
      */
-    public function getParticipateRecordList()
+    public function findParticipateRecord()
     {
         $data = $this->input->post(null, true);
-        $result = [];
+        $result = ActivityParticipateRecordService::getInstance()->find($data);
         $this->_success($result);
     }
-#region
+#endregion
 }

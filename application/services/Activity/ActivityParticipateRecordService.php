@@ -50,6 +50,44 @@ class ActivityParticipateRecordService extends BaseService
 #region common func
     /**
      * @param array $params
+     * @return array
+     */
+    public function find(array $params)
+    {
+        $condition = [];
+
+        empty($params['activity_code']) || $condition['activity_code'] = $params['activity_code'];
+        empty($params['account_id']) || $condition['account_id'] = $params['account_id'];
+
+        empty($params['day']) || $condition['day'] = $params['day'];
+        empty($params['is_related_knowledge']) || $condition['is_related_knowledge'] = $params['is_related_knowledge'];
+        empty($params['is_knowledge']) || $condition['is_knowledge'] = $params['is_knowledge'];
+        empty($params['is_punch']) || $condition['is_punch'] = $params['is_punch'];
+
+        empty($params['knowledge_id']) || $condition['knowledge_id'] = $params['knowledge_id'];
+        empty($params['punch_date']) || $condition['punch_date'] = $params['punch_date'];
+        empty($params['punch_date_start']) || $condition['punch_date_start'] = $params['punch_date_start'];
+        empty($params['punch_date_end']) || $condition['punch_date_end'] = $params['punch_date_end'];
+
+        empty($params['state']) || $condition['state'] = $params['state'];
+
+        $page = $params['page'];
+        $limit = $params['limit'];
+        $page = !empty($page) ? intval($page) : 1;
+        $limit = !empty($limit) ? intval($limit) : 10;
+
+        $data =  IoC()->Activity_participate_record_model->find($condition, $count, $page, $limit);
+        $totalPage = ceil($count / $limit);
+        $totalPage = $totalPage ? $totalPage : 1;
+        return [
+            'list'       => $data,
+            'total'      => $count,
+            'total_page' => $totalPage
+        ];
+    }
+
+    /**
+     * @param array $params
      *
      * @return mixed
      * @throws Exception

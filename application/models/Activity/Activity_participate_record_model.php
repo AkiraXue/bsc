@@ -136,15 +136,17 @@ class Activity_participate_record_model extends MY_Model
         /** initialize where,group,having,order **/
         !empty($params['activity_code']) && $query->where('activity_code', $params['activity_code']);
         !empty($params['account_id']) && $query->where('account_id', $params['account_id']);
+
         !empty($params['day']) && $query->where('day', $params['day']);
-
         !empty($params['is_related_knowledge']) && $query->where('is_related_knowledge', $params['is_related_knowledge']);
-
         !empty($params['is_knowledge']) && $query->where('is_knowledge', $params['is_knowledge']);
         !empty($params['is_punch']) && $query->where('is_punch', $params['is_punch']);
 
-        !empty($params['knowledge_id']) && $query->where('is_punch', $params['is_punch']);
-        !empty($params['knowledge_id']) && $query->where('is_punch', $params['is_punch']);
+        !empty($params['knowledge_id']) && $query->where('knowledge_id', $params['knowledge_id']);
+        !empty($params['punch_date']) && $query->where('punch_date', $params['punch_date']);
+
+        !empty($params['punch_date_start']) && $query->where('punch_date>=', $params['punch_date_start']);
+        !empty($params['punch_date_end']) && $query->where('punch_date<=', $params['punch_date_end']);
 
         !empty($params['recent_punch_date']) && $query->where('recent_punch_date', $params['recent_punch_date']);
         !empty($params['next_punch_date']) && $query->where('next_punch_date', $params['next_punch_date']);
