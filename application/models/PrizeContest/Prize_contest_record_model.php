@@ -119,4 +119,47 @@ class Prize_contest_record_model extends MY_Model
 
         return $query;
     }
+
+    /**
+     * @param array $params
+     * @param $count
+     * @param int $page
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function findRecordLeftJoinItem(array $params, &$count, $page=1, $limit=100)
+    {
+        $query = $this->db->select('record.*, user.name as username, user.avatar')
+            ->from($this->myTable() . ' record')
+            ->join(IoC()->User_model->myTable() . ' user', 'record.account_id=user.account_id','left')
+            //->join(IoC()->Activity_model->myTable() . ' activity', 'record.activity_code=activity.code', 'left')
+            ->order_by('record.id asc');
+
+        !empty($params['account_id']) && $query->where('record.account_id', $params['account_id']);
+
+        !empty($params['is_through']) && $query->where('record.is_through', $params['is_through']);
+
+        !empty($params['date']) && $query->where('record.date', $params['date']);
+        !empty($params['start_date']) && $query->where('record.date>=', $params['start_date']);
+        !empty($params['end_date']) && $query->where('record.date<=', $params['end_date']);
+        !empty($params['asset_num']) && $query->where('record.asset_num', $params['asset_num']);
+
+        !empty($params['state']) && $query->where('record.state', $params['state']);
+
+        $count = $query->count_all_results('',false);
+
+        /** 是否单次取全部 */
+        $limit = !empty($params['isAll']) ? $count : $limit;
+
+        $offset = ($page - 1) * $limit;
+        $query->limit($limit , $offset);
+
+        $result = $query->get()->result_array();
+        if (!count($result)) {
+            return [];
+        }
+
+        return $result;
+    }
 }
