@@ -166,7 +166,7 @@ class Activity_participate_record_model extends MY_Model
      */
     public function findRecordLeftJoinUser(array $params, &$count, $page=1, $limit=100)
     {
-        $query = $this->db->select('record.*, user.*, activity.*')
+        $query = $this->db->select('record.*, user.name as username, user.avatar, activity.start_date, activity.end_date')
             ->from($this->myTable() . ' record')
             ->join(IoC()->User_model->myTable() . ' user', 'record.account_id=user.account_id','left')
             ->join(IoC()->Activity_model->myTable() . ' activity', 'record.activity_code=activity.code', 'left')
