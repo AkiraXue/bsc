@@ -155,4 +155,55 @@ class Activity_participate_record_model extends MY_Model
 
         return $query;
     }
+
+    /**
+     * @param array $params
+     * @param $count
+     * @param int $page
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function findRecordLeftJoinUser(array $params, &$count, $page=1, $limit=100)
+    {
+        $query = $this->db->select('record.*, user.*, activity.*')
+            ->from($this->myTable() . ' record')
+            ->join(IoC()->User_model->myTable() . ' user', 'record.account_id=user.account_id','left')
+            ->join(IoC()->Activity_model->myTable() . ' activity', 'record.activity_code=activity.code', 'left')
+            ->order_by('record.day asc');
+
+        !empty($params['activity_code']) && $query->where('record.activity_code', $params['activity_code']);
+        !empty($params['account_id']) && $query->where('record.account_id', $params['account_id']);
+
+        !empty($params['day']) && $query->where('record.day', $params['day']);
+        !empty($params['is_related_knowledge']) && $query->where('record.is_related_knowledge', $params['is_related_knowledge']);
+        !empty($params['is_knowledge']) && $query->where('record.is_knowledge', $params['is_knowledge']);
+        !empty($params['is_punch']) && $query->where('record.is_punch', $params['is_punch']);
+
+        !empty($params['knowledge_id']) && $query->where('record.knowledge_id', $params['knowledge_id']);
+        !empty($params['punch_date']) && $query->where('record.punch_date', $params['punch_date']);
+
+        !empty($params['punch_date_start']) && $query->where('record.punch_date>=', $params['punch_date_start']);
+        !empty($params['punch_date_end']) && $query->where('record.punch_date<=', $params['punch_date_end']);
+
+        !empty($params['recent_punch_date']) && $query->where('record.recent_punch_date', $params['recent_punch_date']);
+        !empty($params['next_punch_date']) && $query->where('record.next_punch_date', $params['next_punch_date']);
+
+        !empty($params['state']) && $query->where('record.state', $params['state']);
+
+        $count = $query->count_all_results('',false);
+
+        /** 是否单次取全部 */
+        $limit = !empty($params['isAll']) ? $count : $limit;
+
+        $offset = ($page - 1) * $limit;
+        $query->limit($limit , $offset);
+
+        $result = $query->get()->result_array();
+        if (!count($result)) {
+            return [];
+        }
+
+        return $result;
+    }
 }
