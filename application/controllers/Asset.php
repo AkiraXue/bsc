@@ -9,6 +9,7 @@
 
 use Lib\Constants;
 
+use Service\Asset\AssetLogService;
 use Service\Asset\AssetService;
 
 /**
@@ -65,6 +66,15 @@ class Asset extends MY_Controller
     {
         $data = $this->input->post(null, true);
         $result = AssetService::getInstance()->storage($this->accountId, 100, 'jifen');
+        $this->_success($result);
+    }
+#endregion
+
+#region asset log
+    public function findLog()
+    {
+        $data = $this->input->post(null, true);
+        $result = AssetLogService::getInstance()->find($data);
         $this->_success($result);
     }
 #endregion

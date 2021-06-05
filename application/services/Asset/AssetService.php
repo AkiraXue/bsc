@@ -131,7 +131,7 @@ class AssetService extends BaseService
 
 #endregion
 
-#region func
+#region func asset
     public function find(array $params)
     {
         $condition = [];
