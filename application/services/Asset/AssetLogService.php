@@ -52,7 +52,7 @@ class AssetLogService extends BaseService
         $page = !empty($page) ? intval($page) : 1;
         $limit = !empty($limit) ? intval($limit) : 10;
 
-        $data = IoC()->Asset_change_log_model->find($condition, $count, $page, $limit);
+        $data = IoC()->Asset_change_log_model->findLeftJoinItem($condition, $count, $page, $limit);
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
         return [

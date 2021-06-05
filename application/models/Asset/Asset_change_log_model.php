@@ -141,4 +141,42 @@ class Asset_change_log_model extends MY_Model
 
         return $query;
     }
+
+    /**
+     * @param array $params
+     * @param $count
+     * @param int $page
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function findLeftJoinItem(array $params, &$count, $page=1, $limit=100)
+    {
+        $query = $this->db->select('log.*, user.name as username')
+            ->from($this->myTable() . ' log')
+            ->join(IoC()->User_model->myTable() . ' user', 'user.account_id=log.unique_code','left')
+            ->order_by('log.id asc');
+
+        !empty($params['unique_code']) && $query->where('log.unique_code', $params['unique_code']);
+
+        !empty($params['source']) && $query->where('log.source', $params['source']);
+        !empty($params['type']) && $query->where('log.type', $params['type']);
+        !empty($params['act']) && $query->where('log.act', $params['act']);
+
+
+        $count = $query->count_all_results('',false);
+
+        /** 是否单次取全部 */
+        $limit = !empty($params['isAll']) ? $count : $limit;
+
+        $offset = ($page - 1) * $limit;
+        $query->limit($limit , $offset);
+
+        $result = $query->get()->result_array();
+        if (!count($result)) {
+            return [];
+        }
+
+        return $result;
+    }
 }
