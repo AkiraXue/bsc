@@ -103,7 +103,12 @@ class ProductService extends BaseService
             $state = $params['state'];
         }
 
-        $sku = $filter['sku'] ?: $this->makeSkuNo($filter['type']);
+        if ($params['sku']) {
+            $this->checkBySku($params['sku']);
+            $sku = $params['sku'];
+        } else {
+            $sku = $this->makeSkuNo($filter['type']);
+        }
 
         /** 3. save topic info */
         $condition = [
