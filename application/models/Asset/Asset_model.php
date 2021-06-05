@@ -133,6 +133,7 @@ class Asset_model extends MY_Model
     {
         /** initialize where,group,having,order **/
         !empty($params['unique_code']) && $query->where('unique_code', $params['unique_code']);
+        !empty($params['unique_codes']) && $query->where_in('unique_code', $params['unique_codes']);
         !empty($params['name']) && $query->where('name', $params['name']);
 
         !empty($params['source']) && $query->where('source', $params['source']);

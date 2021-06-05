@@ -63,6 +63,23 @@ class UserInfoService extends BaseService
         $limit = !empty($limit) ? intval($limit) : 10;
 
         $data =  IoC()->User_model->find($condition, $count, $page, $limit);
+
+        /** get asset list */
+        $accountIds = array_column($data, 'account_id');
+        $assetCondition = [
+            'unique_codes' => $accountIds,
+            'type'         => Constants::ASSET_TYPE_JIFEN,
+            'isAll'        => Constants::YES_VALUE
+        ];
+        $userAssets = IoC()->Asset_model->find($assetCondition, $assetCount);
+        $userAssetList = [];
+        foreach ($userAssets as $userAsset) {
+            $userAssetList[$userAsset['unique_code']] = $userAsset;
+        }
+
+        foreach ($data as &$item) {
+            $item['asset'] = $userAssetList[$item['account_id']];
+        }
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
         return [
