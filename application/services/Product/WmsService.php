@@ -11,9 +11,9 @@ namespace Service\Product;
 
 use Exception;
 
+use Lib\Helper;
 use Lib\Constants;
 
-use Lib\Helper;
 use Service\BaseTrait;
 use Service\BaseService;
 
@@ -129,31 +129,33 @@ class WmsService extends BaseService
         /** 2. check old inventory  */
         $skuList = $this->formatSkuList($itemList);
 
+        $productList = [];
         foreach ($skuList as $sku => $itemList) {
             $product = ProductService::getInstance()->checkBySku($sku);
 
             if ($product['storage'] < count($itemList)) {
                 throw new Exception('库存不足, 导出数量：' . count($itemList). ' > 实际库存：' . $product['storage'] , 3001);
             }
+            $productList[$sku] = $product;
         }
 
         /** 3. export sku list */
         foreach ($skuList as $sku => $itemList) {
-
-            /** 出库 */
-            foreach ($itemList as &$item) {
-                $item['state'] = Constants::NO_VALUE;
+            /** 3.1 出库 */
+            if ($productList[$sku]['type'] == Constants::PRODUCT_TYPE_VIRTUAL) {
+                foreach ($itemList as &$item) {
+                    $item['status'] = Constants::PRODUCT_STATUS_DELIVER;
+                }
+                IoC()->Inventory_model->batchUpdate($itemList);
             }
-            IoC()->Inventory_model->batchUpdate($itemList);
-
-            /** 更新库存 */
+            /** 3.2 更新库存 */
             $storage = count($itemList);
             IoC()->Product_model->delivery($sku, $storage);
         }
 
         return true;
     }
-#endregoin
+#endregion
 
 #region format && export
     /**
@@ -223,6 +225,29 @@ class WmsService extends BaseService
 #endregion
 
 #region base func
+    /**
+     * @param string $sku
+     * @param integer $isThrowError
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function checkBySku(string $sku, $isThrowError = Constants::YES_VALUE)
+    {
+        $condition = [
+            'sku'    => $sku,
+            'status' => Constants::PRODUCT_STATUS_STORAGE,
+            'state'  => Constants::YES_VALUE
+        ];
+        $inventory = IoC()->Inventory_model->findOne($condition);
+        if (empty($inventory)) {
+            if ($isThrowError == Constants::NO_VALUE) {
+                return [];
+            }
+            throw new Exception('当前商品可兑换库存量为空', 3001);
+        }
+        return $inventory;
+    }
 
     /**
      * @param integer $id

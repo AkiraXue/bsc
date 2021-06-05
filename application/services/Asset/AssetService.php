@@ -76,7 +76,7 @@ class AssetService extends BaseService
         //$where = ['unique_code'=> $uniqueCode, 'type' => $type];
         $where = ['id' => $assetAccount['id']];
         $condition = [
-            'total' => $assetAccount['total']  + $num,
+            'total'     => $assetAccount['total']  + $num,
             'remaining' => $assetAccount['remaining'] + $num
         ];
         IoC()->Asset_model->_update($where, $condition);
@@ -85,8 +85,43 @@ class AssetService extends BaseService
         $cond = [
             'unique_code' => $uniqueCode,
             'source'      => $source,
-            'type'        => 'jifen',
+            'type'        => $type,
             'act'         => 'change',
+            'asset_num'   => $num
+        ];
+        IoC()->Asset_change_log_model->_insert($cond);
+
+        return true;
+    }
+
+    /**
+     * @param $uniqueCode
+     * @param $num
+     * @param $type
+     * @param $source
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function purchase($uniqueCode, $num, $type, $source='')
+    {
+        /** 1. check account */
+        $assetAccount = $this->checkByUniqueCode($uniqueCode, $type, Constants::NO_VALUE);
+
+        //$where = ['unique_code'=> $uniqueCode, 'type' => $type];
+        $where = ['id' => $assetAccount['id']];
+        $condition = [
+            'used'     => $assetAccount['used']  + $num,
+            'remaining' => $assetAccount['remaining'] - $num
+        ];
+        IoC()->Asset_model->_update($where, $condition);
+
+        /*** 3.add asset change record */
+        $cond = [
+            'unique_code' => $uniqueCode,
+            'source'      => $source,
+            'type'        => $type,
+            'act'         => 'purchase',
             'asset_num'   => $num
         ];
         IoC()->Asset_change_log_model->_insert($cond);

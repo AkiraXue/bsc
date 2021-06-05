@@ -34,4 +34,24 @@ class Constants
     // 1-总规则 2-冲顶规则
     const RULE_TYPE_ALL = 1;
     const RULE_TYPE_PRIZE = 2;
+
+    // asset type - 1.积分 jifen  2.现金 cash
+    const ASSET_TYPE_JIFEN = 'jifen';
+    const ASSET_TYPE_CASH = 'cash';
+
+    // product type - 1-实体商品 2-虚拟商品
+    const PRODUCT_TYPE_PHYSICAL = 1;
+    const PRODUCT_TYPE_VIRTUAL = 2;
+
+    // order status - 1. 已下单，未付款 2. 已付款，未发货 3. 已付款已发货 4. 已付款已收货 5. 订单关闭
+    const ORDER_STATUS_PROCESSING = 1;
+    const ORDER_STATUS_PURCHASED = 2;
+    const ORDER_STATUS_DELIVER = 3;
+    const ORDER_STATUS_RECEIVED = 4;
+    const ORDER_STATUS_CLOSED = 5;
+
+    // 商品 1-已兑换 2-未兑换
+    const PRODUCT_STATUS_DELIVER = 1;
+    const PRODUCT_STATUS_STORAGE = 2;
 }
+

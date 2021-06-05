@@ -8,7 +8,9 @@
  */
 
 use Lib\Constants;
+
 use Service\Order\OrderService;
+use Service\Order\TradeService;
 
 /**
  * Class Order
@@ -57,5 +59,18 @@ class Order extends MY_Controller
         $this->_success($result);
     }
 #endregion
+
+#region purchase
+    /**
+     * @throws Exception
+     */
+    public function purchase()
+    {
+        $data = $this->input->post(null, true);
+        $data['accountId'] = $this->accountId;
+        $result = TradeService::getInstance()->purchase($data);
+        $this->_success($result);
+    }
+#region
 
 }

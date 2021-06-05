@@ -162,6 +162,7 @@ class Order_item_model extends MY_Model
 
         !empty($params['unique_code']) && $query->where('unique_code', $params['unique_code']);
         !empty($params['trade_no']) && $query->where('trade_no', $params['trade_no']);
+        !empty($params['trade_nos']) && $query->where_in('trade_no', $params['trade_nos']);
 
         !empty($params['type']) && $query->where('type', $params['type']);
         !empty($params['name']) && $query->where('name', $params['name']);

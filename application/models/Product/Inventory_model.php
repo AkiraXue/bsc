@@ -54,7 +54,7 @@ class Inventory_model extends MY_Model
                 'sku'           => $item['sku'],
                 'unique_code'   => $item['unique_code'],
                 'unique_pass'   => $item['unique_pass'],
-                'status'        => Constants::YES_VALUE,
+                'status'        => Constants::PRODUCT_STATUS_STORAGE,
                 'state'         => Constants::YES_VALUE,
             ];
         }
