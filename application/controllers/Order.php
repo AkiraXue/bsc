@@ -29,9 +29,7 @@ class Order extends MY_Controller
     public function save()
     {
         $data = $this->input->post(null, true);
-
         $result = OrderService::getInstance()->save($data);
-
         $this->_success($result);
     }
 

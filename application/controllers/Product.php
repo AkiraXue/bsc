@@ -9,6 +9,7 @@
 
 use Lib\Constants;
 
+use Service\Product\WmsService;
 use Service\Product\ProductService;
 
 /**
@@ -40,9 +41,7 @@ class Product extends MY_Controller
     public function save()
     {
         $data = $this->input->post(null, true);
-
         $result = ProductService::getInstance()->save($data);
-
         $this->_success($result);
     }
 
@@ -65,6 +64,39 @@ class Product extends MY_Controller
     {
         $data = $this->input->post(null, true);
         $result = ProductService::getInstance()->find($data);
+        $this->_success($result);
+    }
+
+#endregion
+
+#region inventory
+    /**
+     * @throws Exception
+     */
+    public function inventory()
+    {
+        $data = $this->input->post(null, true);
+        $result = WmsService::getInstance()->inventory($data);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function storage()
+    {
+        $data = $this->input->post(null, true);
+        $result = WmsService::getInstance()->storage($data);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function delivery()
+    {
+        $data = $this->input->post(null, true);
+        $result = WmsService::getInstance()->delivery($data);
         $this->_success($result);
     }
 #endregion

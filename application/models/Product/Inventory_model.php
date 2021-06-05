@@ -1,21 +1,21 @@
 <?php
 /**
- * Product_model.php
+ * Inventory_model.php
  *
  * @copyright Copyright (c) 2019 AkiraXue
  * @author akira.xue <18862104333@163.com>
- * @created on 5/17/21 1:49 AM
+ * @created on 6/5/21 4:42 PM
  */
 
 use Lib\Constants;
 
 use Service\BaseModelTrait;
 
-class Product_model extends MY_Model
+class Inventory_model extends MY_Model
 {
     use BaseModelTrait;
 
-    public $table = 'product';
+    public $table = 'inventory';
 
     public function __construct()
     {
@@ -50,15 +50,12 @@ class Product_model extends MY_Model
         $data = [];
         foreach ($list as $item) {
             $data[] = [
-                'sku'           => $item['sku'],
-                'type'          => $item['type'],
                 'name'          => $item['name'],
-                'pic'           => $item['pic'],
-                'price'         => $item['price'],
-                'detail'        => $item['detail'],
-                'remark'        => $item['remark'],
-                'status'        => $item['status'],
-                'state'         => $item['state'] ?: Constants::YES_VALUE
+                'sku'           => $item['sku'],
+                'unique_code'   => $item['unique_code'],
+                'unique_pass'   => $item['unique_pass'],
+                'status'        => Constants::YES_VALUE,
+                'state'         => Constants::YES_VALUE,
             ];
         }
         return $this->db->insert_batch($this->myTable(), $data);
@@ -185,47 +182,16 @@ class Product_model extends MY_Model
     {
         /** initialize where,group,having,order **/
         !empty($params['sku']) && $query->where('sku', $params['sku']);
-        !empty($params['type']) && $query->where('type', $params['type']);
         !empty($params['name']) && $query->where('name', $params['name']);
-        !empty($params['status']) && $query->where('status', $params['status']);
+        !empty($params['unique_code']) && $query->where('unique_code', $params['unique_code']);
+        !empty($params['unique_codes']) && $query->where_in('unique_code', $params['unique_codes']);
+
         !empty($params['state']) && $query->where('state', $params['state']);
+        !empty($params['status']) && $query->where('status', $params['status']);
 
         return $query;
     }
-
-    /**
-     * 入库
-     * @param $sku
-     * @param $storage
-     *
-     * @return array
-     */
-    public function storage($sku, $storage)
-    {
-        $sql = "update " . $this->table . " set `storage`  = `storage` + " . $storage . " where sku = '{$sku}'";
-        $result = $this->db->query($sql);
-        if (!count($result)) {
-            return [];
-        }
-        return $result;
-    }
-    /**
-     * 出库
-     * @param $sku
-     * @param $storage
-     *
-     * @return array
-     */
-    public function delivery($sku, $storage)
-    {
-        $sql = "update " . $this->table . " set `storage`  = `storage` - " . $storage . " where sku = '{$sku}'";
-        $result = $this->db->query($sql);
-        if (!count($result)) {
-            return [];
-        }
-        return $result;
-    }
-
 }
+
 
 
