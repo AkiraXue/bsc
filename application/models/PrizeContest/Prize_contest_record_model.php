@@ -136,6 +136,8 @@ class Prize_contest_record_model extends MY_Model
             //->join(IoC()->Activity_model->myTable() . ' activity', 'record.activity_code=activity.code', 'left')
             ->order_by('record.id asc');
 
+        !empty($params['username']) && $query->like('user.name', $params['username']);
+
         !empty($params['account_id']) && $query->where('record.account_id', $params['account_id']);
 
         !empty($params['is_through']) && $query->where('record.is_through', $params['is_through']);

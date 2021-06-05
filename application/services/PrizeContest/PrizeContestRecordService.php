@@ -58,6 +58,7 @@ class PrizeContestRecordService extends BaseService
         empty($params['is_through']) || $condition['is_through'] = $params['is_through'];
 
         empty($params['state']) || $condition['state'] = $params['state'];
+        empty($params['username']) || $condition['username'] = $params['username'];
 
         $page = $params['page'];
         $limit = $params['limit'];
