@@ -49,6 +49,7 @@ class PrizeContestRecordService extends BaseService
         $condition = [];
 
         empty($params['prize_contest_id']) || $condition['prize_contest_id'] = $params['prize_contest_id'];
+        empty($params['account_id']) || $condition['account_id'] = $params['account_id'];
 
         empty($params['start_date']) || $condition['start_date'] = $params['start_date'];
         empty($params['end_date']) || $condition['end_date'] = $params['end_date'];
