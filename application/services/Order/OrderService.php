@@ -198,7 +198,28 @@ class OrderService extends BaseService
         }
 
         foreach ($data as &$order) {
-            $order['item_list'] = $orderItemList[$order['trade_no']];
+            $itemList = $orderItemList[$order['trade_no']];
+
+            /** toDo: update is_show && product_info */
+            $order['name'] = '积分兑换';
+            $order['is_show'] = Constants::NO_VALUE;
+            $order['product_info'] = '';
+            if ($itemList[0]['type'] == Constants::PRODUCT_TYPE_VIRTUAL) {
+                $order['is_show'] = Constants::YES_VALUE;
+                /** cycle remark info */
+                $remarkList = array_column($itemList, 'remark');
+                $productInfo = '';
+                foreach ($remarkList as $remarks) {
+                    foreach ($remarks as $remark) {
+                        if (empty($remark['unique_code'])) {
+                            continue;
+                        }
+                        $productInfo .= "卡号：" . $remark['unique_code'] . "\n 密码：" . $remark['unique_pass'] . "\n";
+                    }
+                }
+                $order['product_info'] = $productInfo;
+            }
+            $order['item_list'] = $itemList;
         }
 
         $totalPage = ceil($count / $limit);
