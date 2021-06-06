@@ -87,6 +87,16 @@ class WmsService extends BaseService
      */
     public function storage(array $params)
     {
+        foreach ($params['item_list'] as &$item) {
+            $encrypted = $item['unique_pass'];
+            $key = "1234567890654321";
+            $iv = "1234567890123456";
+            $decrypted = openssl_decrypt($encrypted, 'aes-128-cbc', $key, OPENSSL_ZERO_PADDING , $iv);
+            $item['unique_pass'] = $decrypted;
+        }
+
+        echo json_encode(['state ' => 1, 'data' => $params]); die;
+
         /** 1. check base params */
         $filter = $this->checkEntryApiArgument($params);
         $itemList = $filter['item_list'];
@@ -128,7 +138,6 @@ class WmsService extends BaseService
 
         /** 2. check old inventory  */
         $skuList = $this->formatSkuList($itemList);
-
         $productList = [];
         foreach ($skuList as $sku => $itemList) {
             $product = ProductService::getInstance()->checkBySku($sku);
@@ -275,7 +284,7 @@ class WmsService extends BaseService
      *
      * @throws Exception
      */
-    public function checkEntryApiArgument($params)
+    private function checkEntryApiArgument($params)
     {
         $necessaryParamArr = ['item_list'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
