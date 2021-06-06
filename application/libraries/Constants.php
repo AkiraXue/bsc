@@ -53,5 +53,9 @@ class Constants
     // 商品 1-已兑换 2-未兑换
     const PRODUCT_STATUS_DELIVER = 1;
     const PRODUCT_STATUS_STORAGE = 2;
+
+    // 加密子串
+    const CRYPT_KEY = "1234567890654321";
+    const CRYPT_IV = "1234567890123456";
 }
 

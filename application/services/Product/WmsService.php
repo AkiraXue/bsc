@@ -87,19 +87,14 @@ class WmsService extends BaseService
      */
     public function storage(array $params)
     {
-        foreach ($params['item_list'] as &$item) {
-            $encrypted = $item['unique_pass'];
-            $key = "1234567890654321";
-            $iv = "1234567890123456";
-            $decrypted = openssl_decrypt($encrypted, 'aes-128-cbc', $key, OPENSSL_ZERO_PADDING , $iv);
-            $item['unique_pass'] = $decrypted;
-        }
-
-        echo json_encode(['state ' => 1, 'data' => $params]); die;
-
         /** 1. check base params */
         $filter = $this->checkEntryApiArgument($params);
         $itemList = $filter['item_list'];
+
+        /** decrypt unique pass */
+        foreach ($itemList as &$item) {
+            $item['unique_pass'] = Helper::decrypt($item['unique_pass']);
+        }
 
         /** 2. check old inventory  */
 

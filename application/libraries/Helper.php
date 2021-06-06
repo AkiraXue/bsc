@@ -13,6 +13,19 @@ use Exception;
 
 class Helper
 {
+    public static function decrypt($encrypted)
+    {
+        $decrypted = openssl_decrypt(
+            $encrypted,
+            'aes-128-cbc',
+            Constants::CRYPT_KEY,
+            OPENSSL_ZERO_PADDING ,
+            Constants::CRYPT_IV
+        );
+
+        return trim($decrypted);
+    }
+
     /**
      * Create a Random String
      *
