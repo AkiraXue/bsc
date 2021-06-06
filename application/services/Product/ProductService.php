@@ -64,6 +64,10 @@ class ProductService extends BaseService
 
         foreach ($data as &$item) {
             $item['price'] = intval($item['price']);
+            $item['state'] = intval($item['state']);
+            $item['status'] = intval($item['status']);
+            $item['storage'] = intval($item['storage']);
+            $item['type'] = intval($item['type']);
             if (empty($item['pic'])) {
                 continue;
             }
