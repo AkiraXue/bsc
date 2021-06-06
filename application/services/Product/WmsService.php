@@ -62,6 +62,8 @@ class WmsService extends BaseService
         empty($params['status']) || $condition['status'] = $params['status'];
         empty($params['state']) || $condition['state'] = $params['state'];
 
+        empty($params['isAll']) || $condition['isAll'] = $params['isAll'];
+
         $page = $params['page'];
         $limit = $params['limit'];
         $page = !empty($page) ? intval($page) : 1;
