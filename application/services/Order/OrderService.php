@@ -198,6 +198,9 @@ class OrderService extends BaseService
         }
 
         foreach ($data as &$order) {
+            setlocale(LC_TIME, 'en_US');
+            $order['change_time'] = gmstrftime("%d %b %Y", strtotime($order['created_at']));
+
             $itemList = $orderItemList[$order['trade_no']];
 
             /** toDo: update is_show && product_info */
