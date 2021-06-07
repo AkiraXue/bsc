@@ -224,6 +224,7 @@ class OrderService extends BaseService
             }
             $order['item_list'] = $itemList;
 
+            $order['sku'] = $order['item_list'][0]['sku'];
             $order['name'] = $order['item_list'][0]['name'];
             $order['remark'] = json_decode($order['remark'], true);
             $order['address'] = '';
