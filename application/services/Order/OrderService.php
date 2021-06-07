@@ -175,6 +175,8 @@ class OrderService extends BaseService
         empty($params['unique_code']) || $condition['unique_code'] = $params['unique_code'];
         empty($params['trade_no']) || $condition['trade_no'] = $params['trade_no'];
 
+        empty($params['start_date']) || $condition['start_date'] = $params['start_date'];
+        empty($params['end_date']) || $condition['end_date'] = $params['end_date'];
         empty($params['status']) || $condition['status'] = $params['status'];
 
         empty($params['state']) || $condition['state'] = $params['state'];
