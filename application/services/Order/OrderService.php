@@ -223,6 +223,15 @@ class OrderService extends BaseService
                 $order['product_info'] = $productInfo;
             }
             $order['item_list'] = $itemList;
+
+            $order['name'] = $order['item_list'][0]['name'];
+            $order['remark'] = json_decode($order['remark'], true);
+            $order['address'] = '';
+            if ($order['remark']['address']) {
+                $order['address'] = "联系人：" . $order['remark']['address']['contact'] . "\n" .
+                    "手机号：" . $order['remark']['address']['mobile'] . "\n" .
+                    "收件地址：" . $order['remark']['address']['address'];
+            }
         }
 
         $totalPage = ceil($count / $limit);
