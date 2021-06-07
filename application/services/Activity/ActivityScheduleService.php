@@ -145,7 +145,10 @@ class ActivityScheduleService extends BaseService
     public function save(array $params)
     {
         /** 1. check base params & activity_code */
-        $necessaryParamArr = ['activity_code', 'day', 'is_related_knowledge', 'knowledge_id', 'is_asset_award', 'asset_num'];
+        $necessaryParamArr = [
+            'activity_code', 'day',  'is_asset_award', 'asset_num',
+            'is_related_knowledge', 'knowledge_id', 'is_knowledge_asset_award', 'knowledge_asset_num'
+        ];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
         $checkLenLimitList = [
             'activity_code' => 50,
@@ -181,9 +184,9 @@ class ActivityScheduleService extends BaseService
         /** 4. save schedule data */
         if ($params['id']) {
             $filter['id'] = $params['id'];
-            return $this->update($params);
+            return $this->update($filter);
         } else {
-            return $this->add($params);
+            return $this->add($filter);
         }
     }
 #endregion
@@ -209,6 +212,8 @@ class ActivityScheduleService extends BaseService
             'day'                       => $params['day'],
             'is_related_knowledge'      => $params['is_related_knowledge'],
             'knowledge_id'              => $params['knowledge_id'],
+            'is_knowledge_asset_award'  => $params['is_knowledge_asset_award'],
+            'knowledge_asset_num'       => $params['knowledge_asset_num'],
             'is_asset_award'            => $params['is_asset_award'],
             'asset_num'                 => $params['asset_num'],
             'state'                     => $params['state'] ?: Constants::YES_VALUE
@@ -228,6 +233,8 @@ class ActivityScheduleService extends BaseService
             'day'                       => $params['day'],
             'is_related_knowledge'      => $params['is_related_knowledge'],
             'knowledge_id'              => $params['knowledge_id'],
+            'is_knowledge_asset_award'  => $params['is_knowledge_asset_award'],
+            'knowledge_asset_num'       => $params['knowledge_asset_num'],
             'is_asset_award'            => $params['is_asset_award'],
             'asset_num'                 => $params['asset_num'],
             'state'                     => $params['state'] ?: Constants::YES_VALUE
@@ -268,7 +275,11 @@ class ActivityScheduleService extends BaseService
         $necessaryParamArr = ['activity_code', 'schedule_list'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
 
-        $necessaryParamArr = ['day', 'is_related_knowledge', 'knowledge_id', 'is_asset_award', 'asset_num'];
+        $necessaryParamArr = [
+            'day', 'is_asset_award', 'asset_num',
+            'is_related_knowledge', 'knowledge_id',
+            'is_knowledge_asset_award', 'knowledge_asset_num'
+        ];
         $checkLenLimitList = [
             'asset_num' => 50
         ];

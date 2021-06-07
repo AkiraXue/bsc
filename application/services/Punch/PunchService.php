@@ -141,7 +141,10 @@ class PunchService extends BaseService
         IoC()->Activity_participate_record_model->_update($where, $update);
 
         /** 4. record asset change */
-        AssetService::getInstance()->storage($accountId, $schedule['asset_num'], 'jifen', '每日打卡');
+        $resource = '每日打卡, 第'. $schedule['day'] .'天';
+        AssetService::getInstance()->storage(
+            $accountId, $schedule['asset_num'], Constants::ASSET_TYPE_JIFEN, $resource
+        );
 
         return true;
     }
@@ -180,6 +183,14 @@ class PunchService extends BaseService
             'knowledge_time' => date('Y-m-d H:i:s')
         ];
         IoC()->Activity_participate_record_model->_update($where, $update);
+
+        /** 4. record knowledge asset award */
+        if ($record['is_knowledge_asset_award'] == Constants::YES_VALUE) {
+            $resource = '每日打卡查看知识库, 第'. $record['day'] .'天';
+            AssetService::getInstance()->storage(
+                $accountId, $record['knowledge_asset_num'], Constants::ASSET_TYPE_JIFEN, $resource
+            );
+        }
 
         return ['id' => $knowledge['id'], 'type' => $knowledge['type']];
     }
@@ -226,23 +237,29 @@ class PunchService extends BaseService
         $schedule = $activityScheduleList[$day] ?:[];
         if (empty($record) && !isset($record['id']) ) {
             $condition = [
-                'activity_code' => $participateSchedule['activity_code'],
-                'account_id'    => $accountId,
-                'activity_schedule_id' => $schedule['id']?:'',
-                'day'           => $day,
+                'activity_code'         => $participateSchedule['activity_code'],
+                'account_id'            => $accountId,
+                'activity_schedule_id'  => $schedule['id']?:'',
+                'day'                   => $day,
+
                 /** activity schedule setting start */
-                'is_related_knowledge' => Constants::NO_VALUE,
-                'knowledge_id'  => $schedule['knowledge_id'],
-                'is_asset_award' => Constants::NO_VALUE,
-                'asset_num'     => $schedule['asset_num']?:'',
-                'is_knowledge'  => Constants::NO_VALUE,
+                'is_related_knowledge'  => $schedule['is_related_knowledge']?:Constants::NO_VALUE,
+                'knowledge_id'          => $schedule['knowledge_id'],
+                'is_knowledge_asset_award' => $schedule['is_knowledge_asset_award']?:Constants::NO_VALUE,
+                'knowledge_asset_num'   => $schedule['knowledge_asset_num'],
+
+                /** asset num */
+                'is_asset_award'        => $schedule['is_asset_award']?:Constants::NO_VALUE,
+                'asset_num'             => $schedule['asset_num']?:'',
+
                 /** activity schedule setting stop */
-                'knowledge_time' => '',
-                'is_punch'      => Constants::NO_VALUE,
-                'punch_time'    => '',
-                'punch_date'    => $date,
-                'recent_punch_date' => '',
-                'next_punch_date' => '',
+                'is_knowledge'          => Constants::NO_VALUE,
+                'knowledge_time'        => '',
+                'is_punch'              => Constants::NO_VALUE,
+                'punch_time'            => '',
+                'punch_date'            => $date,
+                'recent_punch_date'     => '',
+                'next_punch_date'       => '',
             ];
             ActivityParticipateRecordService::getInstance()->save($condition);
         }

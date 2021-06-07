@@ -37,6 +37,8 @@ class Activity_schedule_model extends MY_Model
                 'day'                       => $item['day'],
                 'is_related_knowledge'      => $item['is_related_knowledge'],
                 'knowledge_id'              => $item['knowledge_id'],
+                'is_knowledge_asset_award'  => $item['is_knowledge_asset_award'],
+                'knowledge_asset_num'       => $item['knowledge_asset_num'],
                 'is_asset_award'            => $item['is_asset_award'],
                 'asset_num'                 => $item['asset_num'],
                 'state'                     => $item['state'] ?: Constants::YES_VALUE

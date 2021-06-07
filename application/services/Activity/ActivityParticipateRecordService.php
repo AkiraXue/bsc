@@ -145,6 +145,8 @@ class ActivityParticipateRecordService extends BaseService
                 'day'                   => $filter['day'],
                 'is_related_knowledge'  => $activitySchedule['is_related_knowledge']?:Constants::NO_VALUE,
                 'knowledge_id'          => $activitySchedule['knowledge_id']?:'',
+                'is_knowledge_asset_award' => $activitySchedule['is_knowledge_asset_award']?:Constants::NO_VALUE,
+                'knowledge_asset_num'   => $activitySchedule['knowledge_asset_num']?:'0',
                 'is_asset_award'        => $activitySchedule['is_asset_award']?:Constants::NO_VALUE,
                 'asset_num'             => $activitySchedule['asset_num']?:'',
                 'punch_date'            => $params['punch_date'],

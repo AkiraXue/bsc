@@ -61,7 +61,10 @@ class ActivityService extends BaseService
         return $activity;
     }
 
-
+    /**
+     * @param array $params
+     * @return array
+     */
     public function find(array $params)
     {
         $condition = [];
@@ -98,11 +101,10 @@ class ActivityService extends BaseService
     public function save(array $params)
     {
         /** 1. check base params */
-        $necessaryParamArr = ['name', 'start_date', 'end_date', 'days'];
+        $necessaryParamArr = ['name', 'start_date', 'days'];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
         $checkLenLimitList = [
-            'start_date' => 50,
-            'end_date' => 50
+            'start_date' => 50
         ];
         $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
 
@@ -118,22 +120,22 @@ class ActivityService extends BaseService
             $activity = $this->checkActivityByCode($code);
             $where = ['code' => $activity['code']];
             $update = [
-                'name'          => $filter['name'],
-                'days'          => $filter['days'],
-                'start_date'    => $filter['start_date'],
-                'end_date'      => $filter['end_date'],
-                'state'         => $state
+                'name'           => $filter['name'],
+                'days'           => $filter['days'],
+                'start_date'     => $filter['start_date'],
+                'end_date'       => $params['end_date']?:'',
+                'state'          => $state
             ];
             return IoC()->Activity_model->_update($where, $update);
         } else {
             $code = Helper::gen_uuid();
             $insert = [
-                'code'          => $code,
-                'name'          => $filter['name'],
-                'days'          => $filter['days'],
-                'start_date'    => $filter['start_date'],
-                'end_date'      => $filter['end_date'],
-                'state'         => $state
+                'code'           => $code,
+                'name'           => $filter['name'],
+                'days'           => $filter['days'],
+                'start_date'     => $filter['start_date'],
+                'end_date'       => $params['end_date']?:'',
+                'state'          => $state
             ];
             return IoC()->Activity_model->_insert($insert);
         }
