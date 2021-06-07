@@ -181,6 +181,36 @@ class OrderService extends BaseService
 
         empty($params['state']) || $condition['state'] = $params['state'];
 
+        if ($params['type'] || $params['sku']) {
+            $orderItemCondition = [
+                'type' => $params['type'],
+                'sku'  => $params['sku'],
+                'start_date'  => $params['start_date'],
+                'end_date'    => $params['end_date'],
+                'isAll'       => Constants::YES_VALUE,
+                'state'       => $params['state'],
+            ];
+            $orderItems = IoC()->Order_item_model->find($orderItemCondition, $itemCount);
+            $tradeNos = array_column($orderItems, 'trade_no');
+            $params['trade_nos'] = $tradeNos;
+        }
+
+        if (!empty($params['name'])) {
+            $userCondition = [
+                'nicknameLike' =>$params['name'],
+                'isAll'       => Constants::YES_VALUE,
+            ];
+            $userList = IoC()->User_model->find($userCondition, $userCount);
+            $orderItemCondition = [
+                'unique_codes' => array_column($userList, 'account_id'),
+                'isAll'        => Constants::YES_VALUE,
+                'state'        => $params['state'],
+            ];
+            $orderItems = IoC()->Order_item_model->find($orderItemCondition, $itemCount);
+            $tradeNos = array_column($orderItems, 'trade_no');
+            $params['trade_nos'] = array_merge($params['trade_nos'], $tradeNos);
+        }
+
         $page = $params['page'];
         $limit = $params['limit'];
         $page = !empty($page) ? intval($page) : 1;

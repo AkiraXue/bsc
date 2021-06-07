@@ -161,11 +161,16 @@ class Order_item_model extends MY_Model
         !empty($params['no_skus']) && $query->where_not_in('sku', $params['no_skus']);
 
         !empty($params['unique_code']) && $query->where('unique_code', $params['unique_code']);
+        !empty($params['unique_codes']) && $query->where_in('unique_code', $params['unique_codes']);
+
         !empty($params['trade_no']) && $query->where('trade_no', $params['trade_no']);
         !empty($params['trade_nos']) && $query->where_in('trade_no', $params['trade_nos']);
 
         !empty($params['type']) && $query->where('type', $params['type']);
         !empty($params['name']) && $query->where('name', $params['name']);
+
+        !empty($params['start_date']) && $query->where('created_at >=', date('Y-m-d H:i:s', strtotime($params['start_date'])));
+        !empty($params['end_date']) && $query->where('created_at <=', date('Y-m-d H:i:s', strtotime($params['end_date'])));
 
         !empty($params['state']) && $query->where('state', $params['state']);
 
