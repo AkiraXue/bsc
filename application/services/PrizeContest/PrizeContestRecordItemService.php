@@ -137,6 +137,28 @@ class PrizeContestRecordItemService extends BaseService
      * @param array $params
      * @return mixed
      */
+    public function getTotalAssetNum(array $params)
+    {
+        $condition = [];
+
+        empty($params['prize_contest_record_id']) || $condition['prize_contest_record_id'] = $params['prize_contest_record_id'];
+        empty($params['prize_contest_id']) || $condition['prize_contest_id'] = $params['prize_contest_id'];
+        empty($params['account_id']) || $condition['account_id'] = $params['account_id'];
+        empty($params['date']) || $condition['date'] = $params['date'];
+        empty($params['knowledge_id']) || $condition['knowledge_id'] = $params['knowledge_id'];
+        empty($params['topic_id']) || $condition['topic_id'] = $params['topic_id'];
+        empty($params['is_correct']) || $condition['is_correct'] = $params['is_correct'];
+        empty($params['is_asset_award']) || $condition['is_asset_award'] = $params['is_asset_award'];
+        empty($params['sort']) || $condition['sort'] = $params['sort'];
+        empty($params['state']) || $condition['state'] = $params['state'];
+
+        return   IoC()->Prize_contest_record_item_model->getTotalAssetNum($condition);
+    }
+
+    /**
+     * @param array $params
+     * @return mixed
+     */
     public function getTotal(array $params)
     {
         $condition = [];

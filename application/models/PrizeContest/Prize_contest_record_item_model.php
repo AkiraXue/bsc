@@ -184,6 +184,24 @@ class Prize_contest_record_item_model extends MY_Model
     }
 
     /**
+     * 统计积分总值
+     *
+     * @param array $params
+     * @return mixed
+     */
+    public function getTotalAssetNum(array $params)
+    {
+        $query = $this->db->select('SUM(`asset_num`) as totalNum')->from($this->table);
+
+        /** initialize where,group,having,order **/
+        $query = $this->filterQuery($query, $params);
+
+        $totalNum  = $query->get()->row();
+
+        return isset($totalNum->totalNum) ? $totalNum->totalNum : 0;
+    }
+
+    /**
      * @param CI_DB_query_builder $query
      * @param array $params
      *

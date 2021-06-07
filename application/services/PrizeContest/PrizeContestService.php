@@ -119,8 +119,31 @@ class PrizeContestService extends BaseService
         ];
 
         /** 3. save prize contest info && and add new config */
+        $oldPrizeContest = IoC()->Prize_contest_model->get(['state' => Constants::YES_VALUE]);
+        $scheduleCondition = [
+            'prize_contest_id' => $oldPrizeContest['id'],
+            'isAll'            => Constants::YES_VALUE,
+        ];
+        $oldPrizeContestItems = IoC()->Prize_contest_schedule_model->find($scheduleCondition, $count);
+
+        /** 4. update old data */
         IoC()->Prize_contest_model->_update(['state' => Constants::YES_VALUE], ['state' => Constants::NO_VALUE]);
-        return IoC()->Prize_contest_model->_insert($condition);
+
+        /** 5. insert new data */
+        $id = IoC()->Prize_contest_model->_insert($condition);
+        $condition = [
+            'prize_contest_id' => $id,
+            'schedule_list'    => []
+        ];
+        foreach ($oldPrizeContestItems as $oldPrizeContestItem) {
+            $condition['schedule_list'][] = [
+                'sort'              => $oldPrizeContestItem['sort'],
+                'is_asset_award'    => $oldPrizeContestItem['is_asset_award'],
+                'asset_num'         => $oldPrizeContestItem['asset_num'],
+            ];
+        }
+        PrizeContestScheduleService::getInstance()->batchSave($condition);
+        return true;
     }
 #endregion
 

@@ -11,6 +11,7 @@ namespace Service\PrizeContest;
 
 use Lib\Constants;
 
+use Service\Asset\AssetService;
 use Service\BaseTrait;
 use Service\BaseService;
 
@@ -159,6 +160,8 @@ class PrizeContestRecordService extends BaseService
 
         return $id;
     }
+
+
 #endregion
 
 #region base
@@ -248,7 +251,57 @@ class PrizeContestRecordService extends BaseService
         }
         return $prizeContestRecord;
     }
+#endregion
 
+
+#region prize contest record base func
+
+    /**
+     * 获取冲顶获得的总积分
+     *
+     * @param $prizeContestRecordId
+     * @return int
+     */
+    public function getPrizeContestRecordTotalAssetNum($prizeContestRecordId)
+    {
+        $condition = [
+            'prize_contest_record_id' => $prizeContestRecordId,
+            'is_asset_award'          => Constants::YES_VALUE
+        ];
+        $correctNum = PrizeContestRecordItemService::getInstance()->getTotalAssetNum($condition);
+        return $correctNum?:0;
+    }
+
+    /**
+     * 获取固定轮次冲顶正确数量
+     *
+     * @param $prizeContestRecordId
+     * @return int
+     */
+    public function getPrizeContestRecordCorrectNum($prizeContestRecordId)
+    {
+        $condition = [
+            'prize_contest_record_id' => $prizeContestRecordId,
+            'is_correct'              => Constants::YES_VALUE
+        ];
+        $correctNum = PrizeContestRecordItemService::getInstance()->getTotal($condition);
+        return $correctNum?:0;
+    }
+
+    /**
+     * 最佳排名
+     * @param $prizeContestRecordId
+     * @return array
+     */
+    public function getBestRank($prizeContestRecordId)
+    {
+        $condition = [
+            'prize_contest_record_id' => $prizeContestRecordId,
+            'is_correct'              => Constants::YES_VALUE
+        ];
+        $bestRank = PrizeContestRecordItemService::getInstance()->getBest($condition);
+        return $bestRank?:[];
+    }
 
     /**
      * 校验当前人的打卡记录数量
@@ -273,6 +326,7 @@ class PrizeContestRecordService extends BaseService
         $totalNum = IoC()->Prize_contest_record_model->getTotal($condition);
         return $totalNum;
     }
+
 #endregion
 }
 

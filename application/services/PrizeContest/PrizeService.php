@@ -180,18 +180,12 @@ class PrizeService extends BaseService
             'sort'             => $item['sort']
         ];
         $schedule = IoC()->Prize_contest_schedule_model->get($condition);
-        if (!empty($schedule) && isset($schedule['id'])) {
-            /** 7. asset update */
-            if ($isCorrect == Constants::YES_VALUE) {
-                $type = 'jifen';
-                AssetService::getInstance()->storage(
-                    $filter['account_id'], $schedule['asset_num'], $type, '冲顶答题'
-                );
-                PrizeContestRankService::getInstance()->save($filter['account_id'], $schedule['asset_num']);
-            }
+        if ($isCorrect == Constants::YES_VALUE && !empty($schedule) && isset($schedule['id'])) {
+            $source = '冲顶答题-轮次'. $schedule['sort'];
+            $this->refreshPrizeContestScheduleRecordAssetChangeLog($filter['account_id'], $schedule['asset_num'], $source);
         }
 
-        /** 6. check is close current record */
+        /** 6. refresh current prize contest record item */
         $where = ['id' => $filter['item_id']];
         $condition = [
             'state'     => Constants::NO_VALUE,
@@ -203,15 +197,22 @@ class PrizeService extends BaseService
         ];
         IoC()->Prize_contest_record_item_model->_update($where, $condition);
 
-        $isNext = Constants::NO_VALUE;
-        if (($item['sort'] < $prizeContest['topic_num']) && $isCorrect) {
-            $isNext = Constants::YES_VALUE;
+
+        /** 7. if is_next == NO_VALUE; add rank info */
+        $isNext = Constants::YES_VALUE;
+        if (($item['sort'] >= $prizeContest['topic_num'])) {
+            $isNext = Constants::NO_VALUE;
+
+            $this->completePrizeContentRecord(
+                $filter['account_id'], $item['prize_contest_record_id'], $prizeContest
+            );
         }
+
         return [
-            'status' => $isCorrect,
-            'is_next' => $isNext,
+            'status'        => $isCorrect,
+            'is_next'       => $isNext,
+            'asset_num'     => $isCorrect ? ($schedule['asset_num'] ? : 0) : 0,
             'is_asset_award' => $isCorrect ? ($schedule['is_asset_award']?: Constants::NO_VALUE) : Constants::NO_VALUE,
-            'asset_num' => $isCorrect ? ($schedule['asset_num'] ?:0 ) : 0,
         ];
     }
 
@@ -229,14 +230,11 @@ class PrizeService extends BaseService
 
         /** 2. get current record */
         $prizeContestRecord = PrizeContestRecordService::getInstance()->checkPrizeContestRecordById($filter['id']);
+        $prizeContestRecordId = $prizeContestRecord['id'];
 
-        $condition = [
-            'prize_contest_record_id' => $filter['id'],
-            'is_correct'              => Constants::YES_VALUE
-        ];
-        $correctNum = PrizeContestRecordItemService::getInstance()->getTotal($condition);
+        $correctNum = PrizeContestRecordService::getInstance()->getPrizeContestRecordCorrectNum($prizeContestRecordId);
 
-        $bestRank = PrizeContestRecordItemService::getInstance()->getBest($condition);
+        $bestRank = PrizeContestRecordService::getInstance()->getBestRank($prizeContestRecordId);
 
         /** 3. get content record result */
         return [
@@ -294,4 +292,62 @@ class PrizeService extends BaseService
     }
 #endregion
 
+#region prize answer
+    /**
+     * @param $accountId
+     * @param $prizeContestRecordId
+     * @param $prizeContest
+     *
+     * @return mixed
+     * @throws Exception
+     */
+    public function completePrizeContentRecord($accountId, $prizeContestRecordId, $prizeContest)
+    {
+        /** 1. get current correct num & record asset num */
+        $correctNum = PrizeContestRecordService::getInstance()->getPrizeContestRecordCorrectNum($prizeContestRecordId);
+        $prizeContestRecordAssetNum = PrizeContestRecordService::getInstance()->getPrizeContestRecordTotalAssetNum($prizeContestRecordId);
+
+        /** 2. check is through */
+        $isThrough = Constants::NO_VALUE;
+        if ($correctNum == $prizeContest['topic_num']) {
+            $isThrough = Constants::YES_VALUE;
+        }
+
+        /** 3. update asset_num change log */
+        if ($isThrough == Constants::YES_VALUE && $prizeContest['is_asset_award'] == Constants::YES_VALUE) {
+            $source = '冲顶答题通关';
+            PrizeService::getInstance()->refreshPrizeContestScheduleRecordAssetChangeLog(
+                $accountId, $prizeContest['asset_num'], $source
+            );
+            $prizeContestRecordAssetNum += $prizeContest['asset_num'];
+        }
+
+        /** 4. update prize contest record */
+        $condition = [
+            'is_through' => $isThrough,
+            'asset_num'  => $prizeContestRecordAssetNum
+        ];
+        IoC()->Prize_contest_record_model->_update(['id' => $prizeContestRecordId], $condition);
+
+        return true;
+    }
+
+    /**
+     * 更新档次打卡轮次
+     * @param $accountId
+     * @param $assetNum
+     * @param $source
+     *
+     * @return bool
+     * @throws Exception
+     */
+    public function refreshPrizeContestScheduleRecordAssetChangeLog($accountId, $assetNum, $source)
+    {
+        AssetService::getInstance()->storage(
+            $accountId, $assetNum, Constants::ASSET_TYPE_JIFEN, $source
+        );
+        PrizeContestRankService::getInstance()->save($accountId, $assetNum);
+        return true;
+    }
+#endregion
 }
