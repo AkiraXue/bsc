@@ -192,7 +192,7 @@ class OrderService extends BaseService
             ];
             $orderItems = IoC()->Order_item_model->find($orderItemCondition, $itemCount);
             $tradeNos = array_column($orderItems, 'trade_no');
-            $params['trade_nos'] = $tradeNos;
+            $condition['trade_nos'] = $tradeNos;
         }
 
         if (!empty($params['name'])) {
@@ -208,7 +208,7 @@ class OrderService extends BaseService
             ];
             $orderItems = IoC()->Order_item_model->find($orderItemCondition, $itemCount);
             $tradeNos = array_column($orderItems, 'trade_no');
-            $params['trade_nos'] = array_merge($params['trade_nos'], $tradeNos);
+            $condition['trade_nos'] = array_merge($params['trade_nos'], $tradeNos);
         }
 
         $page = $params['page'];

@@ -105,6 +105,7 @@ class Order_model extends MY_Model
         /** initialize where,group,having,order **/
         !empty($params['unique_code']) && $query->where('unique_code', $params['unique_code']);
         !empty($params['trade_no']) && $query->where('trade_no', $params['trade_no']);
+        !empty($params['trade_nos']) && $query->where_in('trade_no', $params['trade_nos']);
 
         !empty($params['start_date']) && $query->where('created_at >=', date('Y-m-d H:i:s', strtotime($params['start_date'])));
         !empty($params['end_date']) && $query->where('created_at <=', date('Y-m-d H:i:s', strtotime($params['end_date'])));
