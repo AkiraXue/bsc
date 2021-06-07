@@ -176,6 +176,7 @@ class Tag_relation_model extends MY_Model
 
         !empty($params['type']) ? $query->where('type', $params['type']) : null;
 
+        !empty($params['unique_code']) ? $query->where_in('unique_code', $params['unique_code']) : null;
         !empty($params['unique_codes']) ? $query->where_in('unique_code', $params['unique_codes']) : null;
         !empty($params['no_unique_codes']) ? $query->where_not_in('unique_code', $params['no_unique_codes']) : null;
 

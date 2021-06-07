@@ -335,7 +335,6 @@ class KnowledgeService extends BaseService
                 'unique_code' => $id,
                 'state'       => Constants::YES_VALUE
             ]);
-
             $condition = [
                 'unique_code' => $id,
                 'type'        => Constants::TAG_RELATION_TYPE_KNOWLEDGE_ID,
