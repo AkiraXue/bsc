@@ -90,22 +90,25 @@ class PrizeContestScheduleService extends BaseService
         $necessaryParamArr = [
             'sort', 'is_asset_award', 'asset_num'
         ];
-        $filter['prize_contest_id'] = $params['prize_contest_id'];
-        if (empty($params['prize_contest_id'])) {
-            $currentPrizeContest = PrizeContestService::getInstance()->getCurrentConfig();
-            $filter['prize_contest_id'] = $currentPrizeContest['id'];
-        }
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
         $checkLenLimitList = [
             'asset_num' => 50,
         ];
         $this->checkApiInvalidArgumentLenOverLimit($checkLenLimitList, $params);
 
+        /** check prize contest id */
+        $filter['prize_contest_id'] = $params['prize_contest_id'];
+        if (empty($filter['prize_contest_id'])) {
+            $currentPrizeContest = PrizeContestService::getInstance()->getCurrentConfig();
+            $filter['prize_contest_id'] = $currentPrizeContest['id'];
+        }
+
         /** 2. check data */
         $id = $params['id'];
         if ($id) {
             $this->checkScheduleById($id);
         }
+
         PrizeContestService::getInstance()->checkPrizeContentById($filter['prize_contest_id']);
 
         /** 3. save prize contest schedule info */
