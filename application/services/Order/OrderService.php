@@ -253,9 +253,10 @@ class OrderService extends BaseService
                     }
                 }
                 $order['product_info'] = $productInfo;
+            } else {
+                $order['product_info'] = '冲顶兑换已成功，将在2周内发货哦。';
             }
             $order['item_list'] = $itemList;
-
             $order['sku'] = $order['item_list'][0]['sku'];
             $order['name'] = $order['item_list'][0]['name'];
             $order['remark'] = json_decode($order['remark'], true);

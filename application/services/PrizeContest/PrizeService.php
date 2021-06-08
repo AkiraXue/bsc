@@ -256,7 +256,7 @@ class PrizeService extends BaseService
     {
         $condition = [];
 
-        empty($params['account_id']) || $condition['account_id'] = $params['account_id'];
+        // empty($params['account_id']) || $condition['account_id'] = $params['account_id'];
 
         $page = $params['page'];
         $limit = $params['limit'];
