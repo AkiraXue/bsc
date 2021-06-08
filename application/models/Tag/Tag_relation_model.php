@@ -198,7 +198,7 @@ class Tag_relation_model extends MY_Model
             ->from($this->myTable() . ' relation')
             ->join(IoC()->Tag_model->myTable() . ' tag', 'tag.id=relation.tag_id','left')
             ->join(IoC()->Knowledge_model->myTable() . ' knowledge', 'relation.unique_code=knowledge.id', 'left')
-            ->order_by('knowledge.id asc');
+            ->order_by('relation.sort asc');
 
         !empty($params['tag_id']) && !is_array($params['tag_id']) &&
             $query->where('relation.tag_id', $params['tag_id']);

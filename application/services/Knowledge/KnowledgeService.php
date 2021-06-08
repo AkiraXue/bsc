@@ -13,6 +13,7 @@ use Exception;
 
 use Lib\Constants;
 
+use Lib\Helper;
 use Service\BaseTrait;
 use Service\BaseService;
 
@@ -247,6 +248,7 @@ class KnowledgeService extends BaseService
 
         $data =  IoC()->Knowledge_model->find($condition, $count, $page, $limit);
 
+        /** sort by tagList */
         $ids = array_column($data, 'id');
         $tagRelationCondition = [
             'unique_codes' => $ids,
@@ -254,11 +256,13 @@ class KnowledgeService extends BaseService
             'isAll'        => Constants::YES_VALUE
         ];
         $tagRelationRes = IoC()->Tag_relation_model->findRelationLeftJoinTag($tagRelationCondition, $relationCount);
+
         $tagRelations = [];
         foreach ($tagRelationRes as $tagRelation) {
             $tagRelations[$tagRelation['unique_code']][] = $tagRelation;
         }
 
+        /** filter by tag_sort */
         foreach ($data as &$knowledge) {
             /** add tag relation => toDo: limit num */
             $knowledge['tag_id'] = $tagRelations[$knowledge['id']][0]['tag_id'];
@@ -271,6 +275,9 @@ class KnowledgeService extends BaseService
             }
             $knowledge['content']['img'] = strpos($knowledge['content']['img'], '://') ?  $knowledge['content']['img'] : CDN_HOST . $knowledge['content']['img'];
         }
+
+        $data = Helper::itemSort($data, 'tag_sort', Constants::YES_VALUE);
+
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
         return [

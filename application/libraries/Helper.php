@@ -13,6 +13,31 @@ use Exception;
 
 class Helper
 {
+    /*
+     * content: 根据数组某个字段进行排序
+     * $arr    需要排序的数组
+     * $field  数组里的某个字段
+     * sort    1为正序排序  2为倒序排序
+     */
+    public static function itemSort($arr, $field, $sort){
+        $item = array();
+        foreach($arr as $kay => $value) {
+            $item[] = $value[$field];
+        }
+        if($sort==1) {
+            array_multisort($item,SORT_ASC, $arr);
+        }else{
+            array_multisort($item,SORT_DESC, $arr);
+        }
+        return $arr;
+    }
+
+    /**
+     * 解密
+     *
+     * @param $encrypted
+     * @return string
+     */
     public static function decrypt($encrypted)
     {
         $decrypted = openssl_decrypt(
