@@ -91,7 +91,7 @@ class PrizeContestScheduleService extends BaseService
             'sort', 'is_asset_award', 'asset_num'
         ];
         $filter['prize_contest_id'] = $params['prize_contest_id'];
-        if (empty($params)) {
+        if (empty($params['prize_contest_id'])) {
             $currentPrizeContest = PrizeContestService::getInstance()->getCurrentConfig();
             $filter['prize_contest_id'] = $currentPrizeContest['id'];
         }
