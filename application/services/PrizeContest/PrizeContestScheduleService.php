@@ -107,6 +107,15 @@ class PrizeContestScheduleService extends BaseService
         $id = $params['id'];
         if ($id) {
             $this->checkScheduleById($id);
+        } else {
+            $condition = [
+                'prize_contest_id'  => $filter['prize_contest_id'],
+                'sort'              => $filter['sort'],
+            ];
+            $oldSchedule = IoC()->Prize_contest_schedule_model->get($condition);
+            if ($oldSchedule && isset($oldSchedule['id'])) {
+                $id = $oldSchedule['id'];
+            }
         }
 
         PrizeContestService::getInstance()->checkPrizeContentById($filter['prize_contest_id']);
