@@ -110,6 +110,7 @@ class PrizeContestRecordService extends BaseService
 
         if ($totalNum >= $limitNum) {
             // throw new  Exception('已达到当日冲顶的次数限制：' . $limitNum . '次', 3001);
+            throw new Exception('每人每日' . $limitNum . '次冲顶机会哦，欢迎明天再来！', 3001);
         }
 
         /** 4. add record  */
