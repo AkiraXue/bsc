@@ -66,6 +66,7 @@ class TagRelationService extends BaseService
                 'type'          =>  $filter['type'],
                 'tag_id'        =>  $filter['tag_id'],
                 'desc'          =>  $filter['desc'],
+                'sort'          =>  $filter['sort'],
             ];
             $id = IoC()->Tag_relation_model->_insert($addCondition);
             IoC()->Tag_relation_model->_update(['id' => $id], ['sort' => $id]);
@@ -84,7 +85,9 @@ class TagRelationService extends BaseService
                 'type'          =>  $filter['type'],
                 'tag_id'        =>  $filter['tag_id'],
                 'desc'          =>  $filter['desc'],
+                'sort'          =>  $filter['sort'],
             ];
+
             IoC()->Tag_relation_model->_update(['id' => $id], $updateCondition);
         }
 
