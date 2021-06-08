@@ -88,8 +88,13 @@ class PrizeContestScheduleService extends BaseService
     {
         /** 1. check base params */
         $necessaryParamArr = [
-            'sort', 'prize_contest_id', 'is_asset_award', 'asset_num'
+            'sort', 'is_asset_award', 'asset_num'
         ];
+        $filter['prize_contest_id'] = $params['prize_contest_id'];
+        if (empty($params)) {
+            $currentPrizeContest = PrizeContestService::getInstance()->getCurrentConfig();
+            $filter['prize_contest_id'] = $currentPrizeContest['id'];
+        }
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
         $checkLenLimitList = [
             'asset_num' => 50,
