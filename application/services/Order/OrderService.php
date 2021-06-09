@@ -181,6 +181,8 @@ class OrderService extends BaseService
 
         empty($params['state']) || $condition['state'] = $params['state'];
 
+        empty($params['isAll']) || $condition['isAll'] = $params['isAll'];
+
         if ($params['type'] || $params['sku']) {
             $orderItemCondition = [
                 'type' => $params['type'],

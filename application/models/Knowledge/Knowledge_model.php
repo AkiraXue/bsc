@@ -55,7 +55,7 @@ class Knowledge_model extends MY_Model
 
         $query = $this->db->select($selectStr)->from($this->myTable() );
 
-        $orderBy = ['id' => 'asc'];
+        $orderBy = ['sort' => 'asc'];
         !empty($params['orderBy']) && $orderBy = $params['orderBy'];
         is_array($orderBy) ? $query->order_by(key($orderBy), current($orderBy)) : $query->order_by($orderBy);
 

@@ -276,8 +276,6 @@ class KnowledgeService extends BaseService
             $knowledge['content']['img'] = strpos($knowledge['content']['img'], '://') ?  $knowledge['content']['img'] : CDN_HOST . $knowledge['content']['img'];
         }
 
-        $data = Helper::itemSort($data, 'tag_sort', Constants::YES_VALUE);
-
         $totalPage = ceil($count / $limit);
         $totalPage = $totalPage ? $totalPage : 1;
         return [
