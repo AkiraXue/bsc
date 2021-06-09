@@ -94,7 +94,7 @@ class PrizeContestService extends BaseService
         /** 1. check base params */
         $necessaryParamArr = [
             'name', 'entry_num', 'topic_num', 'pic', 'remark', 'is_asset_award_section',
-            'is_asset_award', 'asset_num', 'start_date', 'end_date', 'is_through'
+            'is_asset_award', 'asset_num', 'start_date', 'end_date'
         ];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
         $checkLenLimitList = [
@@ -115,7 +115,7 @@ class PrizeContestService extends BaseService
             'is_asset_award_section' => $filter['is_asset_award_section'],
             'start_date'    => $filter['start_date'],
             'end_date'      => $filter['end_date'],
-            'is_through'    => $filter['is_through'],
+            'is_through'    => $params['is_through']?:Constants::NO_VALUE,
             'state'         => Constants::YES_VALUE
         ];
 
