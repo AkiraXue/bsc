@@ -74,6 +74,16 @@ class Prize extends MY_Controller
     /**
      * @throws Exception
      */
+    public function getPrizeDetail()
+    {
+        $data = $this->input->post(null, true);
+        $result = PrizeService::getInstance()->getPrizeDetail($data);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function answer()
     {
         $data = $this->input->post(null, true);

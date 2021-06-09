@@ -130,10 +130,12 @@ class Prize_contest_record_model extends MY_Model
      */
     public function findRecordLeftJoinItem(array $params, &$count, $page=1, $limit=100)
     {
-        $query = $this->db->select('record.*, user.name as username, user.avatar')
+        $query = $this->db->select('record.*, setting.name as setting_name, setting.entry_num, setting.topic_num,
+        setting.is_through as setting_is_through, setting.is_asset_award_section, setting.is_asset_award, 
+        setting.asset_num as setting_asset_num, user.name as username, user.avatar')
             ->from($this->myTable() . ' record')
+            ->join(IoC()->Prize_contest_model->myTable() . ' setting', 'setting.id=record.prize_contest_id', 'left')
             ->join(IoC()->User_model->myTable() . ' user', 'record.account_id=user.account_id','left')
-            //->join(IoC()->Activity_model->myTable() . ' activity', 'record.activity_code=activity.code', 'left')
             ->order_by('record.id asc');
 
         !empty($params['username']) && $query->like('user.name', $params['username']);

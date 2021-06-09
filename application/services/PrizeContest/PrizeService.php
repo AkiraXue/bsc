@@ -245,6 +245,59 @@ class PrizeService extends BaseService
     }
 
     /**
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    public function getPrizeDetail(array $params)
+    {
+        /** 1. check base params */
+        $necessaryParamArr = ['id'];
+        $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
+
+        /** 2. get current record */
+        $prizeContestRecord = PrizeContestRecordService::getInstance()->checkPrizeContestRecordById($filter['id']);
+        $prizeContestRecordId = $prizeContestRecord['id'];
+
+        $correctNum = PrizeContestRecordService::getInstance()->getPrizeContestRecordCorrectNum($prizeContestRecordId);
+
+        $bestRank = PrizeContestRecordService::getInstance()->getBestRank($prizeContestRecordId);
+
+        /** 3. get topic list */
+        $condition = [
+            'page'                  => 1,
+            'limit'                 => 100,
+            'orderBy'               => 'sort asc',
+            'account_id'            => $prizeContestRecord['account_id'],
+            'prize_contest_record_id' => $prizeContestRecordId,
+        ];
+        $itemRes = PrizeContestRecordItemService::getInstance()->find($condition);
+        $itemList = $itemRes['list'];
+        if (!empty($itemList) || !empty($itemList[0])) {
+            $topicIds = array_column($itemList, 'topic_id');
+            $topicListRes = TopicServices::getInstance()->find(['ids' => $topicIds]);
+            $topicList = array_column( $topicListRes['list'], null, 'id');
+            foreach ($itemList as &$item) {
+                $topicId = $item['topic_id'];
+                if (!array_key_exists($topicId, $topicList)) {
+                    continue;
+                }
+                $topic = $topicList[$topicId];
+                $topic['content']['list'] = array_filter($topic['content']['list']);
+                $item['topic'] = $topic;
+            }
+        }
+
+        /** 4. get content record result */
+        return [
+            'item_list'        => $itemList,
+            'correct_num' => intval($correctNum),
+            'asset_num'   => $prizeContestRecord['asset_num']?intval($prizeContestRecord['asset_num']):0,
+            'bestRank'    => $bestRank['sort']?intval($bestRank['sort']):0
+        ];
+    }
+
+    /**
      * 排行榜
      *
      * @param array $params
