@@ -93,7 +93,7 @@ class PrizeContestService extends BaseService
     {
         /** 1. check base params */
         $necessaryParamArr = [
-            'name', 'entry_num', 'topic_num', 'pic', 'remark', 'is_asset_award_section',
+            'name', 'entry_num', 'topic_num', 'remark', 'is_asset_award_section',
             'is_asset_award', 'asset_num', 'start_date', 'end_date'
         ];
         $filter = $this->checkApiInvalidArgument($necessaryParamArr, $params, true);
@@ -108,13 +108,14 @@ class PrizeContestService extends BaseService
             'name'          => $filter['name'],
             'entry_num'     => $filter['entry_num'],
             'topic_num'     => $filter['topic_num'],
-            'pic'           => $filter['pic'],
+
             'remark'        => $filter['remark'],
             'is_asset_award' => $filter['is_asset_award'],
             'asset_num'     => $filter['asset_num'],
             'is_asset_award_section' => $filter['is_asset_award_section'],
             'start_date'    => $filter['start_date'],
-            'end_date'      => $filter['end_date'],
+            'pic'           => $params['pic']?:'',
+            'end_date'      => $params['end_date']?:'',
             'is_through'    => $params['is_through']?:Constants::NO_VALUE,
             'state'         => Constants::YES_VALUE
         ];
