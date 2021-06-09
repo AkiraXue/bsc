@@ -276,7 +276,7 @@ class PrizeService extends BaseService
         if (!empty($itemList) || !empty($itemList[0])) {
             $topicIds = array_column($itemList, 'topic_id');
             $topicListRes = TopicServices::getInstance()->find(['ids' => $topicIds]);
-            $topicList = array_column( $topicListRes['list'], null, 'id');
+            $topicList = array_column($topicListRes['list'], null, 'id');
             foreach ($itemList as &$item) {
                 $topicId = $item['topic_id'];
                 if (!array_key_exists($topicId, $topicList)) {
@@ -285,6 +285,7 @@ class PrizeService extends BaseService
                 $topic = $topicList[$topicId];
                 $topic['content']['list'] = array_filter($topic['content']['list']);
                 $item['topic'] = $topic;
+                $item['draft'] = $item['answer_type'] == 'dupChoice' ? json_decode($item['draft']) : $item['draft'];
             }
         }
 
