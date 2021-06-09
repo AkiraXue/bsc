@@ -208,7 +208,7 @@ class PrizeService extends BaseService
         }
 
         return [
-            'is_through'    => $prizeContest['is_through'],
+            'is_through'    => $prizeContest['is_through']?:Constants::NO_VALUE,
             'status'        => $isCorrect,
             'is_next'       => $isNext,
             'asset_num'     => $isCorrect ? ($schedule['asset_num'] ? : 0) : 0,
