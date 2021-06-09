@@ -211,6 +211,10 @@ class OrderService extends BaseService
             $condition['trade_nos'] = array_merge($params['trade_nos'], $tradeNos);
         }
 
+        if (!empty($params['unique_code'])) {
+            $condition['isAll'] = Constants::YES_VALUE;
+        }
+
         $page = $params['page'];
         $limit = $params['limit'];
         $page = !empty($page) ? intval($page) : 1;
