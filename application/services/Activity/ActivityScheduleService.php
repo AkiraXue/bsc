@@ -218,6 +218,7 @@ class ActivityScheduleService extends BaseService
             'asset_num'                 => $params['asset_num'],
             'state'                     => $params['state'] ?: Constants::YES_VALUE
         ];
+
         return IoC()->Activity_schedule_model->_update($where, $update);
     }
 

@@ -164,7 +164,9 @@ class PrizeService extends BaseService
         $correctChoice = $topic['content']['answer_num'];
         if ($topic['answer_type'] == 'dupChoice') {
             sort($filter['answer']);
+            array_map('intval', $filter['answer']);
             sort($correctChoice);
+            array_map('intval', $correctChoice);
 
             $filter['answer'] = json_encode($filter['answer']);
             $correctChoice = json_encode($correctChoice);
