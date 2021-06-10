@@ -64,6 +64,17 @@ class Order extends MY_Controller
     /**
      * @throws Exception
      */
+    public function checkOrderPurchase()
+    {
+        $data = $this->input->post(null, true);
+        $data['accountId'] = $this->accountId;
+        $result = TradeService::getInstance()->checkOrderPurchase($data);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function purchase()
     {
         $data = $this->input->post(null, true);
