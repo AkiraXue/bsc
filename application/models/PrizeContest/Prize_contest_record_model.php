@@ -40,6 +40,23 @@ class Prize_contest_record_model extends MY_Model
     }
 
     /**
+     * 入库资金
+     * @param $id
+     * @param $assetNum
+     *
+     * @return array
+     */
+    public function storage($id, $assetNum)
+    {
+        $sql = "update " . $this->table . " set `asset_num`  = `asset_num` + " . $assetNum . " where id = '{$id}'";
+        $result = $this->db->query($sql);
+        if (!count($result)) {
+            return [];
+        }
+        return $result;
+    }
+
+    /**
      * 查询
      *
      * @param array $params

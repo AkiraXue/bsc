@@ -209,6 +209,7 @@ class Product_model extends MY_Model
         }
         return $result;
     }
+
     /**
      * 出库
      * @param $sku

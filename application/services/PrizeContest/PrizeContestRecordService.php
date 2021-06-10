@@ -161,11 +161,19 @@ class PrizeContestRecordService extends BaseService
 
         return $id;
     }
-
-
 #endregion
 
 #region base
+    /**
+     * @param $prizeContestRecordId
+     * @param $assetNum
+     * @return array
+     */
+    public function storage ($prizeContestRecordId, $assetNum)
+    {
+        return IoC()->Prize_contest_record_model->storage($prizeContestRecordId, $assetNum);
+    }
+
     /**
      * @param integer  $id
      * @param integer  $isThrowError
