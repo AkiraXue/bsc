@@ -203,7 +203,6 @@ class AssetService extends BaseService
             return IoC()->Asset_model->_insert($insert);
         }
     }
-
 #endregion
 
 #region base func
