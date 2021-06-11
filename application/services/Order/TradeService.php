@@ -81,7 +81,7 @@ class TradeService extends BaseService
         $this->checkPurchaseOrder($filter['sku'], $filter['accountId']);
 
         /** 3. get storage */
-        $item = $this->checkStorage($filter['sku']);
+        $item = $this->checkStorage($filter['sku'], $params['address']);
 
         /** 4. order */
         $order = $this->order($filter['sku'], $filter['accountId'], $item, $params['address']);
@@ -144,18 +144,20 @@ class TradeService extends BaseService
 
     /**
      * @param $sku
+     * @param $address
+     *
      * @return mixed
      *
      * @throws Exception
      */
-    private function checkStorage($sku)
+    private function checkStorage($sku, $address='')
     {
         /** get product type => virtual or physical */
         $product = ProductService::getInstance()->checkBySku($sku);
 
         /** 1. physical => check address  */
         if ($product['type'] == Constants::PRODUCT_TYPE_PHYSICAL) {
-            if (empty($params['address'])) {
+            if (empty($address)) {
                 throw new Exception('实体商品下单需要填报地址信息', 3001);
             }
         }
