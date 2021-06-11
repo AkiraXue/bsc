@@ -221,7 +221,8 @@ class AssetService extends BaseService
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];
             }
-            throw new DBInvalidObjectException('AssetObj', 'id');
+            throw new Exception('为开展活动，请先去赚取积分', 3001);
+            // throw new DBInvalidObjectException('AssetObj', 'id');
         }
         return $asset;
     }
@@ -245,7 +246,8 @@ class AssetService extends BaseService
             if ($isThrowError == Constants::NO_VALUE) {
                 return [];
             }
-            throw new DBInvalidObjectException('AssetObj', 'id');
+            throw new Exception('为开展活动，请先去赚取积分', 3001);
+            // throw new DBInvalidObjectException('AssetObj', 'id');
         }
         return $asset;
     }
