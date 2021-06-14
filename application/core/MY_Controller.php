@@ -82,7 +82,7 @@ class MY_Controller extends CI_Controller
     private function checkLogin()
     {
         $token = TokenService::getBearerToken();
-        if (empty($token)) {
+        if (empty($token) && $this->isNeedLogin()) {
             throw new ApiInvalidArgumentException('authorization header token');
         }
         $claims = TokenService::parseToken($token);
