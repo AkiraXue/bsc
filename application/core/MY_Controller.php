@@ -45,7 +45,7 @@ class MY_Controller extends CI_Controller
         $this->checkCors();
 
         $this->checkLogin();
-        $isAdmin = $_POST['is_admin'];
+        $isAdmin = $this->input->post('is_admin', true);
         if ($this->accountId) {
             if ($isAdmin) {
                 AdminUserService::getInstance()->checkByAccountId($this->accountId);
