@@ -85,6 +85,9 @@ class MY_Controller extends CI_Controller
         if (empty($token) && $this->isNeedLogin()) {
             throw new ApiInvalidArgumentException('authorization header token');
         }
+        if (empty($token)) {
+            return true;
+        }
         $claims = TokenService::parseToken($token);
         $currentTime = time();
         $expireTime = $claims['exp']->getValue();
