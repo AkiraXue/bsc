@@ -82,6 +82,16 @@ class AdminUser extends MY_Controller
     /**
      * @throws Exception
      */
+    public function getCurrentUserInfo()
+    {
+        $data = $this->input->post(null, true);
+        $result = AdminUserService::getInstance()->checkByAccountId($this->accountId, Constants::NO_VALUE);
+        $this->_success($result);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function delete()
     {
         $data = $this->input->post(null, true);
