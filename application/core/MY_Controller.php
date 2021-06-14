@@ -46,10 +46,12 @@ class MY_Controller extends CI_Controller
 
         $this->checkLogin();
         $isAdmin = $_POST['is_admin'];
-        if ($isAdmin && $this->accountId) {
-            AdminUserService::getInstance()->checkByAccountId($this->accountId);
-        } else {
-            UserInfoService::getInstance()->checkByAccountId($this->accountId);
+        if ($this->accountId) {
+            if ($isAdmin) {
+                AdminUserService::getInstance()->checkByAccountId($this->accountId);
+            } else {
+                UserInfoService::getInstance()->checkByAccountId($this->accountId);
+            }
         }
 
         foreach ($_POST as $key => $value) {
