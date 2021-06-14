@@ -13,10 +13,12 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
+use Lib\Constants;
 use Service\BaseTrait;
 
 use Service\Wechat\TokenService;
 use Service\User\UserInfoService;
+use Service\Plugin\AdminUserService;
 
 use Exception\Common\ApiInvalidArgumentException;
 
@@ -42,15 +44,12 @@ class MY_Controller extends CI_Controller
 
         $this->checkCors();
 
-        if ($this->isNeedLogin == 1) {
-            $this->checkLogin();
-        }
-
+        $this->checkLogin();
         $isAdmin = $_POST['is_admin'];
-        if ($isAdmin) {
-
+        if ($isAdmin && $this->accountId) {
+            AdminUserService::getInstance()->checkByAccountId($this->accountId);
         } else {
-            // UserInfoService::getInstance()->checkByAccountId($this->accountId);
+            UserInfoService::getInstance()->checkByAccountId($this->accountId);
         }
 
         foreach ($_POST as $key => $value) {
@@ -60,14 +59,17 @@ class MY_Controller extends CI_Controller
         }
     }
 
+    /**
+     * @return bool
+     */
     public function isNeedLogin()
     {
         // Common class
-        $pathInfo = $_SERVER['PATH_INFO'];
+        $pathInfo = $_SERVER['REQUEST_URI'];
         $pathArr = array_reverse(explode(DIRECTORY_SEPARATOR, $pathInfo));
         $className = strtolower($pathArr[1]);
         // 不用check login 的 api
-        $noCheckLoginApiList = ['common', 'login'];
+        $noCheckLoginApiList = ['common', 'login', 'adminuser'];
         if (in_array($className, $noCheckLoginApiList)) {
             return false;
         }

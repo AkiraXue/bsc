@@ -13,6 +13,15 @@ use Exception;
 
 class Helper
 {
+    /**
+     * @param $password
+     * @return string
+     */
+    public static function encryptPass($password)
+    {
+        return md5(sha1($password));
+    }
+
     /*
      * content: 根据数组某个字段进行排序
      * $arr    需要排序的数组
