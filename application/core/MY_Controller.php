@@ -47,7 +47,7 @@ class MY_Controller extends CI_Controller
         $this->checkLogin();
         $isAdmin = $this->input->post('is_admin', true);
         if ($this->accountId) {
-            if ($isAdmin) {
+            if ($isAdmin == Constants::YES_VALUE) {
                 AdminUserService::getInstance()->checkByAccountId($this->accountId);
             } else {
                 UserInfoService::getInstance()->checkByAccountId($this->accountId);
