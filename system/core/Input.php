@@ -257,6 +257,9 @@ class CI_Input {
         if (empty($data)) {
             $content = file_get_contents('php://input');
             $data    = (array)json_decode($content, true);
+            if (isset($index)) {
+                $data = $data[$index];
+            }
         }
         return $data;
 	}
