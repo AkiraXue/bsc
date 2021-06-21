@@ -55,6 +55,8 @@ class PrizeService extends BaseService
     public function getConfig($accountId, $date='')
     {
         $currentConfig = PrizeContestService::getInstance()->getCurrentConfig();
+
+        $date = empty($date) ? date('Y-m-d') : $date;
         $totalNum = PrizeContestRecordService::getInstance()->getPrizeContestRecordNum(
             $accountId, $currentConfig['id'], $date
         );
