@@ -109,6 +109,9 @@ class OrderService extends BaseService
                 'state'         => Constants::YES_VALUE,
             ];
         }
+        if (count($productList) == 0) {
+            throw new Exception('订单关联的商品不存在', 3001);
+        }
         IoC()->Order_item_model->batchAdd($orderItemList);
 
         return $orderId;

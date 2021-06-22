@@ -137,7 +137,7 @@ class HisIoCMgr extends IoCMgr
         $this->registerModel('Inventory_model', 'Product/Inventory_model');
 
         $this->registerModel('Order_model', 'Order/Order_model');
-        $this->registerModel('Adminuser_model', 'Order/Order_item_model');
+        $this->registerModel('Order_item_model', 'Order/Order_item_model');
 
         $this->registerModel('Asset_model', 'Asset/Asset_model');
         $this->registerModel('Asset_change_log_model', 'Asset/Asset_change_log_model');
