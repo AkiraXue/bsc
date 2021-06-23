@@ -285,7 +285,7 @@ class OrderService extends BaseService
             }
 
             /** related user info */
-            $order['related_user'] = $userList[$order['unique_code']] ? : [];
+            $order['related_user'] = $userList[$order['unique_code']]['name'] ? : '';
         }
 
         $totalPage = ceil($count / $limit);
