@@ -279,8 +279,8 @@ class OrderService extends BaseService
             $order['remark'] = json_decode($order['remark'], true);
             $order['address'] = '';
             if ($order['remark']['address']) {
-                $order['address'] = "联系人：" . $order['remark']['address']['contact'] . "<br/>" .
-                    "手机号：" . $order['remark']['address']['mobile'] .  "<br/>" .
+                $order['address'] = "联系人：" . $order['remark']['address']['contact'] . "\n" .
+                    "手机号：" . $order['remark']['address']['mobile'] . "\n" .
                     "收件地址：" . $order['remark']['address']['address'];
             }
 
