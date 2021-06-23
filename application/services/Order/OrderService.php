@@ -227,6 +227,7 @@ class OrderService extends BaseService
 
         $data =  IoC()->Order_model->find($condition, $count, $page, $limit);
 
+        /** get order item info */
         $condition = [
             'trade_nos' => array_column($data, 'trade_no'),
             'isAll'      => Constants::YES_VALUE
@@ -238,6 +239,13 @@ class OrderService extends BaseService
             $orderItemList[$orderItem['trade_no']][] = $orderItem;
         }
 
+        /** related accountId */
+        $uniqueCodes = array_column($data, 'unique_code');
+        $userCon = ['account_ids' => $uniqueCodes, 'isAll' => Constants::YES_VALUE];
+        $userList = IoC()->User_model->find($userCon, $userCount);
+        $userList = array_column($userList, null, 'account_id');
+
+        /** relate order info */
         foreach ($data as &$order) {
             setlocale(LC_TIME, 'en_US');
             $order['change_time'] = gmstrftime("%d %b %Y", strtotime($order['created_at']));
@@ -275,6 +283,9 @@ class OrderService extends BaseService
                     "手机号：" . $order['remark']['address']['mobile'] . "\n" .
                     "收件地址：" . $order['remark']['address']['address'];
             }
+
+            /** related user info */
+            $order['related_user'] = $userList[$order['unique_code']] ? : [];
         }
 
         $totalPage = ceil($count / $limit);
