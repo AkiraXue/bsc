@@ -10,6 +10,7 @@
 
 use Lib\Helper;
 
+use Service\Upload\ImgService;
 use Service\Upload\UploadService;
 use Service\Upload\OssUploadService;
 
@@ -46,5 +47,13 @@ class Upload extends MY_Controller
         $this->_success($response);
     }
 
+    /**
+     * @throws Exception
+     */
+    public function refreshImgExif()
+    {
+        $response = ImgService::getInstance()->refreshImgExif();
+        $this->_success($response);
+    }
 
 }

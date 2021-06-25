@@ -16,7 +16,10 @@ use Lib\Helper;
 use Service\BaseTrait;
 use Service\BaseService;
 
-
+/**
+ * Class UploadService
+ * @package Service\Upload
+ */
 class UploadService extends BaseService
 {
     use BaseTrait;
@@ -89,6 +92,11 @@ class UploadService extends BaseService
             $responseMsg = $uploadClient->display_errors();
             throw new Exception($responseMsg, 2001);
         }
+
+        /** 4. clear exif info */
+        // ImgService::getInstance()->clearImgExif($path . $filename);
+
+        /** return response */
         $response = ['file_name' => $imgPath . $filename];
         return $response;
     }

@@ -14,6 +14,60 @@ use Exception;
 class Helper
 {
     /**
+     * 遍历文件
+     *
+     * @param $dir
+     * @return array
+     */
+    public static function myScanDir($dir)
+    {
+        $file_arr = scandir($dir);
+        $new_arr = [];
+        foreach($file_arr as $item){
+
+            if($item!=".." && $item !="."){
+
+                if(is_dir($dir."/".$item)){
+
+                    $new_arr[$item] = self::myScanDir($dir."/".$item);
+
+                }else{
+                    $new_arr[] = $item;
+                }
+            }
+        }
+        return $new_arr;
+    }
+
+    /**
+     * 遍历文件
+     *
+     * @param $path
+     * @return array
+     */
+    public static function getDir($path)
+    {
+        //判断目录是否为空
+        if(!file_exists($path)) {
+            return [];
+        }
+
+        $files = scandir($path);
+        $fileItem = [];
+        foreach($files as $v) {
+            $newPath = $path .DIRECTORY_SEPARATOR . $v;
+            if(is_dir($newPath) && $v != '.' && $v != '..') {
+                $fileItem = array_merge($fileItem, self::getDir($newPath));
+            }else if(is_file($newPath)){
+                $fileItem[] = $newPath;
+            }
+        }
+
+        return $fileItem;
+    }
+
+
+    /**
      * @param $password
      * @return string
      */

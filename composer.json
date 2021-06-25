@@ -25,10 +25,11 @@
 		"lcobucci/jwt": "~3.3.3",
 		"guzzlehttp/guzzle": "^6.3",
 		"predis/predis": "^1.1",
+		"aliyuncs/oss-sdk-php": "^2.4",
 		"ext-curl": "*",
 		"ext-json": "*",
-		"aliyuncs/oss-sdk-php": "^2.4",
-      	"ext-openssl": "*"
+      	"ext-openssl": "*",
+      	"ext-gd": "*"
     },
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"
