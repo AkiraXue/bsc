@@ -46,8 +46,8 @@ class ImgService extends BaseService
      */
     public function refreshImgExif()
     {
-        $path1 = $resourcePath = APPPATH . '../resource/upload';
-        $this->refreshImgExifInfo($path1);
+//        $path1 = $resourcePath = APPPATH . '../resource/upload';
+//        $this->refreshImgExifInfo($path1);
 
         $path2 = $resourcePath = APPPATH . '../resource/origin';
         $this->refreshImgExifInfo($path2);
