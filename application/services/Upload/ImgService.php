@@ -83,6 +83,7 @@ class ImgService extends BaseService
         }
 
         foreach ($fileList as $filepath) {
+            /** rotate && refresh img */
             ImgService::getInstance()->rotate($filepath);
 
             ImgService::getInstance()->clearImgExif($filepath);

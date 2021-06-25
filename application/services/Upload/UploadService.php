@@ -94,7 +94,9 @@ class UploadService extends BaseService
         }
 
         /** 4. clear exif info */
-        // ImgService::getInstance()->clearImgExif($path . $filename);
+        $filepath = $path . $filename;
+        ImgService::getInstance()->rotate($filepath);
+        ImgService::getInstance()->clearImgExif($filepath);
 
         /** return response */
         $response = ['file_name' => $imgPath . $filename];
