@@ -33,18 +33,36 @@ class ImgService extends BaseService
 
     public static function getInstance()
     {
-        if (!self::$instance instanceof self){
-            self::$instance = new self() ;
+        if (!self::$instance instanceof self) {
+            self::$instance = new self();
         }
         return self::$instance;
     }
 #endregion
 
 #region func
+    /**
+     * @return bool
+     */
     public function refreshImgExif()
     {
-        $path = $resourcePath =  APPPATH . '../resource/upload';
+        $path1 = $resourcePath = APPPATH . '../resource/upload';
+        $this->refreshImgExifInfo($path1);
 
+        $path2 = $resourcePath = APPPATH . '../resource/origin';
+        $this->refreshImgExifInfo($path2);
+
+        return true;
+    }
+#endregion
+
+#region tool
+    /**
+     * @param $path
+     * @return array
+     */
+    public function refreshImgExifInfo($path)
+    {
         $dirFiles = Helper::getDir($path);
 
         $fileList = [];
@@ -72,9 +90,7 @@ class ImgService extends BaseService
 
         return ['file_count' => $total];
     }
-#endregion
 
-#region tool
     /**
      * @param $path
      * @return bool
