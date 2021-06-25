@@ -11,8 +11,14 @@ namespace Lib;
 
 use Exception;
 
+/**
+ * Class Helper
+ * @package Lib
+ */
 class Helper
 {
+
+#region cycle file list
     /**
      * 遍历文件
      *
@@ -65,8 +71,62 @@ class Helper
 
         return $fileItem;
     }
+#endregion
 
+#region file read
+    /**
+     * 第1种方法：
+     * @param $file
+     * @return bool|string
+     */
+    public static function get_extension1($file)
+    {
+        return substr(strrchr($file, '.'), 1);
+    }
 
+    /**
+     * 第2种方法：
+     * @param $file
+     * @return bool|string
+     */
+    public static function get_extension2($file)
+    {
+        return substr($file, strrpos($file, '.')+1);
+    }
+
+    /**
+     * 第3种方法：
+     * @param $file
+     * @return bool|string
+     */
+    public static function get_extension3($file)
+    {
+        return end(explode('.', $file));
+    }
+
+    /**
+     * 第4种方法：
+     * @param $file
+     * @return bool|string
+     */
+    public static function get_extension4($file)
+    {
+        $info = pathinfo($file);
+        return $info['extension'];
+    }
+
+    /**
+     * 第5种方法：
+     * @param $file
+     * @return bool|string
+     */
+    public static function get_extension5($file)
+    {
+        return pathinfo($file, PATHINFO_EXTENSION);
+    }
+#endregion
+
+#region pass
     /**
      * @param $password
      * @return string
@@ -74,25 +134,6 @@ class Helper
     public static function encryptPass($password)
     {
         return md5(sha1($password));
-    }
-
-    /*
-     * content: 根据数组某个字段进行排序
-     * $arr    需要排序的数组
-     * $field  数组里的某个字段
-     * sort    1为正序排序  2为倒序排序
-     */
-    public static function itemSort($arr, $field, $sort){
-        $item = array();
-        foreach($arr as $kay => $value) {
-            $item[] = $value[$field];
-        }
-        if($sort==1) {
-            array_multisort($item,SORT_ASC, $arr);
-        }else{
-            array_multisort($item,SORT_DESC, $arr);
-        }
-        return $arr;
     }
 
     /**
@@ -114,6 +155,30 @@ class Helper
         return trim($decrypted);
     }
 
+#endregion
+
+#region sort
+    /*
+     * content: 根据数组某个字段进行排序
+     * $arr    需要排序的数组
+     * $field  数组里的某个字段
+     * sort    1为正序排序  2为倒序排序
+     */
+    public static function itemSort($arr, $field, $sort){
+        $item = array();
+        foreach($arr as $kay => $value) {
+            $item[] = $value[$field];
+        }
+        if($sort==1) {
+            array_multisort($item,SORT_ASC, $arr);
+        }else{
+            array_multisort($item,SORT_DESC, $arr);
+        }
+        return $arr;
+    }
+#endregion
+
+#region string
     /**
      * Create a Random String
      *
@@ -178,4 +243,5 @@ class Helper
            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
        );
    }
+#endregion
 }

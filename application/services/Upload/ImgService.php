@@ -43,17 +43,67 @@ class ImgService extends BaseService
 #region func
     public function refreshImgExif()
     {
-        $path = $resourcePath =  APPPATH . '../resource/origin';
+        $path = $resourcePath =  APPPATH . '../resource/upload';
 
-        $dir = Helper::getDir($path);
+        $dirFiles = Helper::getDir($path);
 
-        echo json_encode(['dir' => $dir]);
+        $fileList = [];
+        $allowArr = ['gif', 'jpg', 'png', 'jpeg'];
+        foreach ($dirFiles as $filepath) {
+            $extension = Helper::get_extension5($filepath);
+            $extension = strtolower($extension);
+            if (!in_array($extension, $allowArr)) {
+                continue;
+            }
+            $fileList[] = $filepath;
+        }
+        unset($dirFiles);
+
+        $total = count($fileList);
+        if ($total == 0) {
+            return ['file_count' => $total];
+        }
+
+        foreach ($fileList as $filepath) {
+            ImgService::getInstance()->rotate($filepath);
+
+            ImgService::getInstance()->clearImgExif($filepath);
+        }
+
+        return ['file_count' => $total];
     }
 #endregion
 
 #region tool
     /**
-     * clear img
+     * @param $path
+     * @return bool
+     */
+    public function rotate($path)
+    {
+        $image = imagecreatefromstring(file_get_contents($path));
+        $exif = exif_read_data($path);
+        if(empty($exif['Orientation'])) {
+           return true;
+        }
+        switch($exif['Orientation']) {
+            case 8:
+                $image = imagerotate($image,90,0);
+                break;
+            case 3:
+                $image = imagerotate($image,180,0);
+                break;
+            case 6:
+                $image = imagerotate($image,-90,0);
+                break;
+        }
+        imagejpeg($image, $path);
+        imagedestroy($image);
+        return true;
+    }
+
+    /**
+     * clear img exif
      *
      * @param $path
      * @return bool

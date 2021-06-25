@@ -188,7 +188,7 @@ class KnowledgeService extends BaseService
                 $item['title'] = ($knowledgeItem['title'] && $knowledgeContent['text']) ? $knowledgeItem['title'] : '';
                 $item['is_contain'] = $knowledgeContent['is_contain'] ? $knowledgeContent['is_contain'] : Constants::NO_VALUE;
                 $item['text'] = $knowledgeContent['text'] ? $knowledgeContent['text'] : '';
-                $item['img'] =  $knowledgeContent['img'] ? $knowledgeContent['img'] : '';
+                $item['img'] =  $knowledgeContent['img'] ? $knowledgeContent['img'] . '?3' : '';
                 $list[] = $item;
             }
         }
