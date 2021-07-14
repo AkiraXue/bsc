@@ -42,9 +42,7 @@ class Topic_model extends MY_Model
      */
     public function random_topic($num)
     {
-       //$sql = "SELECT * FROM " . $this->table . " ORDER BY RAND() LIMIT ".$num;
-        $sql = "SELECT * FROM " . $this->table . " where `id` in(67,68,69,70,71)";
-
+       $sql = "SELECT * FROM " . $this->table . " ORDER BY RAND() LIMIT ".$num;
        $result = $this->db->query($sql)->result_array();
         if (!count($result)) {
             return [];
