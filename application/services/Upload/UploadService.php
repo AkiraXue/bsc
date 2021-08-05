@@ -75,7 +75,7 @@ class UploadService extends BaseService
         $filename = date('Ymdhis').'_'.Helper::random_string('alnum', 8).'.'.$suffix;
 
         /** 2. get base info */
-        $resourcePath =  APPPATH . '../resource/'. ARCHIVE_PATH;
+        $resourcePath =  APPPATH . '../webroot/resource/'. ARCHIVE_PATH;
         $levelDir = date('Y/m/d', time());
         $path = $resourcePath . $levelDir;
         if(!is_dir($path)){
