@@ -116,7 +116,7 @@ class Asset_model extends MY_Model
      */
     public function getTotal(array $params)
     {
-        $query = $this->db->select('COUNT(`id`) as totalNum')->from($this->table);
+        $query = $this->db->select('COUNT(*) as totalNum')->from($this->table);
 
         /** initialize where,group,having,order **/
         $query = $this->filterQuery($query, $params);
