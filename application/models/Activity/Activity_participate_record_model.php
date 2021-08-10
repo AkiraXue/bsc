@@ -94,6 +94,9 @@ class Activity_participate_record_model extends MY_Model
         $query = $this->filterQuery($query, $params);
 
         $count = $query->count_all_results('',false);
+        if ($count == 0) {
+            return [];
+        }
 
         /** 是否单次取全部 */
         $limit = !empty($params['isAll']) ? $count : $limit;
@@ -192,6 +195,9 @@ class Activity_participate_record_model extends MY_Model
         !empty($params['state']) && $query->where('record.state', $params['state']);
 
         $count = $query->count_all_results('',false);
+        if ($count == 0) {
+            return [];
+        }
 
         /** 是否单次取全部 */
         $limit = !empty($params['isAll']) ? $count : $limit;
