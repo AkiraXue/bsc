@@ -48,7 +48,7 @@ class Prize_contest_record_model extends MY_Model
      */
     public function storage($id, $assetNum)
     {
-        $sql = "update " . $this->table . " set `asset_num`  = `asset_num` + " . $assetNum . " where id = '{$id}'";
+        $sql = "update " . $this->table . " set asset_num  = asset_num + " . $assetNum . " where id = '{$id}'";
         $result = $this->db->query($sql);
         if (!count($result)) {
             return [];

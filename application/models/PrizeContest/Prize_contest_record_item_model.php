@@ -192,7 +192,7 @@ class Prize_contest_record_item_model extends MY_Model
      */
     public function getTotalAssetNum(array $params)
     {
-        $query = $this->db->select('SUM(`asset_num`) as totalNum')->from($this->table);
+        $query = $this->db->select('SUM(asset_num) as totalNum')->from($this->table);
 
         /** initialize where,group,having,order **/
         $query = $this->filterQuery($query, $params);

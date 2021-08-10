@@ -53,7 +53,10 @@ class Order_model extends MY_Model
         $selectStr = '*';
         !empty($params['selectStr']) && $selectStr=$params['selectStr'];
 
-        $query = $this->db->select($selectStr)->from($this->myTable() );
+        $query = $this->db->select($selectStr);
+        if (empty($this->db->qb_from)) {
+            $query->from($this->myTable());
+        }
 
         $orderBy = ['id' => 'desc'];
         !empty($params['orderBy']) && $orderBy = $params['orderBy'];

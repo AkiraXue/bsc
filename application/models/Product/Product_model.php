@@ -205,7 +205,7 @@ class Product_model extends MY_Model
      */
     public function storage($sku, $storage)
     {
-        $sql = "update " . $this->table . " set `storage`  = `storage` + " . $storage . " where sku = '{$sku}'";
+        $sql = "update " . $this->table . " set storage = storage + " . $storage . " where sku = '{$sku}'";
         $result = $this->db->query($sql);
         if (!count($result)) {
             return [];
@@ -222,7 +222,7 @@ class Product_model extends MY_Model
      */
     public function delivery($sku, $storage)
     {
-        $sql = "update " . $this->table . " set `storage`  = `storage` - " . $storage . " where sku = '{$sku}'";
+        $sql = "update " . $this->table . " set storage = storage - " . $storage . " where sku = '{$sku}'";
         $result = $this->db->query($sql);
         if (!count($result)) {
             return [];
