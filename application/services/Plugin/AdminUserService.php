@@ -69,7 +69,6 @@ class AdminUserService extends BaseService
         if (empty($oldData) || !isset($oldData['id'])) {
             throw new Exception('current old data not exist which name is => ' . $filter['name'], 3001);
         }
-
         /** 3. check admin user password */
         $currentPass = Helper::encryptPass($filter['password']);
         if ($currentPass != $oldData['password']) {

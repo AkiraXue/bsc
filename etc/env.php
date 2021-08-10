@@ -24,11 +24,12 @@ return [
 'DB_PWD' => 'Boston2021',          // 密码
 'DB_PORT' => '16000\Prod',        // 端口
 'DB_PREFIX' => '',    // 数据库表前缀
-];
+];	
  */
 
 /** db config */
-define('DB_HOST', '192.168.91.212');
+//define('DB_HOST', '192.168.91.212');
+define('DB_HOST', 'sqlsrv:Server=192.168.91.212,16000\Prod;Database=APP_NHO');
 define('DB_PORT', '16000\Prod');
 define('DB_USER', 'AppNhouser');
 define('DB_PASSWORD', 'Boston2021');

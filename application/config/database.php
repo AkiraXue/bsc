@@ -74,12 +74,15 @@ $active_group = 'default';
 $query_builder = TRUE;
 
 $db['default'] = array(
+	//'dsn'	=> 'sqlsrv:server='.DB_HOST.','.DB_PORT.';Database='.DB_DATABASE,
+	//'dsn'	=> 'odbc:Driver={ODBC Driver 17 for SQL Server};Server='.DB_HOST.';Database=' . DB_DATABASE,
+	//'dsn'	=> 'odbc:Driver={ODBC Driver 17 for SQL Server};Server='.DB_HOST.';Database=' . DB_DATABASE,
 	'dsn'	=> '',
     'hostname' => DB_HOST,
     'username' => DB_USER,
     'password' => DB_PASSWORD,
     'database' => DB_DATABASE,
-	'dbdriver' => 'sqlsrv',
+	'dbdriver' => 'pdo',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
@@ -95,3 +98,4 @@ $db['default'] = array(
 	'save_queries' => TRUE,
     'port' => DB_PORT
 );
+

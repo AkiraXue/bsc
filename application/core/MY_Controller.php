@@ -42,7 +42,7 @@ class MY_Controller extends CI_Controller
     {
         parent::__construct();
 
-        $this->checkCors();
+        // $this->checkCors();
 
         $this->checkLogin();
         $isAdmin = $this->input->post('is_admin', true);
@@ -68,8 +68,10 @@ class MY_Controller extends CI_Controller
     {
         // Common class
         $pathInfo = $_SERVER['REQUEST_URI'];
-        $pathArr = array_reverse(explode(DIRECTORY_SEPARATOR, $pathInfo));
+        //$pathArr = array_reverse(explode(DIRECTORY_SEPARATOR, $pathInfo));
+        $pathArr = explode('/', $pathInfo);
         $className = strtolower($pathArr[1]);
+       //var_dump($pathInfo, $pathArr, $className);die;
         // 不用check login 的 api
         $noCheckLoginApiList = ['common', 'login', 'adminuser'];
         if (in_array($className, $noCheckLoginApiList)) {
