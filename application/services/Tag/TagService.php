@@ -125,7 +125,12 @@ class TagService extends BaseService
         $totalPage = $totalPage ? $totalPage : 1;
 
         $parentTagIds = array_column($data, 'parent_tag_id');
-        $condition = ['ids' => $parentTagIds, 'isAll' => Constants::YES_VALUE];
+        $parentTagIds = array_filter($parentTagIds);
+        $condition = ['isAll' => Constants::YES_VALUE];
+        if (count($parentTagIds) > 0) {
+            $condition['ids'] = $condition;
+        }
+
         $tagList =  IoC()->Tag_model->find($condition,$tagCount);
         $tagList = array_column($tagList, null, 'id');
         foreach ($data as &$tag) {
