@@ -14,6 +14,7 @@ class Tag_model extends MY_Model
     public function __construct()
     {
         parent::__construct();
+        $this->table = 'tag';
     }
 
     /**
@@ -36,7 +37,10 @@ class Tag_model extends MY_Model
         !empty($params['selectStr']) && $selectStr = $params['selectStr'];
 
         $query = $this->db->select($selectStr);
-        $query->from($this->myTable());
+
+        if (empty($this->db->qb_from)) {
+            $query->from($this->myTable());
+        }
 
         $orderBy = ['sort' => 'asc'];
         !empty($params['orderBy']) && $orderBy = $params['orderBy'];
@@ -55,7 +59,7 @@ class Tag_model extends MY_Model
         $offset = ($page - 1) * $limit;
         $query->limit($limit , $offset);
 
-        $result = $query->get()->result_array();
+        $result = $query->get($this->myTable())->result_array();
         if (!count($result)) {
             return [];
         }

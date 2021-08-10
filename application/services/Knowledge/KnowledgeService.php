@@ -85,19 +85,30 @@ class KnowledgeService extends BaseService
     {
         foreach ($list as &$tag) {
             $condition = [
-                'desc'  => Constants::KNOWLEDGE_TYPE_GUIDE,
-                'state' => Constants::YES_VALUE,
+                'desc'          => Constants::KNOWLEDGE_TYPE_GUIDE,
+                'state'         => Constants::YES_VALUE,
                 'parent_tag_id' => $tag['id'],
-                'isAll' => Constants::YES_VALUE
+                'isAll'         => Constants::YES_VALUE
             ];
             $tagRes= TagService::getInstance()->find($condition);
             $tagList = $tagRes['list'] ?:[];
-            if (empty($tagList) || !is_array($tagList)) {
+            if ((count($tagList) == 0) || !is_array($tagList)) {
                continue;
             }
             $tag['list'] = $tagList;
 
-            $this->cycleTagList($tag['list']);
+            // $this->cycleTagList($tag['list']);
+
+            foreach ($tag['list'] as &$tagItem) {
+                $itemCondition = [
+                    'desc'          => Constants::KNOWLEDGE_TYPE_GUIDE,
+                    'state'         => Constants::YES_VALUE,
+                    'parent_tag_id' => $tag['id'],
+                    'isAll'         => Constants::YES_VALUE
+                ];
+                $itemTagRes= TagService::getInstance()->find($itemCondition);
+                $tagItem['list'] = $itemTagRes ?:[];
+            }
         }
 
         return $list;
@@ -112,10 +123,10 @@ class KnowledgeService extends BaseService
     {
         /** 1. get guide info */
         $condition = [
-            'desc'  => Constants::KNOWLEDGE_TYPE_GUIDE,
-            'state' => Constants::YES_VALUE,
+            'desc'          => Constants::KNOWLEDGE_TYPE_GUIDE,
+            'state'         => Constants::YES_VALUE,
             'parent_tag_id' => 0,
-            'isAll' => Constants::YES_VALUE
+            'isAll'         => Constants::YES_VALUE
         ];
         $tagRes= TagService::getInstance()->find($condition);
         $tagList = $tagRes['list'] ?:[];

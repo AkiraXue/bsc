@@ -131,7 +131,7 @@ class TagService extends BaseService
             $condition['ids'] = $condition;
         }
 
-        $tagList =  IoC()->Tag_model->find($condition,$tagCount);
+        $tagList = IoC()->Tag_model->find($condition,$tagCount);
         $tagList = array_column($tagList, null, 'id');
         foreach ($data as &$tag) {
             $tag['parent_tag_name'] = $tagList[$tag['parent_tag_id']]['name'];
